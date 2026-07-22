@@ -226,15 +226,16 @@ export default function Chat() {
           <div
             className="w-full max-w-[773px] flex items-center gap-0 rounded-full px-2 transition-all"
             style={{
-              background: '#212121',
+              background: '#ffffff',
               minHeight: 52,
-              boxShadow: '0 2px 16px rgba(0,0,0,0.18)',
+              border: '1px solid #e5e5e5',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
             }}
           >
             {/* Leading — + button */}
             <button
               title="Add attachment"
-              className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#8E8EA0] hover:text-white hover:bg-white/10 transition-all ml-1"
+              className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all ml-1"
               onClick={() => {}}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -250,7 +251,7 @@ export default function Chat() {
               onKeyDown={handleKey}
               placeholder="Ask anything"
               rows={1}
-              className="flex-1 min-w-0 resize-none outline-none bg-transparent text-white placeholder-[#8E8EA0] text-[16px] leading-[24px] py-[5px] px-2"
+              className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#0d0d0d] placeholder-[#8e8ea0] text-[16px] leading-[24px] py-[5px] px-2"
               style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif', maxHeight: 160 }}
               onInput={e => {
                 const t = e.target as HTMLTextAreaElement;
@@ -263,7 +264,7 @@ export default function Chat() {
             <div className="flex items-center gap-1 flex-shrink-0 mr-1">
               {/* Mic icon */}
               <button
-                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#8E8EA0] hover:text-white hover:bg-white/10 transition-all"
+                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all"
                 onClick={() => setVoiceMode(!voiceMode)}
                 title="Voice input"
               >
@@ -277,13 +278,13 @@ export default function Chat() {
                 style={{
                   width: 55,
                   height: 53,
-                  background: input.trim() ? '#ECECEC' : '#2F2F2F',
+                  background: '#0d0d0d',
                 }}
                 title={input.trim() ? 'Send' : 'Voice mode'}
               >
                 {input.trim() ? (
                   /* Up-arrow send icon when text is present */
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
                   </svg>
                 ) : voiceMode ? (
@@ -300,17 +301,14 @@ export default function Chat() {
                     ))}
                   </div>
                 ) : (
-                  /* Static waveform / audio icon when idle */
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8EA0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="2"  y1="12" x2="2"  y2="12" />
-                    <line x1="5"  y1="9"  x2="5"  y2="15" />
-                    <line x1="8"  y1="6"  x2="8"  y2="18" />
-                    <line x1="11" y1="9"  x2="11" y2="15" />
-                    <line x1="14" y1="7"  x2="14" y2="17" />
-                    <line x1="17" y1="10" x2="17" y2="14" />
-                    <line x1="20" y1="9"  x2="20" y2="15" />
-                    <line x1="23" y1="12" x2="23" y2="12" />
-                  </svg>
+                  /* Static waveform bars — 5 bars, bell-curve heights, white on black */
+                  <div className="flex items-end justify-center gap-[3px]" style={{ height: 20 }}>
+                    <div style={{ width: 3, height: 8,  background: '#fff', borderRadius: 9 }} />
+                    <div style={{ width: 3, height: 14, background: '#fff', borderRadius: 9 }} />
+                    <div style={{ width: 3, height: 20, background: '#fff', borderRadius: 9 }} />
+                    <div style={{ width: 3, height: 14, background: '#fff', borderRadius: 9 }} />
+                    <div style={{ width: 3, height: 8,  background: '#fff', borderRadius: 9 }} />
+                  </div>
                 )}
               </button>
             </div>
