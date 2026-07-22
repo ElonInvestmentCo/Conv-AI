@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Sparkles, Moon, Globe, Bell, Shield, Palette, Database, Zap, ChevronRight, Toggle } from 'lucide-react';
+import {
+  Sparkles, Moon, Globe, Bell, Shield, Palette, Database,
+  Cpu, ChevronRight, MessageSquare, Mic, Eye, Zap
+} from 'lucide-react';
 
-const Toggle2 = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
+const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   <button
     onClick={onChange}
     className="relative w-11 h-6 rounded-full transition-all flex-shrink-0"
     style={{ background: on ? '#2563EB' : '#E2E8F0' }}
   >
     <span
-      className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-all"
+      className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-all duration-200"
       style={{ left: on ? '22px' : '2px' }}
     />
   </button>
@@ -16,13 +19,23 @@ const Toggle2 = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
 
 const sections = [
   {
-    title: 'AI & Model',
+    title: 'AI & Models',
     icon: Sparkles,
     settings: [
-      { label: 'Default Model', desc: 'AI model used for conversations', type: 'select', value: 'Snow Pro (GPT-4o)' },
+      { label: 'Default Model', desc: 'AI model for new conversations', type: 'select', value: 'GPT-4o' },
+      { label: 'Streaming Responses', desc: 'Display responses as they generate', type: 'toggle', value: true },
       { label: 'Deep Analysis Mode', desc: 'Use extended reasoning for complex queries', type: 'toggle', value: false },
-      { label: 'Streaming Responses', desc: 'Show AI responses as they generate', type: 'toggle', value: true },
       { label: 'Voice Responses', desc: 'Read AI responses aloud', type: 'toggle', value: false },
+    ],
+  },
+  {
+    title: 'Chat Behavior',
+    icon: MessageSquare,
+    settings: [
+      { label: 'Auto-save Conversations', desc: 'Save all chats to history automatically', type: 'toggle', value: true },
+      { label: 'Follow-up Suggestions', desc: 'Show suggested next prompts after responses', type: 'toggle', value: true },
+      { label: 'Markdown Rendering', desc: 'Render bold, code, and formatting in responses', type: 'toggle', value: true },
+      { label: 'Code Syntax Highlighting', desc: 'Highlight code blocks with language colors', type: 'toggle', value: true },
     ],
   },
   {
@@ -32,17 +45,26 @@ const sections = [
       { label: 'Theme', desc: 'Interface color scheme', type: 'select', value: 'Light' },
       { label: 'Font Size', desc: 'Text size throughout the app', type: 'select', value: 'Medium (14px)' },
       { label: 'Compact Mode', desc: 'Reduce spacing for more content', type: 'toggle', value: false },
-      { label: 'Sidebar Collapsed', desc: 'Start with sidebar minimized', type: 'toggle', value: false },
+      { label: 'Sidebar Collapsed by Default', desc: 'Start with sidebar minimized', type: 'toggle', value: false },
+    ],
+  },
+  {
+    title: 'Voice',
+    icon: Mic,
+    settings: [
+      { label: 'Voice', desc: 'AI voice for spoken responses', type: 'select', value: 'Nova' },
+      { label: 'Auto-detect Speech End', desc: 'Automatically send when you stop speaking', type: 'toggle', value: true },
+      { label: 'Noise Cancellation', desc: 'Filter background noise during voice input', type: 'toggle', value: true },
     ],
   },
   {
     title: 'Notifications',
     icon: Bell,
     settings: [
-      { label: 'AI Insights', desc: 'Personalized financial recommendations', type: 'toggle', value: true },
-      { label: 'Spending Alerts', desc: 'Notify when budget thresholds are hit', type: 'toggle', value: true },
-      { label: 'Weekly Digest', desc: 'Sunday summary of your financial week', type: 'toggle', value: true },
-      { label: 'Transaction Alerts', desc: 'Large or unusual transactions', type: 'toggle', value: false },
+      { label: 'Agent Completion', desc: 'Notify when an agent finishes a task', type: 'toggle', value: true },
+      { label: 'Automation Alerts', desc: 'Notify on automation errors or failures', type: 'toggle', value: true },
+      { label: 'Weekly Usage Report', desc: 'Receive weekly AI usage summary by email', type: 'toggle', value: false },
+      { label: 'New Features', desc: 'Get notified about Conv AI updates', type: 'toggle', value: true },
     ],
   },
   {
@@ -50,19 +72,18 @@ const sections = [
     icon: Shield,
     settings: [
       { label: 'Two-Factor Authentication', desc: 'Extra security for your account', type: 'toggle', value: true },
-      { label: 'Data Analytics', desc: 'Share anonymized usage to improve Snow AI', type: 'toggle', value: false },
-      { label: 'Chat History', desc: 'Save conversation history', type: 'toggle', value: true },
+      { label: 'Conversation Privacy', desc: 'Exclude my data from model training', type: 'toggle', value: true },
+      { label: 'Analytics Sharing', desc: 'Share anonymized usage to improve Conv AI', type: 'toggle', value: false },
       { label: 'Biometric Login', desc: 'Use Face ID or fingerprint to sign in', type: 'toggle', value: false },
     ],
   },
   {
-    title: 'Data & Integrations',
+    title: 'Data & Storage',
     icon: Database,
     settings: [
-      { label: 'Auto-Sync Accounts', desc: 'Refresh connected bank data daily', type: 'toggle', value: true },
-      { label: 'Export Format', desc: 'Default format for data exports', type: 'select', value: 'CSV' },
-      { label: 'Currency', desc: 'Primary display currency', type: 'select', value: 'USD ($)' },
-      { label: 'Timezone', desc: 'For transaction timestamps', type: 'select', value: 'Pacific Time (PT)' },
+      { label: 'Auto-delete History', desc: 'Automatically delete chats older than', type: 'select', value: 'Never' },
+      { label: 'Export Format', desc: 'Default format for conversation exports', type: 'select', value: 'Markdown' },
+      { label: 'Sync Across Devices', desc: 'Keep conversations in sync everywhere', type: 'toggle', value: true },
     ],
   },
 ];
@@ -70,14 +91,14 @@ const sections = [
 export default function Settings() {
   const [toggles, setToggles] = useState<Record<string, boolean>>({});
 
-  const getToggleState = (section: string, label: string, defaultVal: boolean) => {
+  const getToggle = (section: string, label: string, def: boolean) => {
     const key = `${section}-${label}`;
-    return key in toggles ? toggles[key] : defaultVal;
+    return key in toggles ? toggles[key] : def;
   };
 
-  const flipToggle = (section: string, label: string, defaultVal: boolean) => {
+  const flip = (section: string, label: string, def: boolean) => {
     const key = `${section}-${label}`;
-    setToggles(prev => ({ ...prev, [key]: !(key in prev ? prev[key] : defaultVal) }));
+    setToggles(prev => ({ ...prev, [key]: !(key in prev ? prev[key] : def) }));
   };
 
   return (
@@ -85,23 +106,20 @@ export default function Settings() {
       <div className="max-w-3xl mx-auto p-6 space-y-4">
         <div className="mb-6">
           <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em]">Settings</h1>
-          <p className="text-[14px] text-[#64748B] mt-0.5">Customize your Snow AI experience</p>
+          <p className="text-[14px] text-[#64748B] mt-0.5">Customize your Conv AI experience</p>
         </div>
 
         {sections.map((section) => {
           const Icon = section.icon;
           return (
             <div key={section.title} className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
-              {/* Section header */}
               <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: '1px solid #F1F5F9' }}>
                 <div className="w-8 h-8 rounded-[10px] flex items-center justify-center" style={{ background: '#F8FAFC' }}>
                   <Icon size={15} className="text-[#64748B]" />
                 </div>
                 <p className="text-[14px] font-bold text-[#0F172A] tracking-[-0.01em]">{section.title}</p>
               </div>
-
-              {/* Settings rows */}
-              <div className="divide-y" style={{ divideColor: '#F8FAFC' }}>
+              <div>
                 {section.settings.map((setting, i) => (
                   <div
                     key={i}
@@ -113,9 +131,9 @@ export default function Settings() {
                       <p className="text-[12.5px] text-[#94A3B8] mt-0.5">{setting.desc}</p>
                     </div>
                     {setting.type === 'toggle' ? (
-                      <Toggle2
-                        on={getToggleState(section.title, setting.label, setting.value as boolean)}
-                        onChange={() => flipToggle(section.title, setting.label, setting.value as boolean)}
+                      <Toggle
+                        on={getToggle(section.title, setting.label, setting.value as boolean)}
+                        onChange={() => flip(section.title, setting.label, setting.value as boolean)}
                       />
                     ) : (
                       <button className="flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-medium text-[#475569] hover:bg-[#F8FAFC] transition-all" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
@@ -131,15 +149,14 @@ export default function Settings() {
         })}
 
         {/* Danger zone */}
-        <div className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid #FECACA', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
+        <div className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid #FECACA' }}>
           <div className="px-5 py-4" style={{ borderBottom: '1px solid #FEF2F2' }}>
-            <p className="text-[14px] font-bold text-[#EF4444] tracking-[-0.01em]">Danger Zone</p>
+            <p className="text-[14px] font-bold text-[#EF4444]">Danger Zone</p>
           </div>
           <div className="p-5 space-y-3">
-            {['Clear chat history', 'Disconnect all accounts', 'Delete account'].map((action, i) => (
+            {['Clear all conversation history', 'Revoke all API keys', 'Delete account'].map((action, i) => (
               <button key={i} className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-[13.5px] font-semibold text-[#EF4444] hover:bg-[#FEF2F2] transition-all text-left" style={{ border: '1px solid #FECACA' }}>
-                {action}
-                <ChevronRight size={15} />
+                {action} <ChevronRight size={15} />
               </button>
             ))}
           </div>

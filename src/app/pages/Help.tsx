@@ -1,72 +1,109 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router';
-import { HelpCircle, Search, MessageSquare, BookOpen, Sparkles, ChevronRight, ChevronDown, ArrowRight, Zap, Shield, TrendingUp, CreditCard } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  HelpCircle, Search, ChevronDown, ChevronRight,
+  MessageSquare, Bot, Zap, BookOpen, Code, Globe,
+  ExternalLink, Mail, Sparkles
+} from 'lucide-react';
 
 const faqs = [
-  { q: 'How does Snow AI access my financial data?', a: 'Snow AI connects to your accounts via Plaid, a bank-level secure read-only connection. We never store your banking credentials and can only read — never move — your money.' },
-  { q: 'Can Snow AI execute transactions on my behalf?', a: 'No. Snow AI is read-only. It analyzes your data and gives you recommendations, but all transactions require your explicit action through your bank or brokerage.' },
-  { q: 'How accurate are the AI financial insights?', a: 'Snow AI uses real-time data from your connected accounts combined with market data. Insights are updated daily. For critical decisions, always consult a licensed financial advisor.' },
-  { q: 'Is my data encrypted and private?', a: 'Yes. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We never sell your data and you can delete everything at any time from Settings.' },
-  { q: 'What AI model powers Snow AI?', a: 'Snow Pro uses GPT-4o, fine-tuned on financial reasoning tasks. Snow Basic uses GPT-3.5-turbo. You can switch models in Settings → AI & Model.' },
-  { q: 'How do I disconnect a bank account?', a: 'Go to Accounts → select the account → tap the three-dot menu → Disconnect. Your historical data is retained for 30 days unless you request full deletion.' },
+  {
+    q: 'What is Conv AI?',
+    a: 'Conv AI is a premium AI platform that gives you access to the world\'s best AI models — including GPT-4o, Claude 3.5, and o1 — in a single, beautifully designed workspace. You can chat, generate images, run agents, automate workflows, and more.',
+  },
+  {
+    q: 'Which AI models are available?',
+    a: 'Conv AI includes GPT-4o, GPT-4o mini, o1-preview, Claude 3.5 Sonnet, Gemini 1.5 Pro, and DALL·E 3. You can switch models per conversation or set a default in Settings.',
+  },
+  {
+    q: 'What are AI Agents?',
+    a: 'Agents are autonomous AI workflows that can complete multi-step tasks on your behalf — like researching a topic, reviewing code, drafting emails, or processing documents. They run independently and report results when complete.',
+  },
+  {
+    q: 'How does the Knowledge Base work?',
+    a: 'Upload your documents, PDFs, or connect data sources like Notion and Google Drive. Conv AI embeds them into a searchable vector database. When you chat, the AI can retrieve relevant information from your knowledge base automatically.',
+  },
+  {
+    q: 'What are Automations?',
+    a: 'Automations are event-triggered AI workflows. For example: "When a new email arrives → classify it → draft a reply → add to my CRM." You can build them with a visual editor or describe them in plain English.',
+  },
+  {
+    q: 'How do credits work?',
+    a: 'Different features use different amounts of credits. Text chat (GPT-4o) costs ~1 credit/message. Image generation costs 10 credits. Agent runs cost 25 credits. Your plan includes a monthly credit allowance.',
+  },
+  {
+    q: 'Is my data private?',
+    a: 'Yes. Your conversations and files are private by default. You can opt out of training data usage in Settings → Privacy. We use enterprise-grade encryption and never share your data with third parties.',
+  },
+  {
+    q: 'How do I use the API?',
+    a: 'Go to API Keys to create a key. Conv AI provides a REST API compatible with the OpenAI SDK. Point your base URL to api.convai.io and use your Conv AI key to access all models and features programmatically.',
+  },
 ];
 
 const guides = [
-  { icon: Sparkles, title: 'Getting started with Snow AI', desc: 'Your first 10 conversations', color: '#EFF6FF', iconColor: '#2563EB' },
-  { icon: TrendingUp, title: 'Understanding AI insights', desc: 'How to act on recommendations', color: '#F0FDF4', iconColor: '#10B981' },
-  { icon: CreditCard, title: 'Connecting your accounts', desc: 'Plaid setup step-by-step', color: '#F5F3FF', iconColor: '#7C3AED' },
-  { icon: Shield, title: 'Privacy & security guide', desc: 'How we protect your data', color: '#FFFBEB', iconColor: '#F59E0B' },
+  { title: 'Getting started with Conv AI', icon: Sparkles, color: '#2563EB', bg: '#EFF6FF', time: '5 min' },
+  { title: 'Building your first AI Agent', icon: Bot, color: '#7C3AED', bg: '#F5F3FF', time: '10 min' },
+  { title: 'Setting up Automations', icon: Zap, color: '#D97706', bg: '#FFFBEB', time: '8 min' },
+  { title: 'Knowledge Base best practices', icon: BookOpen, color: '#059669', bg: '#F0FDF4', time: '12 min' },
+  { title: 'Using the API', icon: Code, color: '#0891B2', bg: '#ECFEFF', time: '15 min' },
+  { title: 'Prompt engineering tips', icon: MessageSquare, color: '#DB2777', bg: '#FDF2F8', time: '7 min' },
 ];
 
 export default function Help() {
   const [search, setSearch] = useState('');
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const filtered = faqs.filter(f => f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase()));
+  const filtered = faqs.filter(f => !search || f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
       <div className="max-w-3xl mx-auto p-6 space-y-6">
-        {/* Hero */}
-        <div
-          className="rounded-[20px] p-8 text-center relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%)', border: '1px solid #BFDBFE' }}
-        >
-          <div className="w-14 h-14 rounded-[16px] flex items-center justify-center mx-auto mb-4" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)', boxShadow: '0 4px 16px rgba(37,99,235,0.3)' }}>
-            <HelpCircle size={24} className="text-white" />
-          </div>
-          <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em] mb-2">How can we help?</h1>
-          <p className="text-[14px] text-[#64748B] mb-5">Search our knowledge base or chat with Snow AI directly</p>
-          <div className="relative max-w-md mx-auto">
-            <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
-            <input
-              type="text"
-              placeholder="Search for answers..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all"
-              style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-            />
-          </div>
+
+        {/* Header */}
+        <div className="text-center py-4">
+          <h1 className="text-[24px] font-bold text-[#0F172A] tracking-[-0.02em] mb-2">How can we help?</h1>
+          <p className="text-[14px] text-[#64748B]">Search the docs, browse guides, or contact support</p>
         </div>
 
-        {/* Quick guides */}
+        {/* Search */}
+        <div className="relative">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search help articles…"
+            className="w-full pl-12 pr-4 py-3 text-[14px] rounded-[16px] outline-none transition-all"
+            style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', color: '#0F172A', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
+            onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.8)'; }}
+          />
+        </div>
+
+        {/* Guides */}
         <div>
-          <h2 className="text-[15px] font-bold text-[#0F172A] tracking-[-0.01em] mb-3">Popular Guides</h2>
+          <p className="text-[13px] font-bold text-[#94A3B8] uppercase tracking-[0.06em] mb-3">Guides</p>
           <div className="grid grid-cols-2 gap-3">
-            {guides.map((g, i) => {
-              const Icon = g.icon;
+            {guides.map((guide, i) => {
+              const Icon = guide.icon;
               return (
-                <button key={i} className="flex items-center gap-3 p-4 rounded-[16px] text-left hover:shadow-md transition-all group" style={{ background: g.color, border: `1px solid rgba(226,232,240,0.6)` }}>
-                  <div className="w-10 h-10 rounded-[10px] flex items-center justify-center flex-shrink-0" style={{ background: '#fff' }}>
-                    <Icon size={18} style={{ color: g.iconColor }} />
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-3 p-4 rounded-[16px] text-left transition-all hover:shadow-sm group"
+                  style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}
+                >
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center flex-shrink-0" style={{ background: guide.bg }}>
+                    <Icon size={16} style={{ color: guide.color }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13.5px] font-semibold text-[#0F172A] leading-tight">{g.title}</p>
-                    <p className="text-[12px] text-[#64748B] mt-0.5">{g.desc}</p>
+                    <p className="text-[13px] font-semibold text-[#0F172A] leading-snug">{guide.title}</p>
+                    <p className="text-[11.5px] text-[#94A3B8] mt-0.5">{guide.time} read</p>
                   </div>
-                  <ChevronRight size={14} className="text-[#CBD5E1] group-hover:text-[#94A3B8] flex-shrink-0" />
-                </button>
+                  <ChevronRight size={13} className="text-[#E2E8F0] group-hover:text-[#94A3B8] transition-colors flex-shrink-0" />
+                </motion.button>
               );
             })}
           </div>
@@ -74,66 +111,62 @@ export default function Help() {
 
         {/* FAQ */}
         <div>
-          <h2 className="text-[15px] font-bold text-[#0F172A] tracking-[-0.01em] mb-3">Frequently Asked Questions</h2>
-          <div className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
+          <p className="text-[13px] font-bold text-[#94A3B8] uppercase tracking-[0.06em] mb-3">
+            {search ? `${filtered.length} result${filtered.length !== 1 ? 's' : ''}` : 'Frequently Asked Questions'}
+          </p>
+          <div className="space-y-2">
             {filtered.map((faq, i) => (
-              <div key={i} style={{ borderBottom: i < filtered.length - 1 ? '1px solid #F1F5F9' : 'none' }}>
+              <div
+                key={i}
+                className="rounded-[16px] overflow-hidden"
+                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}
+              >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-[#F8FAFC] transition-all text-left"
+                  className="w-full flex items-center justify-between px-5 py-4 text-left"
                 >
                   <p className="text-[14px] font-semibold text-[#0F172A] pr-4">{faq.q}</p>
                   <ChevronDown
                     size={16}
-                    className="text-[#94A3B8] flex-shrink-0 transition-transform"
-                    style={{ transform: openFaq === i ? 'rotate(180deg)' : 'none' }}
+                    className="text-[#94A3B8] flex-shrink-0 transition-transform duration-200"
+                    style={{ transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)' }}
                   />
                 </button>
-                {openFaq === i && (
-                  <div className="px-5 pb-4">
-                    <p className="text-[13.5px] text-[#64748B] leading-relaxed">{faq.a}</p>
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-4 pt-0" style={{ borderTop: '1px solid #F8FAFC' }}>
+                        <p className="text-[13.5px] text-[#475569] leading-relaxed mt-2">{faq.a}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
-            {filtered.length === 0 && (
-              <div className="px-5 py-8 text-center">
-                <p className="text-[14px] text-[#94A3B8]">No results for "{search}"</p>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Contact & AI help */}
-        <div className="grid grid-cols-2 gap-3">
-          <NavLink
-            to="/chat"
-            className="flex flex-col items-center gap-3 p-5 rounded-[16px] text-center hover:shadow-md transition-all group"
-            style={{ background: 'linear-gradient(135deg, #EFF6FF, #F5F3FF)', border: '1px solid #BFDBFE' }}
-          >
-            <div className="w-10 h-10 rounded-[12px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-              <Sparkles size={18} className="text-white" />
-            </div>
-            <div>
-              <p className="text-[14px] font-bold text-[#0F172A]">Ask Snow AI</p>
-              <p className="text-[12px] text-[#64748B]">Get instant answers from your AI assistant</p>
-            </div>
-            <span className="text-[13px] font-semibold text-[#2563EB] flex items-center gap-1 group-hover:gap-2 transition-all">Start chat <ArrowRight size={13} /></span>
-          </NavLink>
-
-          <button
-            className="flex flex-col items-center gap-3 p-5 rounded-[16px] text-center hover:shadow-md transition-all group"
-            style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)' }}
-          >
-            <div className="w-10 h-10 rounded-[12px] flex items-center justify-center" style={{ background: '#F8FAFC' }}>
-              <MessageSquare size={18} className="text-[#64748B]" />
-            </div>
-            <div>
-              <p className="text-[14px] font-bold text-[#0F172A]">Contact Support</p>
-              <p className="text-[12px] text-[#64748B]">Avg. response time: 2 hours</p>
-            </div>
-            <span className="text-[13px] font-semibold text-[#475569] flex items-center gap-1 group-hover:gap-2 transition-all">Open ticket <ArrowRight size={13} /></span>
-          </button>
+        {/* Support */}
+        <div className="rounded-[20px] p-6 text-center" style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%)', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}>
+          <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
+            <MessageSquare size={20} className="text-white" />
+          </div>
+          <p className="text-[16px] font-bold text-white mb-1">Still need help?</p>
+          <p className="text-[13px] text-[#64748B] mb-4">Our support team typically responds in under 2 hours.</p>
+          <div className="flex items-center justify-center gap-3">
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-[12px] text-[13px] font-semibold text-white transition-all" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
+              <Mail size={14} /> Email Support
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-[12px] text-[13px] font-semibold text-white transition-all" style={{ background: 'linear-gradient(135deg, #2563EB, #4F46E5)', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>
+              <MessageSquare size={14} /> Live Chat
+            </button>
+          </div>
         </div>
       </div>
     </div>

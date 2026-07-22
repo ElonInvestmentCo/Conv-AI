@@ -1,0 +1,76 @@
+STOP.
+
+You have misunderstood the project.
+
+The finance dashboard that exists in this repository is NOT the product I am building.
+
+It is ONLY a UI/UX reference imported from Figma to reuse its premium layout, spacing, typography, components, animations, and design system.
+
+The final product is NOT:
+- a banking app
+- a wallet app
+- a crypto app
+- a finance dashboard
+- an investment platform
+
+The final product is Conv AI — a premium AI platform similar to ChatGPT, Claude, Perplexity, Gemini, Grok, and Rope.live.
+
+Your task is to transform the existing finance dashboard into a modern AI workspace while preserving only the premium design language.
+
+Keep:
+- spacing
+- grid system
+- cards
+- typography
+- colors (where appropriate)
+- shadows
+- animations
+- responsive layout
+- component quality
+
+Replace ALL finance-related functionality, labels, pages, icons, and content.
+
+For example:
+
+Wallet → AI Workspace
+Transactions → Conversations
+Budget → AI Usage
+Analytics → AI Analytics
+Crypto → AI Models
+Cards → AI Tools
+Investments → Agents
+Reports → Documents
+Notifications → Notifications
+Profile → Account
+Settings → Settings
+
+Replace every finance component with AI functionality.
+
+The application should include pages such as:
+
+• Chat
+• AI Builder
+• AI Agents
+• AI Models
+• Voice
+• Images
+• Video
+• Documents
+• Automations
+• Workflows
+• Knowledge Base
+• Files
+• Integrations
+• API Keys
+• History
+• Settings
+
+The UI should resemble a premium AI platform, not a financial product.
+
+Before making additional changes, inspect the workspace and identify which existing components can be reused instead of rewritten.
+
+Do not generate fake banking data, balances, transactions, credit cards, investments, portfolios, currencies, or crypto information.
+
+Every screen should support the Conv AI product vision.
+
+Your objective is to refactor the imported Figma dashboard into an enterprise-grade AI platform while keeping the visual quality and component architecture.

@@ -1,160 +1,177 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line
+  ResponsiveContainer, BarChart, Bar, LineChart, Line
 } from 'recharts';
-import { TrendingUp, TrendingDown, BarChart3, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, MessageSquare, Bot, Image, Zap, Clock } from 'lucide-react';
 
-const monthlyData = [
-  { month: 'Jan', income: 14500, expenses: 8200, savings: 6300 },
-  { month: 'Feb', income: 15200, expenses: 7900, savings: 7300 },
-  { month: 'Mar', income: 14800, expenses: 8500, savings: 6300 },
-  { month: 'Apr', income: 16100, expenses: 8100, savings: 8000 },
-  { month: 'May', income: 15900, expenses: 7600, savings: 8300 },
-  { month: 'Jun', income: 18400, expenses: 9200, savings: 9200 },
+const dailyChats = [
+  { date: 'Jul 16', chats: 142, tokens: 48200 },
+  { date: 'Jul 17', chats: 198, tokens: 67800 },
+  { date: 'Jul 18', chats: 167, tokens: 54300 },
+  { date: 'Jul 19', chats: 231, tokens: 82100 },
+  { date: 'Jul 20', chats: 289, tokens: 98400 },
+  { date: 'Jul 21', chats: 94, tokens: 31200 },
+  { date: 'Jul 22', chats: 156, tokens: 52800 },
 ];
 
-const categoryData = [
-  { name: 'Housing', value: 2800, color: '#3B82F6' },
-  { name: 'Food', value: 920, color: '#F59E0B' },
-  { name: 'Transport', value: 285, color: '#10B981' },
-  { name: 'Shopping', value: 748, color: '#8B5CF6' },
-  { name: 'Travel', value: 960, color: '#06B6D4' },
-  { name: 'Health', value: 180, color: '#EF4444' },
-  { name: 'Other', value: 307, color: '#94A3B8' },
+const modelUsage = [
+  { model: 'GPT-4o', requests: 1840, color: '#10A37F' },
+  { model: 'Claude 3.5', requests: 620, color: '#D97706' },
+  { model: 'GPT-4o mini', requests: 412, color: '#059669' },
+  { model: 'o1-preview', requests: 88, color: '#7C3AED' },
+  { model: 'DALL·E 3', requests: 176, color: '#DB2777' },
 ];
 
-const weeklyTrend = [
-  { day: 'Mon', amount: 340 }, { day: 'Tue', amount: 180 }, { day: 'Wed', amount: 520 },
-  { day: 'Thu', amount: 290 }, { day: 'Fri', amount: 670 }, { day: 'Sat', amount: 420 }, { day: 'Sun', amount: 150 },
+const responseTime = [
+  { time: '6AM', ms: 820 }, { time: '9AM', ms: 1240 }, { time: '12PM', ms: 1680 },
+  { time: '3PM', ms: 1420 }, { time: '6PM', ms: 1180 }, { time: '9PM', ms: 940 },
 ];
 
-const periods = ['7D', '1M', '3M', '6M', '1Y'];
+const periods = ['7D', '1M', '3M', '6M'];
 
 export default function Analytics() {
-  const [period, setPeriod] = useState('6M');
+  const [period, setPeriod] = useState('7D');
+
+  const totalChats = dailyChats.reduce((s, d) => s + d.chats, 0);
+  const totalTokens = dailyChats.reduce((s, d) => s + d.tokens, 0);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Spending Analytics</h1>
-          <p className="text-slate-500 mt-0.5">Deep insights into your financial patterns</p>
-        </div>
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
-          {periods.map(p => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${period === p ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
+      <div className="max-w-5xl mx-auto p-6 space-y-6">
 
-      {/* KPI row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Avg Monthly Spend', value: '$8,583', change: '+12%', up: false },
-          { label: 'Avg Monthly Income', value: '$15,817', change: '+8%', up: true },
-          { label: 'Savings Rate', value: '45.8%', change: '+3.2pp', up: true },
-          { label: 'Largest Category', value: 'Housing', change: '$2,800/mo', up: null },
-        ].map((k, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
-            <p className="text-xs text-slate-500 font-medium mb-2">{k.label}</p>
-            <p className="text-xl font-bold text-slate-900">{k.value}</p>
-            <p className={`text-xs font-semibold mt-1 flex items-center gap-1 ${k.up === true ? 'text-emerald-600' : k.up === false ? 'text-red-500' : 'text-slate-400'}`}>
-              {k.up === true ? <TrendingUp size={11} /> : k.up === false ? <TrendingDown size={11} /> : null}
-              {k.change}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Income vs Expenses */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <div className="flex items-center justify-between mb-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-slate-900">Income vs Expenses</h3>
-            <p className="text-sm text-slate-500 mt-0.5">6-month comparison</p>
+            <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em]">Analytics</h1>
+            <p className="text-[14px] text-[#64748B] mt-0.5">Understand how you use Conv AI</p>
           </div>
-          <div className="flex items-center gap-4 text-xs font-medium text-slate-500">
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> Income</span>
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-red-400 inline-block" /> Expenses</span>
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" /> Savings</span>
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: '#F1F5F9' }}>
+            {periods.map(p => (
+              <button key={p} onClick={() => setPeriod(p)}
+                className="px-3 py-1.5 rounded-[9px] text-[12.5px] font-semibold transition-all"
+                style={{ background: period === p ? '#fff' : 'transparent', color: period === p ? '#0F172A' : '#94A3B8', boxShadow: period === p ? '0 1px 4px rgba(0,0,0,0.06)' : 'none' }}
+              >{p}</button>
+            ))}
           </div>
         </div>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthlyData} margin={{ left: -10 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} tickFormatter={v => `$${v / 1000}k`} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(v: number) => [`$${v.toLocaleString()}`, '']} />
-              <Bar dataKey="income" fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={28} />
-              <Bar dataKey="expenses" fill="#F87171" radius={[4, 4, 0, 0]} maxBarSize={28} />
-              <Bar dataKey="savings" fill="#34D399" radius={[4, 4, 0, 0]} maxBarSize={28} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Category breakdown */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-semibold text-slate-900 mb-5">Spending by Category</h3>
-          <div className="flex items-center gap-6">
-            <div className="h-40 w-40 flex-shrink-0">
+        {/* KPI cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: 'Total Conversations', value: totalChats.toLocaleString(), change: '+18%', up: true, icon: MessageSquare, color: '#2563EB', bg: '#EFF6FF' },
+            { label: 'Tokens Used', value: (totalTokens / 1000).toFixed(0) + 'K', change: '+24%', up: true, icon: Zap, color: '#7C3AED', bg: '#F5F3FF' },
+            { label: 'Avg Response Time', value: '1.2s', change: '-8%', up: true, icon: Clock, color: '#059669', bg: '#F0FDF4' },
+            { label: 'Agent Runs', value: '48', change: '+31%', up: true, icon: Bot, color: '#D97706', bg: '#FFFBEB' },
+          ].map((kpi, i) => {
+            const Icon = kpi.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className="p-5 rounded-[18px]"
+                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: kpi.bg }}>
+                    <Icon size={16} style={{ color: kpi.color }} />
+                  </div>
+                  <span className={`text-[12px] font-bold flex items-center gap-0.5 ${kpi.up ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {kpi.up ? <TrendingUp size={11} /> : <TrendingDown size={11} />} {kpi.change}
+                  </span>
+                </div>
+                <p className="text-[22px] font-bold text-[#0F172A] tracking-[-0.01em]">{kpi.value}</p>
+                <p className="text-[12px] text-[#94A3B8] mt-1">{kpi.label}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Chat activity */}
+        <div className="rounded-[20px] p-6" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-[15px] font-bold text-[#0F172A]">Conversation Activity</h3>
+              <p className="text-[13px] text-[#64748B] mt-0.5">Daily chat volume over the past week</p>
+            </div>
+          </div>
+          <div className="h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailyChats} margin={{ left: -20 }}>
+                <defs>
+                  <linearGradient id="chatGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2563EB" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+                  formatter={(v: number) => [v, 'Conversations']} />
+                <Area type="monotone" dataKey="chats" stroke="#2563EB" strokeWidth={2.5} fill="url(#chatGrad)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Model usage */}
+          <div className="rounded-[20px] p-6" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
+            <h3 className="text-[15px] font-bold text-[#0F172A] mb-5">Requests by Model</h3>
+            <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={categoryData} cx="50%" cy="50%" innerRadius={38} outerRadius={62} paddingAngle={3} dataKey="value">
-                    {categoryData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
-                  </Pie>
-                </PieChart>
+                <BarChart data={modelUsage} layout="vertical" margin={{ left: 0, right: 10 }}>
+                  <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                  <YAxis type="category" dataKey="model" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#475569' }} width={80} />
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0' }} formatter={(v: number) => [v, 'Requests']} />
+                  <Bar dataKey="requests" radius={[0, 6, 6, 0]} fill="#2563EB">
+                    {modelUsage.map((entry, i) => (
+                      <rect key={i} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex-1 space-y-2">
-              {categoryData.map((c, i) => (
+            <div className="space-y-2 mt-3">
+              {modelUsage.map((m, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: c.color }} />
-                  <span className="text-xs text-slate-600 flex-1">{c.name}</span>
-                  <span className="text-xs font-bold text-slate-900">${c.value}</span>
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: m.color }} />
+                  <span className="text-[12px] text-[#64748B] flex-1">{m.model}</span>
+                  <span className="text-[12px] font-bold text-[#0F172A]">{m.requests}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Weekly trend */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-semibold text-slate-900 mb-5">Daily Spending This Week</h3>
-          <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={weeklyTrend} margin={{ left: -20 }}>
-                <defs>
-                  <linearGradient id="weekGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} tickFormatter={v => `$${v}`} />
-                <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0' }} formatter={(v: number) => [`$${v}`, 'Spent']} />
-                <Area type="monotone" dataKey="amount" stroke="#8B5CF6" strokeWidth={2} fill="url(#weekGrad)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="bg-purple-50 rounded-xl p-3">
-              <p className="text-xs text-purple-600 font-medium">Highest day</p>
-              <p className="text-base font-bold text-purple-900 mt-0.5">Friday · $670</p>
+          {/* Response time */}
+          <div className="rounded-[20px] p-6" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
+            <h3 className="text-[15px] font-bold text-[#0F172A] mb-5">Response Time (ms)</h3>
+            <div className="h-40">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={responseTime} margin={{ left: -20 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94A3B8' }} />
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0' }} formatter={(v: number) => [`${v}ms`, 'Avg Response']} />
+                  <Line type="monotone" dataKey="ms" stroke="#7C3AED" strokeWidth={2.5} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-            <div className="bg-emerald-50 rounded-xl p-3">
-              <p className="text-xs text-emerald-600 font-medium">Lowest day</p>
-              <p className="text-base font-bold text-emerald-900 mt-0.5">Sunday · $150</p>
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <div className="p-3 rounded-[12px]" style={{ background: '#F0FDF4' }}>
+                <p className="text-[11px] text-emerald-600 font-medium">Fastest</p>
+                <p className="text-[15px] font-bold text-emerald-900">820ms</p>
+                <p className="text-[11px] text-emerald-600">at 6 AM</p>
+              </div>
+              <div className="p-3 rounded-[12px]" style={{ background: '#FEF2F2' }}>
+                <p className="text-[11px] text-red-500 font-medium">Peak load</p>
+                <p className="text-[15px] font-bold text-red-900">1,680ms</p>
+                <p className="text-[11px] text-red-500">at 12 PM</p>
+              </div>
             </div>
           </div>
         </div>
