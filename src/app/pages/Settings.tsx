@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import {
-  Sparkles, Moon, Globe, Bell, Shield, Palette, Database,
-  Cpu, ChevronRight, MessageSquare, Mic, Eye, Zap
-} from 'lucide-react';
+  RiSparklingLine,
+  RiMoonLine,
+  RiGlobalLine,
+  RiBellLine,
+  RiShieldLine,
+  RiPaletteLine,
+  RiDatabase2Line,
+  RiCpuLine,
+  RiArrowRightSLine,
+  RiMessage3Line,
+  RiMicLine,
+  RiEyeLine,
+  RiFlashlightLine,
+} from '@remixicon/react';
 
 const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   <button
@@ -20,7 +31,7 @@ const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
 const sections = [
   {
     title: 'AI & Models',
-    icon: Sparkles,
+    icon: RiSparklingLine,
     settings: [
       { label: 'Default Model', desc: 'AI model for new conversations', type: 'select', value: 'GPT-4o' },
       { label: 'Streaming Responses', desc: 'Display responses as they generate', type: 'toggle', value: true },
@@ -30,7 +41,7 @@ const sections = [
   },
   {
     title: 'Chat Behavior',
-    icon: MessageSquare,
+    icon: RiMessage3Line,
     settings: [
       { label: 'Auto-save Conversations', desc: 'Save all chats to history automatically', type: 'toggle', value: true },
       { label: 'Follow-up Suggestions', desc: 'Show suggested next prompts after responses', type: 'toggle', value: true },
@@ -40,7 +51,7 @@ const sections = [
   },
   {
     title: 'Appearance',
-    icon: Palette,
+    icon: RiPaletteLine,
     settings: [
       { label: 'Theme', desc: 'Interface color scheme', type: 'select', value: 'Light' },
       { label: 'Font Size', desc: 'Text size throughout the app', type: 'select', value: 'Medium (14px)' },
@@ -50,7 +61,7 @@ const sections = [
   },
   {
     title: 'Voice',
-    icon: Mic,
+    icon: RiMicLine,
     settings: [
       { label: 'Voice', desc: 'AI voice for spoken responses', type: 'select', value: 'Nova' },
       { label: 'Auto-detect Speech End', desc: 'Automatically send when you stop speaking', type: 'toggle', value: true },
@@ -59,7 +70,7 @@ const sections = [
   },
   {
     title: 'Notifications',
-    icon: Bell,
+    icon: RiBellLine,
     settings: [
       { label: 'Agent Completion', desc: 'Notify when an agent finishes a task', type: 'toggle', value: true },
       { label: 'Automation Alerts', desc: 'Notify on automation errors or failures', type: 'toggle', value: true },
@@ -69,7 +80,7 @@ const sections = [
   },
   {
     title: 'Privacy & Security',
-    icon: Shield,
+    icon: RiShieldLine,
     settings: [
       { label: 'Two-Factor Authentication', desc: 'Extra security for your account', type: 'toggle', value: true },
       { label: 'Conversation Privacy', desc: 'Exclude my data from model training', type: 'toggle', value: true },
@@ -79,7 +90,7 @@ const sections = [
   },
   {
     title: 'Data & Storage',
-    icon: Database,
+    icon: RiDatabase2Line,
     settings: [
       { label: 'Auto-delete History', desc: 'Automatically delete chats older than', type: 'select', value: 'Never' },
       { label: 'Export Format', desc: 'Default format for conversation exports', type: 'select', value: 'Markdown' },
@@ -138,7 +149,7 @@ export default function Settings() {
                     ) : (
                       <button className="flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-medium text-[#475569] hover:bg-[#F8FAFC] transition-all" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
                         {setting.value}
-                        <ChevronRight size={13} className="text-[#CBD5E1]" />
+                        <RiArrowRightSLine size={14} className="text-[#CBD5E1]" />
                       </button>
                     )}
                   </div>
@@ -148,7 +159,6 @@ export default function Settings() {
           );
         })}
 
-        {/* Danger zone */}
         <div className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid #FECACA' }}>
           <div className="px-5 py-4" style={{ borderBottom: '1px solid #FEF2F2' }}>
             <p className="text-[14px] font-bold text-[#EF4444]">Danger Zone</p>
@@ -156,7 +166,7 @@ export default function Settings() {
           <div className="p-5 space-y-3">
             {['Clear all conversation history', 'Revoke all API keys', 'Delete account'].map((action, i) => (
               <button key={i} className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-[13.5px] font-semibold text-[#EF4444] hover:bg-[#FEF2F2] transition-all text-left" style={{ border: '1px solid #FECACA' }}>
-                {action} <ChevronRight size={15} />
+                {action} <RiArrowRightSLine size={16} />
               </button>
             ))}
           </div>

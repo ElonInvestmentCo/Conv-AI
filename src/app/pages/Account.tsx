@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
-  User, Mail, MapPin, Camera, Sparkles, Zap,
-  Shield, Bell, KeyRound, CreditCard, ChevronRight,
-  MessageSquare, Bot, Image, Star
-} from 'lucide-react';
+  RiUserLine,
+  RiMailLine,
+  RiMapPin2Line,
+  RiCameraLine,
+  RiSparklingLine,
+  RiFlashlightLine,
+  RiShieldLine,
+  RiBellLine,
+  RiKey2Line,
+  RiBankCardLine,
+  RiArrowRightSLine,
+  RiMessage3Line,
+  RiRobot2Line,
+  RiImageLine,
+  RiStarLine,
+} from '@remixicon/react';
 
 const stats = [
   { label: 'Conversations', value: '1,284', sub: 'All time', color: '#2563EB' },
@@ -17,25 +29,25 @@ const sections = [
   {
     title: 'Account',
     items: [
-      { icon: User, label: 'Personal Information', desc: 'Name, email, phone, photo' },
-      { icon: MapPin, label: 'Location & Language', desc: 'Timezone, region, language' },
-      { icon: Shield, label: 'Security', desc: '2FA, password, active sessions' },
+      { icon: RiUserLine, label: 'Personal Information', desc: 'Name, email, phone, photo' },
+      { icon: RiMapPin2Line, label: 'Location & Language', desc: 'Timezone, region, language' },
+      { icon: RiShieldLine, label: 'Security', desc: '2FA, password, active sessions' },
     ],
   },
   {
     title: 'AI Preferences',
     items: [
-      { icon: Bot, label: 'Default AI Model', desc: 'GPT-4o · Multimodal' },
-      { icon: MessageSquare, label: 'Chat Preferences', desc: 'Response style, language' },
-      { icon: Bell, label: 'Notifications', desc: 'Email, push, in-app alerts' },
+      { icon: RiRobot2Line, label: 'Default AI Model', desc: 'GPT-4o · Multimodal' },
+      { icon: RiMessage3Line, label: 'Chat Preferences', desc: 'Response style, language' },
+      { icon: RiBellLine, label: 'Notifications', desc: 'Email, push, in-app alerts' },
     ],
   },
   {
     title: 'Subscription & Billing',
     items: [
-      { icon: Zap, label: 'Conv AI Pro', desc: '$19/month · Renews Aug 22', badge: 'Active' },
-      { icon: CreditCard, label: 'Payment Method', desc: 'Visa ending in 4821' },
-      { icon: Star, label: 'Referral Program', desc: 'Earn free months by sharing' },
+      { icon: RiFlashlightLine, label: 'Conv AI Pro', desc: '$19/month · Renews Aug 22', badge: 'Active' },
+      { icon: RiBankCardLine, label: 'Payment Method', desc: 'Visa ending in 4821' },
+      { icon: RiStarLine, label: 'Referral Program', desc: 'Earn free months by sharing' },
     ],
   },
 ];
@@ -58,7 +70,7 @@ export default function Account() {
                 A
               </div>
               <button className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center bg-white shadow-md text-[#2563EB] hover:bg-[#EFF6FF] transition-all" style={{ border: '1.5px solid #BFDBFE' }}>
-                <Camera size={11} />
+                <RiCameraLine size={11} />
               </button>
             </div>
             <div className="flex-1">
@@ -80,16 +92,13 @@ export default function Account() {
                   {editing ? 'Save Changes' : 'Edit Profile'}
                 </button>
               </div>
-
-              {/* Plan badge */}
               <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl" style={{ background: 'linear-gradient(135deg, #EFF6FF, #F5F3FF)', border: '1px solid #BFDBFE' }}>
-                <Sparkles size={12} className="text-[#2563EB]" />
+                <RiSparklingLine size={12} className="text-[#2563EB]" />
                 <span className="text-[12px] font-bold text-[#2563EB]">Conv AI Pro</span>
               </div>
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-4 gap-3 mt-5 pt-5" style={{ borderTop: '1px solid rgba(226,232,240,0.6)' }}>
             {stats.map(stat => (
               <div key={stat.label} className="text-center">
@@ -101,7 +110,6 @@ export default function Account() {
           </div>
         </div>
 
-        {/* Settings sections */}
         {sections.map(section => (
           <div key={section.title} className="rounded-[20px] overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
             <p className="px-5 py-3 text-[11px] font-bold text-[#94A3B8] uppercase tracking-[0.08em]" style={{ borderBottom: '1px solid rgba(226,232,240,0.6)' }}>
@@ -130,14 +138,13 @@ export default function Account() {
                     </div>
                     <p className="text-[12px] text-[#94A3B8] mt-0.5">{item.desc}</p>
                   </div>
-                  <ChevronRight size={14} className="text-[#CBD5E1] group-hover:text-[#94A3B8] transition-colors flex-shrink-0" />
+                  <RiArrowRightSLine size={16} className="text-[#CBD5E1] group-hover:text-[#94A3B8] transition-colors flex-shrink-0" />
                 </motion.button>
               );
             })}
           </div>
         ))}
 
-        {/* Danger zone */}
         <div className="rounded-[20px] p-5" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)' }}>
           <p className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[0.08em] mb-3">Danger Zone</p>
           <div className="flex items-center justify-between">
@@ -150,7 +157,6 @@ export default function Account() {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

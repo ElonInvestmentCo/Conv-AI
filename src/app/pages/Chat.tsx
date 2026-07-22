@@ -1,19 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles, Send, Paperclip, Mic, MicOff, Image, FileText,
-  Globe, Code, Lightbulb, PenLine, Search, Zap,
-  Volume2, X, RefreshCw, Copy, ThumbsUp, ThumbsDown,
-  ChevronDown, ArrowRight, Hash, Plus, StopCircle, Bot
-} from 'lucide-react';
+  RiSparklingLine,
+  RiSendPlaneLine,
+  RiAttachmentLine,
+  RiMicLine,
+  RiMicOffLine,
+  RiImageLine,
+  RiFileTextLine,
+  RiGlobalLine,
+  RiCodeSSlashLine,
+  RiLightbulbLine,
+  RiPencilLine,
+  RiSearchLine,
+  RiFlashlightLine,
+  RiArrowDownSLine,
+  RiLoopRightLine,
+  RiFileCopyLine,
+  RiThumbUpLine,
+  RiThumbDownLine,
+  RiStopCircleLine,
+  RiRobot2Line,
+} from '@remixicon/react';
 
 const prompts = [
-  { icon: <Code size={15} className="text-blue-500" />, title: 'Write code', desc: 'Debug, refactor, or build something new', bg: '#EFF6FF', border: '#BFDBFE' },
-  { icon: <PenLine size={15} className="text-violet-500" />, title: 'Draft content', desc: 'Emails, blog posts, social copy', bg: '#F5F3FF', border: '#DDD6FE' },
-  { icon: <Search size={15} className="text-emerald-500" />, title: 'Research', desc: 'Deep analysis and comprehensive summaries', bg: '#F0FDF4', border: '#BBF7D0' },
-  { icon: <Lightbulb size={15} className="text-amber-500" />, title: 'Brainstorm', desc: 'Generate ideas and explore possibilities', bg: '#FFFBEB', border: '#FDE68A' },
-  { icon: <FileText size={15} className="text-rose-500" />, title: 'Analyze document', desc: 'Upload files for instant AI analysis', bg: '#FFF1F2', border: '#FECDD3' },
-  { icon: <Globe size={15} className="text-cyan-500" />, title: 'Browse the web', desc: 'Search and summarize live information', bg: '#ECFEFF', border: '#A5F3FC' },
+  { icon: <RiCodeSSlashLine size={15} className="text-blue-500" />, title: 'Write code', desc: 'Debug, refactor, or build something new', bg: '#EFF6FF', border: '#BFDBFE' },
+  { icon: <RiPencilLine size={15} className="text-violet-500" />, title: 'Draft content', desc: 'Emails, blog posts, social copy', bg: '#F5F3FF', border: '#DDD6FE' },
+  { icon: <RiSearchLine size={15} className="text-emerald-500" />, title: 'Research', desc: 'Deep analysis and comprehensive summaries', bg: '#F0FDF4', border: '#BBF7D0' },
+  { icon: <RiLightbulbLine size={15} className="text-amber-500" />, title: 'Brainstorm', desc: 'Generate ideas and explore possibilities', bg: '#FFFBEB', border: '#FDE68A' },
+  { icon: <RiFileTextLine size={15} className="text-rose-500" />, title: 'Analyze document', desc: 'Upload files for instant AI analysis', bg: '#FFF1F2', border: '#FECDD3' },
+  { icon: <RiGlobalLine size={15} className="text-cyan-500" />, title: 'Browse the web', desc: 'Search and summarize live information', bg: '#ECFEFF', border: '#A5F3FC' },
 ];
 
 type Msg = { id: number; role: 'user' | 'ai'; text?: string; thinking?: boolean };
@@ -57,41 +73,29 @@ const AIAvatar = () => (
     className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
     style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}
   >
-    <Sparkles size={12} className="text-white" />
+    <RiSparklingLine size={12} className="text-white" />
   </div>
 );
 
 function parseMarkdown(text: string) {
-  // Bold
   text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // Code inline
   text = text.replace(/`(.+?)`/g, '<code class="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded text-[13px] font-mono">$1</code>');
-  // Newlines
-  const parts = text.split('\n\n');
-  return parts;
+  return text.split('\n\n');
 }
 
 const AIMessage = ({ text }: { text: string }) => {
   const parts = parseMarkdown(text);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex gap-3"
-    >
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3">
       <AIAvatar />
       <div className="flex-1 min-w-0">
         <div className="space-y-3">
           {parts.map((part, i) => (
-            <p
-              key={i}
-              className="text-[14px] leading-relaxed text-[#1E293B]"
-              dangerouslySetInnerHTML={{ __html: part }}
-            />
+            <p key={i} className="text-[14px] leading-relaxed text-[#1E293B]" dangerouslySetInnerHTML={{ __html: part }} />
           ))}
         </div>
         <div className="flex items-center gap-1 mt-3">
-          {[Copy, ThumbsUp, ThumbsDown, RefreshCw].map((Icon, i) => (
+          {[RiFileCopyLine, RiThumbUpLine, RiThumbDownLine, RiLoopRightLine].map((Icon, i) => (
             <button key={i} className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-[#64748B] hover:bg-[#F8FAFC] transition-all">
               <Icon size={13} />
             </button>
@@ -121,8 +125,7 @@ export default function Chat() {
     if (!t) return;
     setStarted(true);
     setInput('');
-    const userMsg: Msg = { id: Date.now(), role: 'user', text: t };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(prev => [...prev, { id: Date.now(), role: 'user', text: t }]);
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
@@ -142,12 +145,9 @@ export default function Chat() {
 
   return (
     <div className="flex h-full overflow-hidden" style={{ background: '#F7F9FC' }}>
-
-      {/* Main chat area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {!started ? (
-          /* Welcome screen */
           <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -155,19 +155,16 @@ export default function Chat() {
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               className="w-full max-w-2xl"
             >
-              {/* Hero */}
               <div className="text-center mb-10">
                 <div
                   className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
                   style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 4px 20px rgba(37,99,235,0.3)' }}
                 >
-                  <Sparkles size={24} className="text-white" />
+                  <RiSparklingLine size={24} className="text-white" />
                 </div>
                 <h1 className="text-[28px] font-bold text-[#0F172A] tracking-[-0.03em] mb-2">What can I help you with?</h1>
                 <p className="text-[15px] text-[#64748B]">Powered by <span className="font-semibold text-[#2563EB]">{model}</span></p>
               </div>
-
-              {/* Prompt grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
                 {prompts.map((p, i) => (
                   <motion.button
@@ -188,24 +185,17 @@ export default function Chat() {
             </motion.div>
           </div>
         ) : (
-          /* Conversation */
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
             <AnimatePresence initial={false}>
               {messages.map(msg => (
                 <div key={msg.id}>
-                  {msg.role === 'user'
-                    ? <UserBubble text={msg.text!} />
-                    : <AIMessage text={msg.text!} />
-                  }
+                  {msg.role === 'user' ? <UserBubble text={msg.text!} /> : <AIMessage text={msg.text!} />}
                 </div>
               ))}
               {isTyping && (
                 <motion.div key="typing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
                   <AIAvatar />
-                  <div
-                    className="px-4 py-3 rounded-2xl"
-                    style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-                  >
+                  <div className="px-4 py-3 rounded-2xl" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                     <TypingDots />
                   </div>
                 </motion.div>
@@ -215,7 +205,6 @@ export default function Chat() {
           </div>
         )}
 
-        {/* Follow-up suggestions (when started) */}
         {started && !isTyping && (
           <div className="px-6 pb-2 flex gap-2 overflow-x-auto">
             {['Continue this further', 'Show me an example', 'Explain step by step', 'Generate the code'].map((s, i) => (
@@ -237,7 +226,6 @@ export default function Chat() {
             className="rounded-[20px] overflow-hidden transition-all"
             style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
           >
-            {/* Textarea */}
             <textarea
               ref={textareaRef}
               value={input}
@@ -253,25 +241,22 @@ export default function Chat() {
                 t.style.height = Math.min(t.scrollHeight, 160) + 'px';
               }}
             />
-
-            {/* Toolbar */}
             <div className="flex items-center justify-between px-4 pb-3">
               <div className="flex items-center gap-1">
                 {[
-                  { icon: Paperclip, title: 'Attach file' },
-                  { icon: Image, title: 'Upload image' },
-                  { icon: FileText, title: 'Upload document' },
+                  { icon: RiAttachmentLine, title: 'Attach file' },
+                  { icon: RiImageLine, title: 'Upload image' },
+                  { icon: RiFileTextLine, title: 'Upload document' },
                 ].map(({ icon: Icon, title }) => (
                   <button key={title} title={title} className="p-2 rounded-xl text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all">
                     <Icon size={16} />
                   </button>
                 ))}
                 <div className="w-px h-4 bg-[#E2E8F0] mx-1" />
-                {/* Model picker */}
                 <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[12.5px] font-medium text-[#64748B] hover:bg-[#F8FAFC] transition-all">
-                  <Bot size={13} className="text-[#94A3B8]" />
+                  <RiRobot2Line size={13} className="text-[#94A3B8]" />
                   {model}
-                  <ChevronDown size={11} className="text-[#CBD5E1]" />
+                  <RiArrowDownSLine size={13} className="text-[#CBD5E1]" />
                 </button>
               </div>
 
@@ -293,7 +278,7 @@ export default function Chat() {
                       ))}
                     </div>
                   ) : (
-                    <Mic size={16} />
+                    <RiMicLine size={16} />
                   )}
                 </button>
                 <button
@@ -306,7 +291,7 @@ export default function Chat() {
                     boxShadow: input.trim() && !isTyping ? '0 2px 8px rgba(37,99,235,0.3)' : 'none',
                   }}
                 >
-                  {isTyping ? <StopCircle size={15} /> : <Send size={15} />}
+                  {isTyping ? <RiStopCircleLine size={15} /> : <RiSendPlaneLine size={15} />}
                 </button>
               </div>
             </div>

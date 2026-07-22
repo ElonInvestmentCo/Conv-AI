@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
-  Image, Sparkles, Download, RefreshCw, Wand2,
-  Grid, List, ChevronDown, Sliders, Plus, Star, Copy
-} from 'lucide-react';
+  RiImageLine,
+  RiSparklingLine,
+  RiDownloadLine,
+  RiLoopRightLine,
+  RiMagicLine,
+  RiLayoutGridLine,
+  RiListView,
+  RiArrowDownSLine,
+  RiEqualizerLine,
+  RiAddLine,
+  RiStarLine,
+  RiStarFill,
+  RiFileCopyLine,
+} from '@remixicon/react';
 
 const styles = ['Photorealistic', 'Digital Art', 'Oil Painting', 'Watercolor', 'Anime', 'Sketch', '3D Render', 'Cinematic'];
 const sizes = ['1:1 Square', '16:9 Landscape', '9:16 Portrait', '4:3 Standard'];
@@ -45,19 +56,17 @@ export default function Images() {
     <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
       <div className="max-w-5xl mx-auto p-6 space-y-5">
 
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em]">Image Generation</h1>
             <p className="text-[14px] text-[#64748B] mt-0.5">Create stunning visuals with AI</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setView('grid')} className={`p-2.5 rounded-[10px] transition-all ${view === 'grid' ? 'bg-[#EFF6FF] text-[#2563EB]' : 'text-[#94A3B8] hover:bg-[#F8FAFC]'}`}><Grid size={16} /></button>
-            <button onClick={() => setView('list')} className={`p-2.5 rounded-[10px] transition-all ${view === 'list' ? 'bg-[#EFF6FF] text-[#2563EB]' : 'text-[#94A3B8] hover:bg-[#F8FAFC]'}`}><List size={16} /></button>
+            <button onClick={() => setView('grid')} className={`p-2.5 rounded-[10px] transition-all ${view === 'grid' ? 'bg-[#EFF6FF] text-[#2563EB]' : 'text-[#94A3B8] hover:bg-[#F8FAFC]'}`}><RiLayoutGridLine size={16} /></button>
+            <button onClick={() => setView('list')} className={`p-2.5 rounded-[10px] transition-all ${view === 'list' ? 'bg-[#EFF6FF] text-[#2563EB]' : 'text-[#94A3B8] hover:bg-[#F8FAFC]'}`}><RiListView size={16} /></button>
           </div>
         </div>
 
-        {/* Generator */}
         <div className="rounded-[20px] p-5" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
@@ -82,12 +91,11 @@ export default function Images() {
                 boxShadow: prompt.trim() && !generating ? '0 2px 12px rgba(37,99,235,0.3)' : 'none',
               }}
             >
-              {generating ? <RefreshCw size={15} className="animate-spin" /> : <Sparkles size={15} />}
+              {generating ? <RiLoopRightLine size={15} className="animate-spin" /> : <RiSparklingLine size={15} />}
               {generating ? 'Generating…' : 'Generate'}
             </button>
           </div>
 
-          {/* Options */}
           <div className="flex flex-wrap gap-3">
             <div>
               <p className="text-[11px] font-semibold text-[#94A3B8] mb-1.5">Style</p>
@@ -111,23 +119,13 @@ export default function Images() {
             <div className="flex gap-3 ml-auto">
               <div>
                 <p className="text-[11px] font-semibold text-[#94A3B8] mb-1.5">Size</p>
-                <select
-                  value={size}
-                  onChange={e => setSize(e.target.value)}
-                  className="px-3 py-1.5 rounded-[10px] text-[12.5px] font-medium text-[#475569] outline-none"
-                  style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}
-                >
+                <select value={size} onChange={e => setSize(e.target.value)} className="px-3 py-1.5 rounded-[10px] text-[12.5px] font-medium text-[#475569] outline-none" style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}>
                   {sizes.map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <p className="text-[11px] font-semibold text-[#94A3B8] mb-1.5">Quality</p>
-                <select
-                  value={quality}
-                  onChange={e => setQuality(e.target.value)}
-                  className="px-3 py-1.5 rounded-[10px] text-[12.5px] font-medium text-[#475569] outline-none"
-                  style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}
-                >
+                <select value={quality} onChange={e => setQuality(e.target.value)} className="px-3 py-1.5 rounded-[10px] text-[12.5px] font-medium text-[#475569] outline-none" style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}>
                   {qualities.map(q => <option key={q}>{q}</option>)}
                 </select>
               </div>
@@ -135,7 +133,6 @@ export default function Images() {
           </div>
         </div>
 
-        {/* Generating state */}
         {generating && (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -150,7 +147,7 @@ export default function Images() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               >
-                <Sparkles size={24} className="text-white" />
+                <RiSparklingLine size={24} className="text-white" />
               </motion.div>
               <div className="text-center">
                 <p className="text-[15px] font-semibold text-[#0F172A]">Creating your image…</p>
@@ -168,7 +165,6 @@ export default function Images() {
           </motion.div>
         )}
 
-        {/* Gallery */}
         <div>
           <p className="text-[13px] font-bold text-[#94A3B8] uppercase tracking-[0.06em] mb-3">Recent Generations</p>
           <div className={`grid gap-4 ${view === 'grid' ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
@@ -181,28 +177,17 @@ export default function Images() {
                 className="group rounded-[16px] overflow-hidden relative cursor-pointer"
                 style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
               >
-                {/* Placeholder image */}
-                <div
-                  className="w-full"
-                  style={{ background: placeholderColors[i % placeholderColors.length], aspectRatio: '4/3' }}
-                />
-                {/* Overlay on hover */}
+                <div className="w-full" style={{ background: placeholderColors[i % placeholderColors.length], aspectRatio: '4/3' }} />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
-                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-                    <Download size={16} />
-                  </button>
-                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-                    <Copy size={16} />
-                  </button>
-                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-                    <RefreshCw size={16} />
-                  </button>
+                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all"><RiDownloadLine size={16} /></button>
+                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all"><RiFileCopyLine size={16} /></button>
+                  <button className="p-2.5 rounded-xl bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all"><RiLoopRightLine size={16} /></button>
                 </div>
                 <div className="p-3">
                   <p className="text-[12.5px] font-medium text-[#475569] line-clamp-2">{img.prompt}</p>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-[11px] font-semibold text-[#CBD5E1]">{img.style} · {img.date}</span>
-                    {img.liked && <Star size={12} className="text-amber-400 fill-amber-400" />}
+                    {img.liked && <RiStarFill size={12} className="text-amber-400" />}
                   </div>
                 </div>
               </motion.div>

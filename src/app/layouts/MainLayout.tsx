@@ -2,28 +2,41 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles, MessageSquare, Image, BookOpen, Layers,
-  Wand2, Mic2, Mic, Bell, Settings, User, HelpCircle,
-  ChevronLeft, ChevronRight,
-  Search, LogOut, Zap
-} from 'lucide-react';
+  RiSparklingLine,
+  RiMessage3Line,
+  RiImageLine,
+  RiBookOpenLine,
+  RiStackLine,
+  RiMagicLine,
+  RiMic2Line,
+  RiMicLine,
+  RiBellLine,
+  RiSettings4Line,
+  RiUserLine,
+  RiQuestionLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiSearchLine,
+  RiLogoutBoxLine,
+  RiFlashlightLine,
+} from '@remixicon/react';
 
 const mainNav = [
-  { label: 'New Chat', path: '/chat', icon: MessageSquare },
-  { label: 'Images', path: '/images', icon: Image },
-  { label: 'Library', path: '/library', icon: BookOpen },
-  { label: 'Projects', path: '/projects', icon: Layers },
-  { label: 'Builder', path: '/builder', icon: Wand2 },
-  { label: 'Text to Speech', path: '/tts', icon: Mic2 },
-  { label: 'Voice', path: '/voice', icon: Mic },
+  { label: 'New Chat', path: '/chat', icon: RiMessage3Line },
+  { label: 'Images', path: '/images', icon: RiImageLine },
+  { label: 'Library', path: '/library', icon: RiBookOpenLine },
+  { label: 'Projects', path: '/projects', icon: RiStackLine },
+  { label: 'Builder', path: '/builder', icon: RiMagicLine },
+  { label: 'Text to Speech', path: '/tts', icon: RiMic2Line },
+  { label: 'Voice', path: '/voice', icon: RiMicLine },
 ];
 
 const profileMenu = [
-  { icon: Zap, label: 'Upgrade Plan', desc: null, path: null, accent: true },
-  { icon: Bell, label: 'Notifications', desc: null, path: '/notifications' },
-  { icon: User, label: 'Account', desc: null, path: '/account' },
-  { icon: Settings, label: 'Settings', desc: null, path: '/settings' },
-  { icon: HelpCircle, label: 'Help', desc: null, path: '/help', chevron: true },
+  { icon: RiFlashlightLine, label: 'Upgrade Plan', path: null, accent: true, chevron: false },
+  { icon: RiBellLine, label: 'Notifications', path: '/notifications', accent: false, chevron: false },
+  { icon: RiUserLine, label: 'Account', path: '/account', accent: false, chevron: false },
+  { icon: RiSettings4Line, label: 'Settings', path: '/settings', accent: false, chevron: false },
+  { icon: RiQuestionLine, label: 'Help', path: '/help', accent: false, chevron: true },
 ];
 
 function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }> }; collapsed: boolean }) {
@@ -80,7 +93,6 @@ export default function MainLayout() {
   const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Close popup on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
@@ -107,7 +119,7 @@ export default function MainLayout() {
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.35)' }}
           >
-            <Sparkles size={15} className="text-white" />
+            <RiSparklingLine size={15} className="text-white" />
           </div>
           <AnimatePresence initial={false}>
             {!collapsed && (
@@ -150,7 +162,7 @@ export default function MainLayout() {
                   boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
                 }}
               >
-                {/* User row at top */}
+                {/* User row */}
                 <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: '1px solid rgba(226,232,240,0.7)' }}>
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[13px] font-bold flex-shrink-0"
@@ -162,7 +174,7 @@ export default function MainLayout() {
                     <p className="text-[13px] font-bold text-[#0F172A] truncate">Alex Reed</p>
                     <p className="text-[11px] text-[#94A3B8]">Pro Plan</p>
                   </div>
-                  <ChevronRight size={14} className="text-[#CBD5E1] flex-shrink-0" />
+                  <RiArrowRightSLine size={16} className="text-[#CBD5E1] flex-shrink-0" />
                 </div>
 
                 {/* Menu items */}
@@ -172,20 +184,14 @@ export default function MainLayout() {
                     return (
                       <button
                         key={item.label}
-                        onClick={() => {
-                          setProfileOpen(false);
-                          if (item.path) navigate(item.path);
-                        }}
+                        onClick={() => { setProfileOpen(false); if (item.path) navigate(item.path); }}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all hover:bg-[#F8FAFC]"
                       >
-                        <Icon
-                          size={15}
-                          className={item.accent ? 'text-[#7C3AED]' : 'text-[#64748B]'}
-                        />
+                        <Icon size={15} className={item.accent ? 'text-[#7C3AED]' : 'text-[#64748B]'} />
                         <span className={`flex-1 text-[13px] font-medium ${item.accent ? 'text-[#7C3AED] font-semibold' : 'text-[#0F172A]'}`}>
                           {item.label}
                         </span>
-                        {item.chevron && <ChevronRight size={12} className="text-[#CBD5E1]" />}
+                        {item.chevron && <RiArrowRightSLine size={14} className="text-[#CBD5E1]" />}
                       </button>
                     );
                   })}
@@ -194,7 +200,7 @@ export default function MainLayout() {
                 {/* Log out */}
                 <div style={{ borderTop: '1px solid rgba(226,232,240,0.7)' }}>
                   <button className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[#FEF2F2]">
-                    <LogOut size={15} className="text-[#EF4444]" />
+                    <RiLogoutBoxLine size={15} className="text-[#EF4444]" />
                     <span className="text-[13px] font-medium text-[#EF4444]">Log out</span>
                   </button>
                 </div>
@@ -202,15 +208,14 @@ export default function MainLayout() {
             )}
           </AnimatePresence>
 
-          {/* Profile row — div so no nested-button violation */}
+          {/* Profile row */}
           <div className="flex items-center gap-2 px-2 py-2">
-            {/* Avatar + name — clickable to open popup */}
             <div
               role="button"
               tabIndex={0}
               onClick={() => setProfileOpen(!profileOpen)}
               onKeyDown={e => e.key === 'Enter' && setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 flex-1 min-w-0 rounded-xl cursor-pointer transition-all hover:bg-[#F8FAFC] px-0 py-0"
+              className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer"
             >
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
@@ -233,13 +238,11 @@ export default function MainLayout() {
                 )}
               </AnimatePresence>
             </div>
-
-            {/* Collapse toggle — separate element, no nesting */}
             <button
               onClick={() => setCollapsed(!collapsed)}
               className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all"
             >
-              {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
+              {collapsed ? <RiArrowRightSLine size={15} /> : <RiArrowLeftSLine size={15} />}
             </button>
           </div>
         </div>
@@ -247,11 +250,9 @@ export default function MainLayout() {
 
       {/* ─── Main area ─── */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
-        {/* Header */}
         <header className="flex items-center justify-between px-6 h-14 flex-shrink-0" style={{ background: '#fff', borderBottom: '1px solid rgba(226,232,240,0.8)' }}>
           <div className="relative flex-1 max-w-sm">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+            <RiSearchLine size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
             <input
               type="text"
               placeholder="Search conversations, projects, files..."
@@ -261,33 +262,25 @@ export default function MainLayout() {
               onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.8)'; e.target.style.background = '#F8FAFC'; }}
             />
           </div>
-
           <div className="flex items-center gap-2">
-            {/* Model indicator */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-[13px] font-medium text-[#475569]" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               GPT-4o
             </div>
-
-            {/* Notifications */}
             <NavLink to="/notifications" className="relative p-2.5 rounded-xl text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all">
-              <Bell size={16} />
+              <RiBellLine size={16} />
               <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-blue-500 rounded-full" />
             </NavLink>
-
-            {/* New chat CTA */}
             <NavLink
               to="/chat"
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all"
               style={{ background: 'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}
             >
-              <Sparkles size={13} />
+              <RiSparklingLine size={13} />
               New Chat
             </NavLink>
           </div>
         </header>
-
-        {/* Page content */}
         <main className="flex-1 overflow-hidden">
           <Outlet />
         </main>

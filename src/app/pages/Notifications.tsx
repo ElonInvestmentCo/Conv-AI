@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Bell, CheckCheck, Bot, Zap, MessageSquare, AlertCircle,
-  CheckCircle2, Image, FileText, Sparkles, Trash2, Settings
-} from 'lucide-react';
+  RiBellLine,
+  RiCheckDoubleLine,
+  RiRobot2Line,
+  RiFlashlightLine,
+  RiMessage3Line,
+  RiErrorWarningLine,
+  RiCheckboxCircleLine,
+  RiImageLine,
+  RiFileTextLine,
+  RiSparklingLine,
+  RiDeleteBinLine,
+  RiSettings4Line,
+} from '@remixicon/react';
+
+const STORAGE_KEY = 'convai_notifications';
 
 type Notification = {
   id: number;
@@ -26,15 +38,13 @@ const initialNotifs: Notification[] = [
 ];
 
 const typeConfig = {
-  agent: { icon: Bot, color: '#7C3AED', bg: '#F5F3FF' },
-  automation: { icon: Zap, color: '#D97706', bg: '#FFFBEB' },
-  chat: { icon: MessageSquare, color: '#2563EB', bg: '#EFF6FF' },
-  system: { icon: Sparkles, color: '#0891B2', bg: '#ECFEFF' },
-  image: { icon: Image, color: '#DB2777', bg: '#FDF2F8' },
-  error: { icon: AlertCircle, color: '#EF4444', bg: '#FEF2F2' },
+  agent:      { icon: RiRobot2Line,       color: '#7C3AED', bg: '#F5F3FF' },
+  automation: { icon: RiFlashlightLine,   color: '#D97706', bg: '#FFFBEB' },
+  chat:       { icon: RiMessage3Line,     color: '#2563EB', bg: '#EFF6FF' },
+  system:     { icon: RiSparklingLine,    color: '#0891B2', bg: '#ECFEFF' },
+  image:      { icon: RiImageLine,        color: '#DB2777', bg: '#FDF2F8' },
+  error:      { icon: RiErrorWarningLine, color: '#EF4444', bg: '#FEF2F2' },
 };
-
-const STORAGE_KEY = 'convai_notifications';
 
 function loadNotifs(): Notification[] {
   try {
@@ -45,9 +55,7 @@ function loadNotifs(): Notification[] {
 }
 
 function saveNotifs(notifs: Notification[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notifs));
-  } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notifs)); } catch {}
 }
 
 export default function Notifications() {
@@ -55,7 +63,6 @@ export default function Notifications() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
   const update = (next: Notification[]) => { setNotifs(next); saveNotifs(next); };
-
   const markAllRead = () => update(notifs.map(n => ({ ...n, read: true })));
   const markRead = (id: number) => update(notifs.map(n => n.id === id ? { ...n, read: true } : n));
   const dismiss = (id: number) => update(notifs.filter(n => n.id !== id));
@@ -67,7 +74,6 @@ export default function Notifications() {
     <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
       <div className="max-w-3xl mx-auto p-6 space-y-4">
 
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -81,13 +87,12 @@ export default function Notifications() {
           <div className="flex items-center gap-2">
             {unreadCount > 0 && (
               <button onClick={markAllRead} className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] text-[13px] font-semibold text-[#2563EB] transition-all" style={{ background: '#EFF6FF' }}>
-                <CheckCheck size={14} /> Mark all read
+                <RiCheckDoubleLine size={14} /> Mark all read
               </button>
             )}
           </div>
         </div>
 
-        {/* Filter */}
         <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: '#F1F5F9' }}>
           {(['all', 'unread'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
@@ -97,7 +102,6 @@ export default function Notifications() {
           ))}
         </div>
 
-        {/* Notif list */}
         <div className="space-y-2">
           <AnimatePresence>
             {filtered.map(notif => {
@@ -131,11 +135,11 @@ export default function Notifications() {
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                     {!notif.read && (
                       <button onClick={e => { e.stopPropagation(); markRead(notif.id); }} className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-[#2563EB] hover:bg-[#EFF6FF] transition-all">
-                        <CheckCircle2 size={13} />
+                        <RiCheckboxCircleLine size={13} />
                       </button>
                     )}
                     <button onClick={e => { e.stopPropagation(); dismiss(notif.id); }} className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-red-500 hover:bg-red-50 transition-all">
-                      <Trash2 size={13} />
+                      <RiDeleteBinLine size={13} />
                     </button>
                   </div>
                 </motion.div>
@@ -145,7 +149,7 @@ export default function Notifications() {
 
           {filtered.length === 0 && (
             <div className="text-center py-16">
-              <Bell size={32} className="text-[#CBD5E1] mx-auto mb-3" />
+              <RiBellLine size={32} className="text-[#CBD5E1] mx-auto mb-3" />
               <p className="text-[15px] font-semibold text-[#475569]">
                 {filter === 'unread' ? 'No unread notifications' : 'No notifications'}
               </p>
