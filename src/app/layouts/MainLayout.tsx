@@ -7,7 +7,6 @@ import {
 
 
   Mic2,
-  Mic,
   Bell,
   Settings,
   User,
@@ -86,7 +85,6 @@ const mainNav = [
   { label: 'Projects', path: '/projects', icon: ProjectsIcon },
   { label: 'Builder', path: '/builder', icon: BuilderIcon },
   { label: 'Text to Speech', path: '/tts', icon: TTSIcon },
-  { label: 'Voice', path: '/voice', icon: Mic },
 ];
 
 const profileMenu = [
