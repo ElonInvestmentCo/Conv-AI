@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Outlet, NavLink } from 'react-router';
+import React, { useState, useRef, useEffect } from 'react';
+import { Outlet, NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, MessageSquare, Image, BookOpen, Layers,
   Wand2, Mic2, Mic, Bell, Settings, User, HelpCircle,
-  ChevronLeft, ChevronRight, Search
+  ChevronLeft, ChevronRight,
+  Search, LogOut, Zap
 } from 'lucide-react';
 
 const mainNav = [
@@ -17,11 +18,12 @@ const mainNav = [
   { label: 'Voice', path: '/voice', icon: Mic },
 ];
 
-const bottomNav = [
-  { label: 'Notifications', path: '/notifications', icon: Bell },
-  { label: 'Account', path: '/account', icon: User },
-  { label: 'Settings', path: '/settings', icon: Settings },
-  { label: 'Help', path: '/help', icon: HelpCircle },
+const profileMenu = [
+  { icon: Zap, label: 'Upgrade Plan', desc: null, path: null, accent: true },
+  { icon: Bell, label: 'Notifications', desc: null, path: '/notifications' },
+  { icon: User, label: 'Account', desc: null, path: '/account' },
+  { icon: Settings, label: 'Settings', desc: null, path: '/settings' },
+  { icon: HelpCircle, label: 'Help', desc: null, path: '/help', chevron: true },
 ];
 
 function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }> }; collapsed: boolean }) {
@@ -74,6 +76,20 @@ function NavItem({ item, collapsed }: { item: { label: string; path: string; ico
 
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  // Close popup on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    if (profileOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [profileOpen]);
 
   return (
     <div className="flex h-screen w-full overflow-hidden" style={{ background: '#F7F9FC', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -116,36 +132,109 @@ export default function MainLayout() {
           ))}
         </div>
 
-        {/* Bottom nav */}
-        <div className="px-2 py-2 flex-shrink-0 space-y-0.5" style={{ borderTop: '1px solid rgba(226,232,240,0.5)' }}>
-          {bottomNav.map((item) => (
-            <NavItem key={item.path} item={item} collapsed={collapsed} />
-          ))}
-        </div>
+        {/* User profile + popup */}
+        <div className="px-2 py-2 flex-shrink-0 relative" style={{ borderTop: '1px solid rgba(226,232,240,0.5)' }} ref={profileRef}>
 
-        {/* User + collapse toggle */}
-        <div className="px-2 py-2 flex-shrink-0" style={{ borderTop: '1px solid rgba(226,232,240,0.5)' }}>
+          {/* Profile popup */}
+          <AnimatePresence>
+            {profileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                className="absolute bottom-full left-2 right-2 mb-2 rounded-[16px] overflow-hidden z-50"
+                style={{
+                  background: '#fff',
+                  border: '1px solid rgba(226,232,240,0.9)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+                }}
+              >
+                {/* User row at top */}
+                <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: '1px solid rgba(226,232,240,0.7)' }}>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[13px] font-bold flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}
+                  >
+                    A
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-bold text-[#0F172A] truncate">Alex Reed</p>
+                    <p className="text-[11px] text-[#94A3B8]">Pro Plan</p>
+                  </div>
+                  <ChevronRight size={14} className="text-[#CBD5E1] flex-shrink-0" />
+                </div>
+
+                {/* Menu items */}
+                <div className="py-1.5">
+                  {profileMenu.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.label}
+                        onClick={() => {
+                          setProfileOpen(false);
+                          if (item.path) navigate(item.path);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all hover:bg-[#F8FAFC]"
+                      >
+                        <Icon
+                          size={15}
+                          className={item.accent ? 'text-[#7C3AED]' : 'text-[#64748B]'}
+                        />
+                        <span className={`flex-1 text-[13px] font-medium ${item.accent ? 'text-[#7C3AED] font-semibold' : 'text-[#0F172A]'}`}>
+                          {item.label}
+                        </span>
+                        {item.chevron && <ChevronRight size={12} className="text-[#CBD5E1]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Log out */}
+                <div style={{ borderTop: '1px solid rgba(226,232,240,0.7)' }}>
+                  <button className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[#FEF2F2]">
+                    <LogOut size={15} className="text-[#EF4444]" />
+                    <span className="text-[13px] font-medium text-[#EF4444]">Log out</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Profile row — div so no nested-button violation */}
           <div className="flex items-center gap-2 px-2 py-2">
+            {/* Avatar + name — clickable to open popup */}
             <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}
+              role="button"
+              tabIndex={0}
+              onClick={() => setProfileOpen(!profileOpen)}
+              onKeyDown={e => e.key === 'Enter' && setProfileOpen(!profileOpen)}
+              className="flex items-center gap-2 flex-1 min-w-0 rounded-xl cursor-pointer transition-all hover:bg-[#F8FAFC] px-0 py-0"
             >
-              A
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}
+              >
+                A
+              </div>
+              <AnimatePresence initial={false}>
+                {!collapsed && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="flex-1 overflow-hidden"
+                  >
+                    <p className="text-[13px] font-semibold text-[#0F172A] whitespace-nowrap">Alex Reed</p>
+                    <p className="text-[11px] text-[#94A3B8] whitespace-nowrap">Pro Plan</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <AnimatePresence initial={false}>
-              {!collapsed && (
-                <motion.div
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className="flex-1 overflow-hidden"
-                >
-                  <p className="text-[13px] font-semibold text-[#0F172A] whitespace-nowrap">Alex Reed</p>
-                  <p className="text-[11px] text-[#94A3B8] whitespace-nowrap">Pro Plan</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+
+            {/* Collapse toggle — separate element, no nesting */}
             <button
               onClick={() => setCollapsed(!collapsed)}
               className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all"

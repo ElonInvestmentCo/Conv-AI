@@ -278,9 +278,23 @@ export default function Chat() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setVoiceMode(!voiceMode)}
-                  className={`p-2 rounded-xl transition-all ${voiceMode ? 'bg-red-50 text-red-500' : 'text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC]'}`}
+                  className={`flex items-center gap-1 px-2 py-2 rounded-xl transition-all ${voiceMode ? 'bg-blue-50' : 'text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC]'}`}
                 >
-                  {voiceMode ? <MicOff size={16} /> : <Mic size={16} />}
+                  {voiceMode ? (
+                    <div className="flex items-center gap-[3px]">
+                      {[0, 1, 2, 3, 4].map(i => (
+                        <motion.div
+                          key={i}
+                          className="w-[3px] rounded-full bg-blue-400"
+                          animate={{ height: [8, 20 + (i % 3) * 6, 8] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.12, ease: 'easeInOut' }}
+                          style={{ height: 8 }}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <Mic size={16} />
+                  )}
                 </button>
                 <button
                   onClick={() => send()}
