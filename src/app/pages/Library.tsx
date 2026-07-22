@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Search, SlidersHorizontal, LayoutGrid, List,
   Plus, ChevronDown, ChevronUp, ChevronRight,
-  FileText, Image, File, MoreHorizontal,
-  Download, Share2, Trash2, Star,
+  MoreHorizontal, Download, Share2, Trash2, Star,
 } from 'lucide-react';
 
 type FilterTab = 'All' | 'Images' | 'Documents';
@@ -20,7 +19,7 @@ interface LibFile {
   size: string;
   sizeKb: number;
   starred: boolean;
-  thumb: string; // gradient for placeholder
+  thumb: string;
 }
 
 const files: LibFile[] = [
@@ -32,9 +31,9 @@ const files: LibFile[] = [
   { id: 6,  name: 'Speech bubble with gradient sound waves.png', type: 'image', modified: 'Jul 21, 4:25 PM', modifiedTs: 4,  size: '1.30 MB', sizeKb: 1300, starred: true,  thumb: 'linear-gradient(135deg,#a78bfa,#60a5fa)' },
   { id: 7,  name: 'Gradient speech bubble with sound waves.png', type: 'image', modified: 'Jul 21, 4:23 PM', modifiedTs: 3,  size: '1.32 MB', sizeKb: 1320, starred: false, thumb: 'linear-gradient(135deg,#fb7185,#c084fc)' },
   { id: 8,  name: 'AI conversation logo with speech bubble.png', type: 'image', modified: 'Jul 21, 4:22 PM', modifiedTs: 3,  size: '692 KB', sizeKb: 692,  starred: false, thumb: 'linear-gradient(135deg,#34d399,#60a5fa)' },
-  { id: 9,  name: 'gemini_sparkle_aurora_33f86dc0c0257da337c63.svg', type: 'svg', modified: 'Jul 21, 4:21 PM', modifiedTs: 2, size: '27.1 KB', sizeKb: 27,  starred: false, thumb: 'linear-gradient(135deg,#fbbf24,#f97316)' },
-  { id: 10, name: 'b56486b7-ba82-40c4-b775-477df9e5733b.png', type: 'image',    modified: 'Jul 21, 12:05 PM', modifiedTs: 1, size: '145 KB', sizeKb: 145,  starred: false, thumb: 'linear-gradient(135deg,#818cf8,#6ee7b7)' },
-  { id: 11, name: 'AI workflow diagram.pdf',                   type: 'document', modified: 'Jul 21, 10:00 AM', modifiedTs: 0, size: '14.2 MB', sizeKb: 14200, starred: true, thumb: '' },
+  { id: 9,  name: 'gemini_sparkle_aurora_33f86dc0c0257da337c63.svg', type: 'svg', modified: 'Jul 21, 4:21 PM', modifiedTs: 2, size: '27.1 KB', sizeKb: 27, starred: false, thumb: 'linear-gradient(135deg,#fbbf24,#f97316)' },
+  { id: 10, name: 'b56486b7-ba82-40c4-b775-477df9e5733b.png', type: 'image',    modified: 'Jul 21, 12:05 PM', modifiedTs: 1, size: '145 KB', sizeKb: 145, starred: false,  thumb: 'linear-gradient(135deg,#818cf8,#6ee7b7)' },
+  { id: 11, name: 'AI workflow diagram.pdf',                   type: 'document', modified: 'Jul 21, 10:00 AM', modifiedTs: 0, size: '14.2 MB', sizeKb: 14200, starred: true,  thumb: '' },
   { id: 12, name: 'Application workspace terminology.docx',    type: 'document', modified: 'Jul 21, 9:30 AM',  modifiedTs: 0, size: '80.6 KB', sizeKb: 80,   starred: false, thumb: '' },
   { id: 13, name: 'Branch - AI workflow diagram.pdf',          type: 'document', modified: 'Jul 21, 9:00 AM',  modifiedTs: 0, size: '14.2 MB', sizeKb: 14200, starred: false, thumb: '' },
   { id: 14, name: 'Dev Server Setup Plan.txt',                 type: 'document', modified: 'Jul 20',           modifiedTs: 0, size: '34.1 KB', sizeKb: 34,   starred: false, thumb: '' },
@@ -42,26 +41,20 @@ const files: LibFile[] = [
 
 const docColor = (name: string) => {
   const ext = name.split('.').pop()?.toLowerCase();
-  if (ext === 'pdf') return { color: '#EF4444', bg: '#FFF1F2' };
-  if (ext === 'docx' || ext === 'doc') return { color: '#2563EB', bg: '#EFF6FF' };
-  if (ext === 'txt') return { color: '#64748B', bg: '#F8FAFC' };
-  return { color: '#64748B', bg: '#F8FAFC' };
+  if (ext === 'pdf')               return { color: '#EF4444', bg: 'rgba(239,68,68,0.1)' };
+  if (ext === 'docx' || ext === 'doc') return { color: '#6366F1', bg: 'rgba(99,102,241,0.1)' };
+  return { color: '#475569', bg: '#1A1D24' };
 };
 
 function FileThumb({ file, size = 32 }: { file: LibFile; size?: number }) {
   if (file.type === 'image' || file.type === 'svg') {
-    return (
-      <div
-        className="rounded-lg flex-shrink-0"
-        style={{ width: size, height: size, background: file.thumb }}
-      />
-    );
+    return <div className="rounded-lg flex-shrink-0" style={{ width: size, height: size, background: file.thumb }} />;
   }
   const { color, bg } = docColor(file.name);
   const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
   return (
     <div className="rounded-lg flex-shrink-0 flex items-center justify-center" style={{ width: size, height: size, background: bg }}>
-      <span className="text-[9px] font-[800]" style={{ color }}>{ext.slice(0, 3)}</span>
+      <span className="text-[9px] font-bold" style={{ color }}>{ext.slice(0, 3)}</span>
     </div>
   );
 }
@@ -77,16 +70,16 @@ export default function Library() {
 
   const filtered = files
     .filter(f => {
-      if (tab === 'Images') return f.type === 'image' || f.type === 'svg';
+      if (tab === 'Images')    return f.type === 'image' || f.type === 'svg';
       if (tab === 'Documents') return f.type === 'document';
       return true;
     })
     .filter(f => !search || f.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       let diff = 0;
-      if (sortKey === 'name') diff = a.name.localeCompare(b.name);
+      if (sortKey === 'name')     diff = a.name.localeCompare(b.name);
       if (sortKey === 'modified') diff = a.modifiedTs - b.modifiedTs;
-      if (sortKey === 'size') diff = a.sizeKb - b.sizeKb;
+      if (sortKey === 'size')     diff = a.sizeKb - b.sizeKb;
       return sortDir === 'asc' ? diff : -diff;
     });
 
@@ -97,53 +90,47 @@ export default function Library() {
 
   const SortIcon = ({ k }: { k: SortKey }) => {
     if (sortKey !== k) return <span className="w-3" />;
-    return sortDir === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
+    return sortDir === 'asc' ? <ChevronUp size={11} /> : <ChevronDown size={11} />;
   };
 
   return (
-    <div className="h-full overflow-y-auto" style={{ background: '#F8FAFC' }}>
+    <div className="h-full overflow-y-auto" style={{ background: '#0A0C10' }}>
       <div className="max-w-5xl mx-auto p-6">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h1 className="text-[22px] font-[800] tracking-[-0.02em]" style={{ color: '#0F172A' }}>Library</h1>
+          <h1 className="text-[20px] font-semibold text-[#F8FAFC] tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Library</h1>
           <div className="flex items-center gap-3">
-            {/* Search */}
             <div className="relative">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
+              <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E3440]" />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search files…"
                 className="pl-8 pr-3 py-2 text-[13px] rounded-xl outline-none w-52 transition-all"
-                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', color: '#0F172A' }}
-                onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
-                onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.9)'; }}
+                style={{ background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
+                onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
+                onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
               />
             </div>
-            {/* New button */}
-            <button
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-[600] text-white transition-all"
-              style={{ background: 'linear-gradient(135deg,#0F172A,#1E293B)', boxShadow: '0 2px 8px rgba(15,23,42,0.2)' }}
-            >
-              New
-              <ChevronDown size={13} />
+            <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]" style={{ background: '#6366F1' }}>
+              New <ChevronDown size={13} />
             </button>
           </div>
         </div>
 
         {/* Filter tabs + view controls */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)' }}>
+          <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: '#111318', border: '1px solid #1E222A' }}>
             {(['All', 'Images', 'Documents'] as FilterTab[]).map(t => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className="px-3.5 py-1.5 rounded-lg text-[12.5px] font-[600] transition-all"
+                className="px-3.5 py-1.5 rounded-lg text-[12px] font-semibold transition-all"
                 style={{
-                  background: tab === t ? '#0F172A' : 'transparent',
-                  color: tab === t ? '#fff' : '#64748B',
+                  background: tab === t ? '#6366F1' : 'transparent',
+                  color: tab === t ? '#fff' : '#475569',
                 }}
               >
                 {t}
@@ -151,55 +138,53 @@ export default function Library() {
             ))}
           </div>
           <div className="flex items-center gap-1.5">
-            <button className="p-2 rounded-lg text-[#94A3B8] hover:text-[#475569] hover:bg-white transition-all" style={{ border: '1px solid rgba(226,232,240,0.9)' }}>
-              <SlidersHorizontal size={14} />
+            <button className="p-2 rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all" style={{ border: '1px solid #1E222A' }}>
+              <SlidersHorizontal size={13} />
             </button>
             <button
               onClick={() => setView('grid')}
               className="p-2 rounded-lg transition-all"
               style={{
-                background: view === 'grid' ? '#EFF6FF' : 'transparent',
-                color: view === 'grid' ? '#2563EB' : '#94A3B8',
-                border: '1px solid rgba(226,232,240,0.9)',
+                background: view === 'grid' ? 'rgba(99,102,241,0.1)' : 'transparent',
+                color: view === 'grid' ? '#6366F1' : '#475569',
+                border: '1px solid #1E222A',
               }}
             >
-              <LayoutGrid size={14} />
+              <LayoutGrid size={13} />
             </button>
             <button
               onClick={() => setView('list')}
               className="p-2 rounded-lg transition-all"
               style={{
-                background: view === 'list' ? '#EFF6FF' : 'transparent',
-                color: view === 'list' ? '#2563EB' : '#94A3B8',
-                border: '1px solid rgba(226,232,240,0.9)',
+                background: view === 'list' ? 'rgba(99,102,241,0.1)' : 'transparent',
+                color: view === 'list' ? '#6366F1' : '#475569',
+                border: '1px solid #1E222A',
               }}
             >
-              <List size={14} />
+              <List size={13} />
             </button>
           </div>
         </div>
 
         {/* List view */}
         {view === 'list' && (
-          <div className="rounded-2xl overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 1px 4px rgba(15,23,42,0.04)' }}>
-            {/* Table header */}
+          <div className="rounded-2xl overflow-hidden" style={{ background: '#111318', border: '1px solid #1E222A' }}>
             <div
               className="grid px-4 py-2.5"
-              style={{ gridTemplateColumns: '1fr 140px 100px 36px', borderBottom: '1px solid rgba(226,232,240,0.9)', background: '#F8FAFC' }}
+              style={{ gridTemplateColumns: '1fr 140px 100px 36px', borderBottom: '1px solid #1E222A', background: '#0A0C10' }}
             >
-              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em] text-left" style={{ color: '#94A3B8' }} onClick={() => handleSort('name')}>
+              <button className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-left text-[#475569]" onClick={() => handleSort('name')}>
                 Name <SortIcon k="name" />
               </button>
-              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em]" style={{ color: '#94A3B8' }} onClick={() => handleSort('modified')}>
+              <button className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-[#475569]" onClick={() => handleSort('modified')}>
                 Modified <SortIcon k="modified" />
               </button>
-              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em]" style={{ color: '#94A3B8' }} onClick={() => handleSort('size')}>
+              <button className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-[#475569]" onClick={() => handleSort('size')}>
                 Size <SortIcon k="size" />
               </button>
               <div />
             </div>
 
-            {/* Rows */}
             {filtered.map((file, i) => (
               <motion.div
                 key={file.id}
@@ -211,21 +196,17 @@ export default function Library() {
                 className="grid px-4 py-2.5 items-center cursor-pointer transition-all relative"
                 style={{
                   gridTemplateColumns: '1fr 140px 100px 36px',
-                  borderBottom: i < filtered.length - 1 ? '1px solid rgba(226,232,240,0.6)' : 'none',
-                  background: hovered === file.id ? '#F8FAFC' : 'transparent',
+                  borderBottom: i < filtered.length - 1 ? '1px solid #1E222A' : 'none',
+                  background: hovered === file.id ? '#1A1D24' : 'transparent',
                 }}
               >
-                {/* Name + thumb */}
                 <div className="flex items-center gap-3 min-w-0">
-                  <FileThumb file={file} size={30} />
-                  <span className="text-[13px] font-[500] truncate" style={{ color: '#0F172A' }}>{file.name}</span>
-                  {file.starred && <Star size={11} className="flex-shrink-0 fill-amber-400 text-amber-400" />}
+                  <FileThumb file={file} size={28} />
+                  <span className="text-[13px] font-medium truncate text-[#F8FAFC]">{file.name}</span>
+                  {file.starred && <Star size={11} className="flex-shrink-0 fill-[#F59E0B] text-[#F59E0B]" />}
                 </div>
-                {/* Modified */}
-                <span className="text-[12.5px]" style={{ color: '#94A3B8' }}>{file.modified}</span>
-                {/* Size */}
-                <span className="text-[12.5px]" style={{ color: '#94A3B8' }}>{file.size}</span>
-                {/* Actions */}
+                <span className="text-[12px] text-[#475569]">{file.modified}</span>
+                <span className="text-[12px] text-[#475569]">{file.size}</span>
                 <div className="flex justify-end">
                   <AnimatePresence>
                     {hovered === file.id && (
@@ -234,16 +215,14 @@ export default function Library() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={e => { e.stopPropagation(); setActionRow(actionRow === file.id ? null : file.id); }}
-                        className="p-1 rounded-lg transition-all"
-                        style={{ color: '#94A3B8' }}
+                        className="p-1 rounded-lg text-[#475569] hover:text-[#94A3B8] transition-all"
                       >
-                        <MoreHorizontal size={15} />
+                        <MoreHorizontal size={14} />
                       </motion.button>
                     )}
                   </AnimatePresence>
                 </div>
 
-                {/* Context menu */}
                 <AnimatePresence>
                   {actionRow === file.id && (
                     <motion.div
@@ -251,18 +230,18 @@ export default function Library() {
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       className="absolute right-4 top-10 z-10 rounded-xl overflow-hidden"
-                      style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 8px 24px rgba(15,23,42,0.12)', width: 160 }}
+                      style={{ background: '#1A1D24', border: '1px solid #2E3440', boxShadow: '0 12px 40px rgba(0,0,0,0.7)', width: 160 }}
                     >
                       {[
                         { icon: Download, label: 'Download' },
-                        { icon: Share2, label: 'Share' },
-                        { icon: Star, label: file.starred ? 'Unstar' : 'Star' },
-                        { icon: Trash2, label: 'Delete', danger: true },
+                        { icon: Share2,   label: 'Share' },
+                        { icon: Star,     label: file.starred ? 'Unstar' : 'Star' },
+                        { icon: Trash2,   label: 'Delete', danger: true },
                       ].map(action => (
                         <button
                           key={action.label}
-                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] font-[500] transition-all hover:bg-[#F8FAFC] text-left"
-                          style={{ color: action.danger ? '#EF4444' : '#0F172A' }}
+                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12px] font-medium transition-all hover:bg-[#2E3440] text-left"
+                          style={{ color: action.danger ? '#EF4444' : '#94A3B8' }}
                         >
                           <action.icon size={13} />
                           {action.label}
@@ -276,7 +255,7 @@ export default function Library() {
 
             {filtered.length === 0 && (
               <div className="py-16 text-center">
-                <p className="text-[14px] font-[500]" style={{ color: '#94A3B8' }}>No files found</p>
+                <p className="text-[14px] font-medium text-[#475569]">No files found</p>
               </div>
             )}
           </div>
@@ -291,19 +270,19 @@ export default function Library() {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="group rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-md"
-                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)' }}
+                className="group rounded-xl overflow-hidden cursor-pointer transition-all hover:border-[#2E3440]"
+                style={{ background: '#111318', border: '1px solid #1E222A' }}
               >
                 {file.type === 'image' || file.type === 'svg' ? (
                   <div className="w-full h-28" style={{ background: file.thumb }} />
                 ) : (
-                  <div className="w-full h-28 flex items-center justify-center" style={{ background: '#F8FAFC' }}>
+                  <div className="w-full h-28 flex items-center justify-center" style={{ background: '#1A1D24' }}>
                     <FileThumb file={file} size={40} />
                   </div>
                 )}
                 <div className="p-3">
-                  <p className="text-[12px] font-[600] truncate" style={{ color: '#0F172A' }}>{file.name}</p>
-                  <p className="text-[11px] mt-0.5" style={{ color: '#94A3B8' }}>{file.size} · {file.modified}</p>
+                  <p className="text-[12px] font-semibold truncate text-[#F8FAFC]">{file.name}</p>
+                  <p className="text-[11px] mt-0.5 text-[#475569]">{file.size} · {file.modified}</p>
                 </div>
               </motion.div>
             ))}

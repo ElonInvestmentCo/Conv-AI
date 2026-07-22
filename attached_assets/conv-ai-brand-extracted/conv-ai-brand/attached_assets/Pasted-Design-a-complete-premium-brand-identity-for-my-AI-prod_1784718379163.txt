@@ -1,0 +1,331 @@
+Design a complete premium brand identity for my AI product called "Conv AI".
+
+OBJECTIVE
+
+Create a world-class, modern, premium FinTech-inspired AI brand identity that feels original, memorable, trustworthy, and sophisticated.
+
+This is NOT a cryptocurrency brand.
+This is NOT a banking brand.
+This is NOT a trading platform.
+
+It is an AI-first platform with a premium FinTech aesthetic.
+
+The visual quality should be comparable to companies like Stripe, Linear, Notion, Mercury, Ramp, Vercel, OpenAI, Anthropic, Perplexity, and modern enterprise SaaS products.
+
+The brand should communicate:
+
+• Intelligence
+• Trust
+• Precision
+• Simplicity
+• Speed
+• Innovation
+• Professionalism
+• Premium quality
+
+Avoid anything that looks generic, cheap, playful, or template-based.
+
+--------------------------------------------------
+
+DESIGN STYLE
+
+Use modern minimalist branding.
+
+Requirements:
+
+• Geometric
+• Flat design
+• Timeless
+• Elegant
+• Highly recognizable
+• Excellent negative space
+• Perfect proportions
+• Balanced symmetry
+• Scalable
+• Works at 16px as well as on billboards
+
+Avoid:
+
+• AI brain icons
+• Robot heads
+• Chat bubbles
+• Circuit boards
+• Hexagons
+• Lightning bolts
+• Generic gradients
+• Overly complex symbols
+• Stock logos
+
+Create something unique.
+
+--------------------------------------------------
+
+APP ICON
+
+Design a premium application icon.
+
+Requirements:
+
+• Simple geometric mark
+• Instantly recognizable
+• Works on macOS
+• Works on Windows
+• Works on Android
+• Works on iOS
+• Perfect favicon
+• Perfect browser tab icon
+• Rounded corner safe
+• Looks premium in dark mode
+• Looks premium in light mode
+• Vector-first design
+
+Generate:
+
+• 1024×1024 master
+• 512×512
+• 256×256
+• 192×192
+• 180×180
+• 96×96
+• 64×64
+• 48×48
+• 32×32
+• 16×16
+
+Transparent background versions where appropriate.
+
+--------------------------------------------------
+
+WORDMARK
+
+Create a custom wordmark.
+
+Requirements:
+
+• Custom typography
+• Modern geometric sans-serif
+• Premium kerning
+• Balanced spacing
+• Professional weight
+• Highly legible
+• Desktop-first
+• Works in navigation bars
+• Works in headers
+• Works in splash screens
+• Works in marketing pages
+
+Produce:
+
+Conv AI
+
+Do not simply use an existing font.
+
+Customize the typography.
+
+--------------------------------------------------
+
+LOGO SYSTEM
+
+Create:
+
+• Primary logo
+• Secondary logo
+• Icon only
+• Wordmark only
+• Horizontal logo
+• Vertical logo
+• Monochrome
+• White version
+• Black version
+• Dark mode version
+• Light mode version
+• Favicon version
+• App icon version
+
+--------------------------------------------------
+
+COLOR SYSTEM
+
+Create a premium brand color palette.
+
+Include:
+
+Primary
+
+Secondary
+
+Accent
+
+Neutral
+
+Background
+
+Surface
+
+Border
+
+Success
+
+Warning
+
+Error
+
+Muted
+
+Text Primary
+
+Text Secondary
+
+Text Tertiary
+
+Provide HEX values for every color.
+
+The palette should feel premium and modern with strong accessibility and sufficient contrast for dark and light themes.
+
+--------------------------------------------------
+
+TYPOGRAPHY
+
+Recommend:
+
+• Brand font
+• Heading font
+• Body font
+• UI font
+• Monospace font
+
+Use modern, high-quality, widely available fonts suitable for SaaS applications.
+
+--------------------------------------------------
+
+ICON STYLE
+
+Design an icon style guide.
+
+Requirements:
+
+• Thin modern outline icons
+• Consistent stroke width
+• Rounded corners
+• Premium appearance
+• Lucide-compatible sizing
+• Desktop optimized
+
+--------------------------------------------------
+
+DESIGN TOKENS
+
+Generate design tokens for:
+
+Spacing
+
+Border radius
+
+Shadows
+
+Elevation
+
+Blur
+
+Opacity
+
+Transitions
+
+Animation duration
+
+Typography scale
+
+Grid
+
+Container widths
+
+Button heights
+
+Input heights
+
+Sidebar spacing
+
+Navigation spacing
+
+Chat composer spacing
+
+--------------------------------------------------
+
+BRAND GUIDELINES
+
+Create rules for:
+
+Logo spacing
+
+Minimum size
+
+Clear space
+
+Incorrect usage
+
+Color usage
+
+Typography usage
+
+Background usage
+
+Accessibility
+
+Dark mode
+
+Light mode
+
+--------------------------------------------------
+
+EXPORTS
+
+Create production-ready assets for:
+
+• Website
+• Desktop application
+• Mobile application
+• Browser favicon
+• PWA
+• Social media
+• GitHub repository
+• Documentation
+• Marketing website
+• Email signature
+• Loading screen
+• Splash screen
+
+--------------------------------------------------
+
+IMPLEMENTATION
+
+Implement the complete brand identity throughout the application.
+
+Update:
+
+• Navbar
+• Sidebar
+• Login
+• Register
+• Splash screen
+• Browser favicon
+• PWA icons
+• Metadata
+• Open Graph image
+• Loading screen
+• Empty states
+• AI chat interface
+• Marketing pages
+
+Ensure every page consistently reflects the new Conv AI brand identity.
+
+--------------------------------------------------
+
+QUALITY STANDARD
+
+Do not use placeholder graphics.
+
+Do not copy existing company logos.
+
+Create an original, production-ready brand identity that looks like it was designed by a top-tier SaaS branding agency.
+
+Every asset should be vector-first, pixel-perfect, scalable, consistent, and suitable for immediate production use.

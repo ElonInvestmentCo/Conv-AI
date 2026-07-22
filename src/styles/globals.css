@@ -11,8 +11,8 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #F7F9FC;
-  color: #0F172A;
+  background: #0A0C10;
+  color: #F8FAFC;
   margin: 0;
   padding: 0;
 }
@@ -26,16 +26,16 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E2E8F0;
+  background: #1E222A;
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #CBD5E1;
+  background: #2E3440;
 }
 
 /* Focus visible ring */
 :focus-visible {
-  outline: 2px solid #3B82F6;
+  outline: 2px solid #6366F1;
   outline-offset: 2px;
 }
 
@@ -44,4 +44,14 @@ a, button {
   transition-property: color, background-color, border-color, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+/* Range input accent */
+input[type="range"] {
+  accent-color: #6366F1;
+}
+
+/* Select dark style */
+select {
+  color-scheme: dark;
 }

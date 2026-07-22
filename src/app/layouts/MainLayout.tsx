@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles,
   SquarePen,
   Mic2,
   Bell,
@@ -14,87 +13,40 @@ import {
   Search,
   LogOut,
   Zap,
+  Image,
+  Library,
+  FolderOpen,
+  LayoutDashboard,
+  FileAudio,
 } from 'lucide-react';
 
-function ImagesIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvcHktaW1hZ2UtaWNvbiBsdWNpZGUtY29weS1pbWFnZSI+PHBhdGggZD0iTTQgMTZhMiAyIDAgMCAxLTItMlY0YTIgMiAwIDAgMSAyLTJoMTBhMiAyIDAgMCAxIDIgMiIvPjxyZWN0IHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgeD0iOCIgeT0iOCIgcng9IjIiLz48Y2lyY2xlIGN4PSIxNCIgY3k9IjE0IiByPSIyIi8+PHBhdGggZD0ibTEzLjQgMjIgNC43LTMuOWMuOC0uOCAyLS44IDIuOCAwbDEuMSAxLjEiLz48L3N2Zz4="
-      width={24}
-      height={24}
-      alt="Images"
-      className={className}
-    />
-  );
-}
-
-function LibraryIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpYnJhcnktYmlnLWljb24gbHVjaWRlLWxpYnJhcnktYmlnIj48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjEiLz48cGF0aCBkPSJNNyAzdjE4Ii8+PHBhdGggZD0iTTIwLjQgMTguOWMuMi41LS4xIDEuMS0uNiAxLjNsLTEuOS43Yy0uNS4yLTEuMS0uMS0xLjMtLjZMMTEuMSA1LjFjLS4yLS41LjEtMS4xLjYtMS4zbDEuOS0uN2MuNS0uMiAxLjEuMSAxLjMuNloiLz48L3N2Zz4="
-      width={24}
-      height={24}
-      alt="Library"
-      className={className}
-    />
-  );
-}
-
-function ProjectsIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZvbGRlci1jbG9zZWQtaWNvbiBsdWNpZGUtZm9sZGVyLWNsb3NlZCI+PHBhdGggZD0iTTIwIDIwYTIgMiAwIDAgMCAyLTJWOGEyIDIgMCAwIDAtMi0yaC03LjlhMiAyIDAgMCAxLTEuNjktLjlMOS42IDMuOUEyIDIgMCAwIDAgNy45MyAzSDRhMiAyIDAgMCAwLTIgMnYxM2EyIDIgMCAwIDAgMiAyWiIvPjxwYXRoIGQ9Ik0yIDEwaDIwIi8+PC9zdmc+"
-      width={24}
-      height={24}
-      alt="Projects"
-      className={className}
-    />
-  );
-}
-
-function TTSIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZpbGUtc2lnbmFsLWljb24gbHVjaWRlLWZpbGUtc2lnbmFsIj48cGF0aCBkPSJNNiAyMmEyIDIgMCAwIDEtMi0yVjRhMiAyIDAgMCAxIDItMmg4YTIuNCAyLjQgMCAwIDEgMS43MDQuNzA2bDMuNTg4IDMuNTg4QTIuNCAyLjQgMCAwIDEgMjAgOHYxMmEyIDIgMCAwIDEtMiAyeiIvPjxwYXRoIGQ9Ik0xNCAydjVhMSAxIDAgMCAwIDEgMWg1Ii8+PHBhdGggZD0iTTggMTVoLjAxIi8+PHBhdGggZD0iTTExLjUgMTMuNWEyLjUgMi41IDAgMCAxIDAgMyIvPjxwYXRoIGQ9Ik0xNSAxMmE1IDUgMCAwIDEgMCA2Ii8+PC9zdmc+"
-      width={24}
-      height={24}
-      alt="Text to Speech"
-      className={className}
-    />
-  );
-}
-
-function BuilderIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxheW91dC1kYXNoYm9hcmQtaWNvbiBsdWNpZGUtbGF5b3V0LWRhc2hib2FyZCI+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iOSIgeD0iMyIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI1IiB4PSIxNCIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI5IiB4PSIxNCIgeT0iMTIiIHJ4PSIxIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iNSIgeD0iMyIgeT0iMTYiIHJ4PSIxIi8+PC9zdmc+"
-      width={24}
-      height={24}
-      alt="Builder"
-      className={className}
-    />
-  );
-}
+// ── Conv AI Logo Mark ─────────────────────────────────────────────────────────
+const LogoMark = ({ className = 'w-7 h-7', color = '#F8FAFC' }: { className?: string; color?: string }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill={color} />
+    <path d="M26 22C26 24.2091 24.2091 26 22 26H16V14C16 9.58172 19.5817 6 24 6H26V22Z" fill={color} fillOpacity={0.5} />
+  </svg>
+);
 
 const mainNav = [
-  { label: 'New Chat', path: '/chat', icon: SquarePen, noColor: true },
-  { label: 'Images', path: '/images', icon: ImagesIcon },
-  { label: 'Library', path: '/library', icon: LibraryIcon },
-  { label: 'Projects', path: '/projects', icon: ProjectsIcon },
-  { label: 'Builder', path: '/builder', icon: BuilderIcon },
-  { label: 'Text to Speech', path: '/tts', icon: TTSIcon },
+  { label: 'New Chat',      path: '/chat',      Icon: SquarePen   },
+  { label: 'Images',        path: '/images',    Icon: Image       },
+  { label: 'Library',       path: '/library',   Icon: Library     },
+  { label: 'Projects',      path: '/projects',  Icon: FolderOpen  },
+  { label: 'Builder',       path: '/builder',   Icon: LayoutDashboard },
+  { label: 'Text to Speech',path: '/tts',       Icon: FileAudio   },
 ];
 
 const profileMenu = [
-  { icon: Zap, label: 'Upgrade Plan', path: null, accent: true, chevron: false },
-  { icon: Bell, label: 'Notifications', path: '/notifications', accent: false, chevron: false },
-  { icon: User, label: 'Account', path: '/account', accent: false, chevron: false },
-  { icon: Settings, label: 'Settings', path: '/settings', accent: false, chevron: false },
-  { icon: HelpCircle, label: 'Help', path: '/help', accent: false, chevron: true },
+  { Icon: Zap,         label: 'Upgrade Plan',  path: null,            accent: true  },
+  { Icon: Bell,        label: 'Notifications', path: '/notifications', accent: false },
+  { Icon: User,        label: 'Account',       path: '/account',       accent: false },
+  { Icon: Settings,    label: 'Settings',      path: '/settings',      accent: false },
+  { Icon: HelpCircle,  label: 'Help',          path: '/help',          accent: false, chevron: true },
 ];
 
-function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number; className?: string }>; noColor?: boolean }; collapsed: boolean }) {
-  const Icon = item.icon;
+function NavItem({ item, collapsed }: { item: typeof mainNav[0]; collapsed: boolean }) {
+  const { Icon } = item;
   return (
     <NavLink
       to={item.path}
@@ -102,8 +54,8 @@ function NavItem({ item, collapsed }: { item: { label: string; path: string; ico
       className={({ isActive }) =>
         `group flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 relative
         ${isActive
-          ? 'bg-[#EFF6FF] text-[#1D4ED8]'
-          : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
+          ? 'bg-[#6366F1]/10 text-[#6366F1]'
+          : 'text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8]'
         }`
       }
     >
@@ -112,14 +64,12 @@ function NavItem({ item, collapsed }: { item: { label: string; path: string; ico
           {isActive && (
             <motion.div
               layoutId="sidebarActive"
-              className="absolute inset-0 rounded-xl bg-[#EFF6FF]"
+              className="absolute inset-0 rounded-xl bg-[#6366F1]/10"
               transition={{ type: 'spring', stiffness: 400, damping: 35 }}
             />
           )}
           <Icon
-            size={24}
-            color="#000000"
-            strokeWidth={2}
+            size={18}
             className="relative flex-shrink-0"
           />
           <AnimatePresence initial={false}>
@@ -158,23 +108,18 @@ export default function MainLayout() {
   }, [profileOpen]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden" style={{ background: '#F7F9FC', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div className="flex h-screen w-full overflow-hidden" style={{ background: '#0A0C10', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ─── Sidebar ─── */}
       <motion.aside
-        animate={{ width: collapsed ? 64 : 259 }}
+        animate={{ width: collapsed ? 64 : 240 }}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
         className="relative flex-shrink-0 flex flex-col h-full overflow-hidden"
-        style={{ background: '#fff', borderRight: '1px solid rgba(226,232,240,0.8)' }}
+        style={{ background: '#0A0C10', borderRight: '1px solid #1E222A' }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 h-14 flex-shrink-0" style={{ borderBottom: '1px solid rgba(226,232,240,0.5)' }}>
-          <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.35)' }}
-          >
-            <Sparkles size={15} className="text-white" />
-          </div>
+        <div className="flex items-center gap-3 px-4 h-14 flex-shrink-0" style={{ borderBottom: '1px solid #1E222A' }}>
+          <LogoMark className="w-7 h-7 flex-shrink-0" color="#F8FAFC" />
           <AnimatePresence initial={false}>
             {!collapsed && (
               <motion.div
@@ -182,10 +127,10 @@ export default function MainLayout() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.18 }}
-                className="overflow-hidden"
+                className="overflow-hidden flex items-baseline gap-0.5"
               >
-                <p className="text-[15px] font-bold text-[#0F172A] tracking-[-0.02em] whitespace-nowrap">Conv AI</p>
-                <p className="text-[11px] text-[#94A3B8] whitespace-nowrap -mt-0.5">AI Platform</p>
+                <span className="text-[15px] font-semibold text-[#F8FAFC] tracking-tight whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>Conv</span>
+                <span className="text-[15px] font-normal text-[#94A3B8] whitespace-nowrap ml-0.5">AI</span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -199,7 +144,7 @@ export default function MainLayout() {
         </div>
 
         {/* User profile + popup */}
-        <div className="px-2 py-2 flex-shrink-0 relative" style={{ borderTop: '1px solid rgba(226,232,240,0.5)' }} ref={profileRef}>
+        <div className="px-2 py-2 flex-shrink-0 relative" style={{ borderTop: '1px solid #1E222A' }} ref={profileRef}>
 
           {/* Profile popup */}
           <AnimatePresence>
@@ -209,52 +154,52 @@ export default function MainLayout() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                className="absolute bottom-full left-2 right-2 mb-2 rounded-[16px] overflow-hidden z-50"
+                className="absolute bottom-full left-2 right-2 mb-2 rounded-[14px] overflow-hidden z-50"
                 style={{
-                  background: '#fff',
-                  border: '1px solid rgba(226,232,240,0.9)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+                  background: '#111318',
+                  border: '1px solid #1E222A',
+                  boxShadow: '0 12px 40px rgba(0,0,0,0.7)',
                 }}
               >
                 {/* User row */}
-                <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: '1px solid rgba(226,232,240,0.7)' }}>
+                <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: '1px solid #1E222A' }}>
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[13px] font-bold flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}
+                    style={{ background: 'linear-gradient(135deg, #6366F1, #06B6D4)' }}
                   >
                     A
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-bold text-[#0F172A] truncate">Alex Reed</p>
-                    <p className="text-[11px] text-[#94A3B8]">Pro Plan</p>
+                    <p className="text-[13px] font-semibold text-[#F8FAFC] truncate">Alex Reed</p>
+                    <p className="text-[11px] text-[#475569]">Pro Plan</p>
                   </div>
-                  <ChevronRight size={16} className="text-[#CBD5E1] flex-shrink-0" />
+                  <ChevronRight size={14} className="text-[#2E3440] flex-shrink-0" />
                 </div>
 
                 {/* Menu items */}
                 <div className="py-1.5">
                   {profileMenu.map((item) => {
-                    const Icon = item.icon;
+                    const { Icon } = item;
                     return (
                       <button
                         key={item.label}
                         onClick={() => { setProfileOpen(false); if (item.path) navigate(item.path); }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all hover:bg-[#F8FAFC]"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all hover:bg-[#1A1D24]"
                       >
-                        <Icon size={15} className={item.accent ? 'text-[#7C3AED]' : 'text-[#64748B]'} />
-                        <span className={`flex-1 text-[13px] font-medium ${item.accent ? 'text-[#7C3AED] font-semibold' : 'text-[#0F172A]'}`}>
+                        <Icon size={14} className={item.accent ? 'text-[#6366F1]' : 'text-[#475569]'} />
+                        <span className={`flex-1 text-[13px] font-medium ${item.accent ? 'text-[#6366F1]' : 'text-[#94A3B8]'}`}>
                           {item.label}
                         </span>
-                        {item.chevron && <ChevronRight size={14} className="text-[#CBD5E1]" />}
+                        {item.chevron && <ChevronRight size={13} className="text-[#2E3440]" />}
                       </button>
                     );
                   })}
                 </div>
 
                 {/* Log out */}
-                <div style={{ borderTop: '1px solid rgba(226,232,240,0.7)' }}>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[#FEF2F2]">
-                    <LogOut size={15} className="text-[#EF4444]" />
+                <div style={{ borderTop: '1px solid #1E222A' }}>
+                  <button className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[#EF4444]/10">
+                    <LogOut size={14} className="text-[#EF4444]" />
                     <span className="text-[13px] font-medium text-[#EF4444]">Log out</span>
                   </button>
                 </div>
@@ -273,7 +218,7 @@ export default function MainLayout() {
             >
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}
+                style={{ background: 'linear-gradient(135deg, #6366F1, #06B6D4)' }}
               >
                 A
               </div>
@@ -286,17 +231,17 @@ export default function MainLayout() {
                     transition={{ duration: 0.18 }}
                     className="flex-1 overflow-hidden"
                   >
-                    <p className="text-[13px] font-semibold text-[#0F172A] whitespace-nowrap">Alex Reed</p>
-                    <p className="text-[11px] text-[#94A3B8] whitespace-nowrap">Pro Plan</p>
+                    <p className="text-[13px] font-medium text-[#F8FAFC] whitespace-nowrap">Alex Reed</p>
+                    <p className="text-[11px] text-[#475569] whitespace-nowrap">Pro Plan</p>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all"
+              className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all"
             >
-              {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
+              {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
             </button>
           </div>
         </div>
@@ -304,33 +249,33 @@ export default function MainLayout() {
 
       {/* ─── Main area ─── */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex items-center justify-between px-6 h-14 flex-shrink-0" style={{ background: '#fff', borderBottom: '1px solid rgba(226,232,240,0.8)' }}>
+        <header className="flex items-center justify-between px-6 h-14 flex-shrink-0" style={{ background: '#0A0C10', borderBottom: '1px solid #1E222A' }}>
           <div className="relative flex-1 max-w-sm">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E3440]" />
             <input
               type="text"
               placeholder="Search conversations, projects, files..."
               className="pl-9 pr-3 py-2 text-[13px] rounded-xl outline-none transition-all w-full"
-              style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)', color: '#0F172A' }}
-              onFocus={e => { e.target.style.borderColor = '#93C5FD'; e.target.style.background = '#fff'; }}
-              onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.8)'; e.target.style.background = '#F8FAFC'; }}
+              style={{ background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
+              onFocus={e => { e.target.style.borderColor = '#6366F1'; e.target.style.color = '#F8FAFC'; }}
+              onBlur={e => { e.target.style.borderColor = '#1E222A'; e.target.style.color = '#94A3B8'; }}
             />
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-[13px] font-medium text-[#475569]" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              GPT-4o
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-[13px] font-medium text-[#475569]" style={{ border: '1px solid #1E222A' }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+              <span className="text-[#94A3B8]">GPT-4o</span>
             </div>
-            <NavLink to="/notifications" className="relative p-2.5 rounded-xl text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all">
-              <Bell size={16} />
-              <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-blue-500 rounded-full" />
+            <NavLink to="/notifications" className="relative p-2.5 rounded-xl text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all">
+              <Bell size={15} />
+              <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#6366F1] rounded-full" />
             </NavLink>
             <NavLink
               to="/chat"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all"
-              style={{ background: 'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]"
+              style={{ background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.3)' }}
             >
-              <Sparkles size={13} />
+              <SquarePen size={13} />
               New Chat
             </NavLink>
           </div>
