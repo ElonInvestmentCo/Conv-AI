@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
   SquarePen,
-  BookOpen,
   Layers,
   Wand2,
   Mic2,
@@ -32,10 +31,22 @@ function ImagesIcon({ className }: { size?: number; color?: string; strokeWidth?
   );
 }
 
+function LibraryIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
+  return (
+    <img
+      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpYnJhcnktYmlnLWljb24gbHVjaWRlLWxpYnJhcnktYmlnIj48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjEiLz48cGF0aCBkPSJNNyAzdjE4Ii8+PHBhdGggZD0iTTIwLjQgMTguOWMuMi41LS4xIDEuMS0uNiAxLjNsLTEuOS43Yy0uNS4yLTEuMS0uMS0xLjMtLjZMMTEuMSA1LjFjLS4yLS41LjEtMS4xLjYtMS4zbDEuOS0uN2MuNS0uMiAxLjEuMSAxLjMuNloiLz48L3N2Zz4="
+      width={24}
+      height={24}
+      alt="Library"
+      className={className}
+    />
+  );
+}
+
 const mainNav = [
   { label: 'New Chat', path: '/chat', icon: SquarePen, noColor: true },
   { label: 'Images', path: '/images', icon: ImagesIcon },
-  { label: 'Library', path: '/library', icon: BookOpen },
+  { label: 'Library', path: '/library', icon: LibraryIcon },
   { label: 'Projects', path: '/projects', icon: Layers },
   { label: 'Builder', path: '/builder', icon: Wand2 },
   { label: 'Text to Speech', path: '/tts', icon: Mic2 },
