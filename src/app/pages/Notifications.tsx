@@ -34,13 +34,31 @@ const typeConfig = {
   error: { icon: AlertCircle, color: '#EF4444', bg: '#FEF2F2' },
 };
 
+const STORAGE_KEY = 'convai_notifications';
+
+function loadNotifs(): Notification[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored) as Notification[];
+  } catch {}
+  return initialNotifs;
+}
+
+function saveNotifs(notifs: Notification[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notifs));
+  } catch {}
+}
+
 export default function Notifications() {
-  const [notifs, setNotifs] = useState<Notification[]>(initialNotifs);
+  const [notifs, setNotifs] = useState<Notification[]>(loadNotifs);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
-  const markAllRead = () => setNotifs(prev => prev.map(n => ({ ...n, read: true })));
-  const markRead = (id: number) => setNotifs(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  const dismiss = (id: number) => setNotifs(prev => prev.filter(n => n.id !== id));
+  const update = (next: Notification[]) => { setNotifs(next); saveNotifs(next); };
+
+  const markAllRead = () => update(notifs.map(n => ({ ...n, read: true })));
+  const markRead = (id: number) => update(notifs.map(n => n.id === id ? { ...n, read: true } : n));
+  const dismiss = (id: number) => update(notifs.filter(n => n.id !== id));
 
   const filtered = notifs.filter(n => filter === 'all' || !n.read);
   const unreadCount = notifs.filter(n => !n.read).length;
