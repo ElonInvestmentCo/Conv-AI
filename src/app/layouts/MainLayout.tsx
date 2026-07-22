@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
-  MessageSquare,
+  SquarePen,
   Image,
   BookOpen,
   Layers,
@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 const mainNav = [
-  { label: 'New Chat', path: '/chat', icon: MessageSquare },
+  { label: 'New Chat', path: '/chat', icon: SquarePen },
   { label: 'Images', path: '/images', icon: Image },
   { label: 'Library', path: '/library', icon: BookOpen },
   { label: 'Projects', path: '/projects', icon: Layers },
