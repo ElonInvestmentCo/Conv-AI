@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
   SquarePen,
-  Layers,
+
   Wand2,
   Mic2,
   Mic,
@@ -43,11 +43,23 @@ function LibraryIcon({ className }: { size?: number; color?: string; strokeWidth
   );
 }
 
+function ProjectsIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
+  return (
+    <img
+      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZvbGRlci1jbG9zZWQtaWNvbiBsdWNpZGUtZm9sZGVyLWNsb3NlZCI+PHBhdGggZD0iTTIwIDIwYTIgMiAwIDAgMCAyLTJWOGEyIDIgMCAwIDAtMi0yaC03LjlhMiAyIDAgMCAxLTEuNjktLjlMOS42IDMuOUEyIDIgMCAwIDAgNy45MyAzSDRhMiAyIDAgMCAwLTIgMnYxM2EyIDIgMCAwIDAgMiAyWiIvPjxwYXRoIGQ9Ik0yIDEwaDIwIi8+PC9zdmc+"
+      width={24}
+      height={24}
+      alt="Projects"
+      className={className}
+    />
+  );
+}
+
 const mainNav = [
   { label: 'New Chat', path: '/chat', icon: SquarePen, noColor: true },
   { label: 'Images', path: '/images', icon: ImagesIcon },
   { label: 'Library', path: '/library', icon: LibraryIcon },
-  { label: 'Projects', path: '/projects', icon: Layers },
+  { label: 'Projects', path: '/projects', icon: ProjectsIcon },
   { label: 'Builder', path: '/builder', icon: Wand2 },
   { label: 'Text to Speech', path: '/tts', icon: Mic2 },
   { label: 'Voice', path: '/voice', icon: Mic },
