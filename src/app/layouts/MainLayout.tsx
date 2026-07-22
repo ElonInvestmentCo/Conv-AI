@@ -39,7 +39,7 @@ const profileMenu = [
   { icon: HelpCircle, label: 'Help', path: '/help', accent: false, chevron: true },
 ];
 
-function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }>; noColor?: boolean }; collapsed: boolean }) {
+function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number; className?: string }>; noColor?: boolean }; collapsed: boolean }) {
   const Icon = item.icon;
   return (
     <NavLink
@@ -63,10 +63,10 @@ function NavItem({ item, collapsed }: { item: { label: string; path: string; ico
             />
           )}
           <Icon
-            size={16}
-            className={item.noColor ? 'relative flex-shrink-0' : `relative flex-shrink-0 transition-colors ${
-              isActive ? 'text-[#2563EB]' : 'text-[#94A3B8] group-hover:text-[#475569]'
-            }`}
+            size={24}
+            color="#000000"
+            strokeWidth={2}
+            className="relative flex-shrink-0"
           />
           <AnimatePresence initial={false}>
             {!collapsed && (
