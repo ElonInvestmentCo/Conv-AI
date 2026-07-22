@@ -7,6 +7,7 @@ import Library from './pages/Library';
 import Projects from './pages/Projects';
 import Builder from './pages/Builder';
 import TextToSpeech from './pages/TextToSpeech';
+import Voice from './pages/Voice';
 import Notifications from './pages/Notifications';
 import Account from './pages/Account';
 import Settings from './pages/Settings';
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="projects" element={<Projects />} />
           <Route path="builder" element={<Builder />} />
           <Route path="tts" element={<TextToSpeech />} />
+          <Route path="voice" element={<Voice />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="account" element={<Account />} />
           <Route path="settings" element={<Settings />} />

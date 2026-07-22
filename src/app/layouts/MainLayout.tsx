@@ -3,7 +3,7 @@ import { Outlet, NavLink } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, MessageSquare, Image, BookOpen, Layers,
-  Wand2, Mic2, Bell, Settings, User, HelpCircle,
+  Wand2, Mic2, Mic, Bell, Settings, User, HelpCircle,
   ChevronLeft, ChevronRight, Search
 } from 'lucide-react';
 
@@ -14,6 +14,7 @@ const mainNav = [
   { label: 'Projects', path: '/projects', icon: Layers },
   { label: 'Builder', path: '/builder', icon: Wand2 },
   { label: 'Text to Speech', path: '/tts', icon: Mic2 },
+  { label: 'Voice', path: '/voice', icon: Mic },
 ];
 
 const bottomNav = [
