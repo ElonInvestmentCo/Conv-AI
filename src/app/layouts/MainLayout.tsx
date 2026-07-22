@@ -1,56 +1,19 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router';
+import { Outlet, NavLink } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles, MessageSquare, Clock, ChevronLeft, ChevronRight,
-  Search, Bell, Settings, User, HelpCircle,
-  Wand2, Bot, Cpu, Mic, Image, Video, FileText,
-  Zap, BookOpen, FolderOpen, Plug, KeyRound,
-  BarChart3, PieChart, ChevronDown
+  Sparkles, MessageSquare, Image, BookOpen, Layers,
+  Wand2, Mic2, Bell, Settings, User, HelpCircle,
+  ChevronLeft, ChevronRight, Search
 } from 'lucide-react';
 
-const navGroups = [
-  {
-    label: 'AI',
-    items: [
-      { label: 'New Chat', path: '/chat', icon: MessageSquare, primary: true },
-      { label: 'History', path: '/history', icon: Clock },
-      { label: 'Builder', path: '/builder', icon: Wand2 },
-    ],
-  },
-  {
-    label: 'Create',
-    items: [
-      { label: 'Agents', path: '/agents', icon: Bot },
-      { label: 'Models', path: '/models', icon: Cpu },
-      { label: 'Voice', path: '/voice', icon: Mic },
-      { label: 'Images', path: '/images', icon: Image },
-      { label: 'Video', path: '/video', icon: Video },
-    ],
-  },
-  {
-    label: 'Organize',
-    items: [
-      { label: 'Documents', path: '/documents', icon: FileText },
-      { label: 'Knowledge Base', path: '/knowledge', icon: BookOpen },
-      { label: 'Files', path: '/files', icon: FolderOpen },
-    ],
-  },
-  {
-    label: 'Automate',
-    items: [
-      { label: 'Automations', path: '/automations', icon: Zap },
-    ],
-  },
-  {
-    label: 'Develop',
-    items: [
-      { label: 'Integrations', path: '/integrations', icon: Plug },
-      { label: 'API Keys', path: '/api-keys', icon: KeyRound },
-      { label: 'Analytics', path: '/analytics', icon: BarChart3 },
-      { label: 'Usage', path: '/usage', icon: PieChart },
-    ],
-  },
+const mainNav = [
+  { label: 'New Chat', path: '/chat', icon: MessageSquare },
+  { label: 'Images', path: '/images', icon: Image },
+  { label: 'Library', path: '/library', icon: BookOpen },
+  { label: 'Projects', path: '/projects', icon: Layers },
+  { label: 'Builder', path: '/builder', icon: Wand2 },
+  { label: 'Text to Speech', path: '/tts', icon: Mic2 },
 ];
 
 const bottomNav = [
@@ -60,15 +23,7 @@ const bottomNav = [
   { label: 'Help', path: '/help', icon: HelpCircle },
 ];
 
-const recentChats = [
-  'Build a multi-agent pipeline',
-  'Summarize this 80-page PDF',
-  'Generate product images for launch',
-  'Write API integration docs',
-  'Automate my email workflow',
-];
-
-function NavItem({ item, collapsed }: { item: any; collapsed: boolean }) {
+function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }> }; collapsed: boolean }) {
   const Icon = item.icon;
   return (
     <NavLink
@@ -118,14 +73,13 @@ function NavItem({ item, collapsed }: { item: any; collapsed: boolean }) {
 
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
 
   return (
     <div className="flex h-screen w-full overflow-hidden" style={{ background: '#F7F9FC', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ─── Sidebar ─── */}
       <motion.aside
-        animate={{ width: collapsed ? 64 : 248 }}
+        animate={{ width: collapsed ? 64 : 232 }}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
         className="relative flex-shrink-0 flex flex-col h-full overflow-hidden"
         style={{ background: '#fff', borderRight: '1px solid rgba(226,232,240,0.8)' }}
@@ -154,56 +108,11 @@ export default function MainLayout() {
           </AnimatePresence>
         </div>
 
-        {/* Nav groups */}
-        <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4">
-          {navGroups.map((group) => (
-            <div key={group.label}>
-              <AnimatePresence initial={false}>
-                {!collapsed && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="px-3 mb-1 text-[10px] font-bold text-[#CBD5E1] uppercase tracking-[0.08em]"
-                  >
-                    {group.label}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <NavItem key={item.path} item={item} collapsed={collapsed} />
-                ))}
-              </div>
-            </div>
+        {/* Main nav */}
+        <div className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
+          {mainNav.map((item) => (
+            <NavItem key={item.path} item={item} collapsed={collapsed} />
           ))}
-
-          {/* Recent chats */}
-          <AnimatePresence initial={false}>
-            {!collapsed && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
-              >
-                <p className="px-3 mb-1 text-[10px] font-bold text-[#CBD5E1] uppercase tracking-[0.08em]">Recent</p>
-                <div className="space-y-0.5">
-                  {recentChats.map((chat, i) => (
-                    <NavLink
-                      key={i}
-                      to="/history"
-                      className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12.5px] text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#0F172A] transition-all truncate"
-                    >
-                      <MessageSquare size={12} className="text-[#CBD5E1] flex-shrink-0" />
-                      <span className="truncate">{chat}</span>
-                    </NavLink>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Bottom nav */}
@@ -255,7 +164,7 @@ export default function MainLayout() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
             <input
               type="text"
-              placeholder="Search conversations, files, agents..."
+              placeholder="Search conversations, projects, files..."
               className="pl-9 pr-3 py-2 text-[13px] rounded-xl outline-none transition-all w-full"
               style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)', color: '#0F172A' }}
               onFocus={e => { e.target.style.borderColor = '#93C5FD'; e.target.style.background = '#fff'; }}
