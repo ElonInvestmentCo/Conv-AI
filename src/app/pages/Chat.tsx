@@ -301,14 +301,14 @@ export default function Chat() {
                     ))}
                   </div>
                 ) : (
-                  /* Static waveform bars — 5 bars, bell-curve heights, white on black */
-                  <div className="flex items-end justify-center gap-[3px]" style={{ height: 20 }}>
-                    <div style={{ width: 3, height: 8,  background: '#fff', borderRadius: 9 }} />
-                    <div style={{ width: 3, height: 14, background: '#fff', borderRadius: 9 }} />
-                    <div style={{ width: 3, height: 20, background: '#fff', borderRadius: 9 }} />
-                    <div style={{ width: 3, height: 14, background: '#fff', borderRadius: 9 }} />
-                    <div style={{ width: 3, height: 8,  background: '#fff', borderRadius: 9 }} />
-                  </div>
+                  /* Static waveform icon */
+                  <img
+                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWF1ZGlvLWxpbmVzLWljb24gbHVjaWRlLWF1ZGlvLWxpbmVzIj48cGF0aCBkPSJNMiAxMHYzIi8+PHBhdGggZD0iTTYgNnYxMSIvPjxwYXRoIGQ9Ik0xMCAzdjE4Ii8+PHBhdGggZD0iTTE0IDh2NyIvPjxwYXRoIGQ9Ik0xOCA1djEzIi8+PHBhdGggZD0iTTIyIDEwdjMiLz48L3N2Zz4="
+                    width={20}
+                    height={20}
+                    alt="Voice"
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
                 )}
               </button>
             </div>
