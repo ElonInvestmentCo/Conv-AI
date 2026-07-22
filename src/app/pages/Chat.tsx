@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Send,
-  Paperclip,
   Mic,
   Image,
   FileText,
@@ -11,7 +9,6 @@ import {
   Lightbulb,
   Pencil,
   Search,
-  ChevronDown,
   RotateCcw,
   Copy,
   ThumbsUp,
@@ -27,81 +24,176 @@ const LogoMark = ({ className = 'w-5 h-5' }: { className?: string }) => (
   </svg>
 );
 
+// ── Prompts ───────────────────────────────────────────────────────────────────
 const prompts = [
-  { icon: <Code2 size={14} className="text-[#6366F1]" />,  title: 'Write code',         desc: 'Debug, refactor, or build something new'   },
-  { icon: <Pencil size={14} className="text-[#94A3B8]" />,  title: 'Draft content',      desc: 'Emails, blog posts, social copy'             },
-  { icon: <Search size={14} className="text-[#10B981]" />,  title: 'Research',           desc: 'Deep analysis and comprehensive summaries'  },
-  { icon: <Lightbulb size={14} className="text-[#F59E0B]"/>, title: 'Brainstorm',         desc: 'Generate ideas and explore possibilities'   },
-  { icon: <FileText size={14} className="text-[#EF4444]" />, title: 'Analyze document',   desc: 'Upload files for instant AI analysis'       },
-  { icon: <Globe size={14} className="text-[#06B6D4]" />,   title: 'Browse the web',     desc: 'Search and summarize live information'      },
+  { icon: <Code2 size={15} className="text-[#6366F1]" />,   title: 'Write code',        desc: 'Debug, refactor, or build something new'  },
+  { icon: <Pencil size={15} className="text-[#94A3B8]" />,  title: 'Draft content',     desc: 'Emails, blog posts, social copy'            },
+  { icon: <Search size={15} className="text-[#10B981]" />,  title: 'Research',          desc: 'Deep analysis and comprehensive summaries'  },
+  { icon: <Lightbulb size={15} className="text-[#F59E0B]"/>,title: 'Brainstorm',        desc: 'Generate ideas and explore possibilities'   },
+  { icon: <FileText size={15} className="text-[#EF4444]" />,title: 'Analyze document',  desc: 'Upload files for instant AI analysis'       },
+  { icon: <Globe size={15} className="text-[#06B6D4]" />,   title: 'Browse the web',    desc: 'Search and summarize live information'      },
 ];
 
-type Msg = { id: number; role: 'user' | 'ai'; text?: string; thinking?: boolean };
+// ── Types ─────────────────────────────────────────────────────────────────────
+type Msg = { id: number; role: 'user' | 'ai'; text: string };
 
 const seed: Msg[] = [
-  { id: 1, role: 'user', text: 'Can you help me build a multi-step AI agent that can browse the web and summarize research papers?' },
-  { id: 2, role: 'ai',   text: `Absolutely. Here's a clean architecture for a multi-step research agent:\n\n**Step 1 — Search & Retrieve**\nThe agent uses a web search tool to find relevant papers, then fetches full-text from arXiv or Semantic Scholar via API.\n\n**Step 2 — Chunk & Embed**\nEach paper is chunked into sections and embedded with a fast model (text-embedding-3-small). These vectors land in a temporary vector store per session.\n\n**Step 3 — Synthesize**\nA reasoning model (o1 or Claude 3.5 Sonnet) reads the top-k retrieved chunks and writes a structured summary with citations.\n\n**Step 4 — Format & Export**\nOutput is formatted as Markdown with inline citations, exportable to PDF or Notion.\n\nWant me to generate the full Python implementation with LangGraph or a custom agent loop?` },
+  {
+    id: 1,
+    role: 'user',
+    text: 'Can you help me build a multi-step AI agent that can browse the web and summarize research papers?',
+  },
+  {
+    id: 2,
+    role: 'ai',
+    text: `Absolutely. Here's a clean architecture for a multi-step research agent:\n\n**Step 1 — Search & Retrieve**\nThe agent uses a web search tool to find relevant papers, then fetches full-text from arXiv or Semantic Scholar via API.\n\n**Step 2 — Chunk & Embed**\nEach paper is chunked into sections and embedded with a fast model (text-embedding-3-small). These vectors land in a temporary vector store per session.\n\n**Step 3 — Synthesize**\nA reasoning model (o1 or Claude 3.5 Sonnet) reads the top-k retrieved chunks and writes a structured summary with citations.\n\n**Step 4 — Format & Export**\nOutput is formatted as Markdown with inline citations, exportable to PDF or Notion.\n\nWant me to generate the full Python implementation with LangGraph or a custom agent loop?`,
+  },
 ];
 
+// ── Typing dots ───────────────────────────────────────────────────────────────
 const TypingDots = () => (
-  <div className="flex items-center gap-1 py-1">
+  <div className="flex items-center gap-[5px] py-0.5">
     {[0, 1, 2].map(i => (
       <motion.span
         key={i}
-        className="block w-1.5 h-1.5 rounded-full bg-[#6366F1]"
-        animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 1, repeat: Infinity, delay: i * 0.18 }}
+        className="block w-[6px] h-[6px] rounded-full bg-[#6366F1]"
+        animate={{ y: [0, -5, 0], opacity: [0.35, 1, 0.35] }}
+        transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.17, ease: 'easeInOut' }}
       />
     ))}
   </div>
 );
 
+// ── Animated voice waveform (5 bars) ─────────────────────────────────────────
+const VoiceWaveform = () => (
+  <div className="flex items-center gap-[3px]">
+    {[0, 1, 2, 3, 4].map(i => (
+      <motion.div
+        key={i}
+        className="w-[3px] rounded-full bg-white"
+        animate={{ height: ['5px', `${13 + (i % 3) * 5}px`, '5px'] }}
+        transition={{
+          duration: 0.55,
+          repeat: Infinity,
+          delay: i * 0.09,
+          ease: 'easeInOut',
+        }}
+      />
+    ))}
+  </div>
+);
+
+// ── Parse a simple markdown subset ───────────────────────────────────────────
+function parseMarkdown(text: string): string[][] {
+  return text.split('\n\n').map(block => {
+    const lines = block.split('\n');
+    return lines;
+  });
+}
+
+function renderLine(line: string, key: number) {
+  // Bold: **text**
+  let html = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Inline code
+  html = html.replace(
+    /`(.+?)`/g,
+    `<code style="background:#1A1D24;color:#818CF8;padding:2px 7px;border-radius:5px;font-size:12.5px;font-family:'JetBrains Mono',monospace">$1</code>`
+  );
+  return (
+    <span key={key} dangerouslySetInnerHTML={{ __html: html }} />
+  );
+}
+
+// ── User bubble ───────────────────────────────────────────────────────────────
 const UserBubble = ({ text }: { text: string }) => (
   <motion.div
     initial={{ opacity: 0, y: 10, scale: 0.98 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
-    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
     className="flex justify-end"
   >
     <div
-      className="max-w-[70%] px-4 py-3 text-[14px] leading-relaxed text-[#F8FAFC] rounded-2xl rounded-tr-md"
-      style={{ background: '#1A1D24', border: '1px solid #2E3440' }}
+      className="max-w-[62%] px-5 py-[14px] text-[15px] leading-[1.65] text-[#F8FAFC]"
+      style={{
+        background: '#1A1D24',
+        border: '1px solid #2E3440',
+        borderRadius: '20px 20px 4px 20px',
+      }}
     >
       {text}
     </div>
   </motion.div>
 );
 
+// ── AI avatar ─────────────────────────────────────────────────────────────────
 const AIAvatar = () => (
   <div
-    className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
-    style={{ background: '#111318', border: '1px solid #1E222A' }}
+    className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
+    style={{
+      background: '#111318',
+      border: '1px solid #1E222A',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+    }}
   >
-    <LogoMark className="w-4 h-4" />
+    <LogoMark className="w-[17px] h-[17px]" />
   </div>
 );
 
-function parseMarkdown(text: string) {
-  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  text = text.replace(/`(.+?)`/g, '<code style="background:#1A1D24;color:#6366F1;padding:2px 6px;border-radius:4px;font-size:12px;font-family:\'JetBrains Mono\',monospace">$1</code>');
-  return text.split('\n\n');
-}
-
+// ── AI message ────────────────────────────────────────────────────────────────
 const AIMessage = ({ text }: { text: string }) => {
-  const parts = parseMarkdown(text);
+  const blocks = parseMarkdown(text);
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+      className="flex gap-4"
+    >
       <AIAvatar />
       <div className="flex-1 min-w-0">
-        <div className="space-y-3">
-          {parts.map((part, i) => (
-            <p key={i} className="text-[14px] leading-relaxed text-[#F8FAFC]" dangerouslySetInnerHTML={{ __html: part }} />
+        <div className="space-y-[14px]">
+          {blocks.map((lines, bi) => (
+            <p
+              key={bi}
+              className="text-[15px] text-[#F8FAFC]"
+              style={{ lineHeight: 1.68 }}
+            >
+              {lines.map((line, li) => (
+                <React.Fragment key={li}>
+                  {renderLine(line, li)}
+                  {li < lines.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </p>
           ))}
         </div>
-        <div className="flex items-center gap-1 mt-3">
-          {[Copy, ThumbsUp, ThumbsDown, RotateCcw].map((Icon, i) => (
-            <button key={i} className="p-1.5 rounded-lg text-[#2E3440] hover:text-[#475569] hover:bg-[#1A1D24] transition-all">
-              <Icon size={13} />
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-0.5 mt-4">
+          {[
+            { Icon: Copy,      title: 'Copy'       },
+            { Icon: ThumbsUp,  title: 'Helpful'    },
+            { Icon: ThumbsDown,title: 'Not helpful' },
+            { Icon: RotateCcw, title: 'Regenerate' },
+            { Icon: Pencil,    title: 'Edit'       },
+          ].map(({ Icon, title }) => (
+            <button
+              key={title}
+              title={title}
+              className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-[140ms] group"
+              style={{ color: 'rgba(148,163,184,0.65)' }}
+              onMouseEnter={e => {
+                const el = e.currentTarget;
+                el.style.background = '#1A1D24';
+                el.style.color = '#94A3B8';
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget;
+                el.style.background = 'transparent';
+                el.style.color = 'rgba(148,163,184,0.65)';
+              }}
+            >
+              <Icon size={14} strokeWidth={1.8} />
             </button>
           ))}
         </div>
@@ -110,15 +202,24 @@ const AIMessage = ({ text }: { text: string }) => {
   );
 };
 
+// ── Suggestion chips ──────────────────────────────────────────────────────────
+const chips = [
+  'Continue this further',
+  'Show me an example',
+  'Explain step by step',
+  'Generate the code',
+];
+
+// ── Main Chat component ───────────────────────────────────────────────────────
 export default function Chat() {
   const [messages, setMessages] = useState<Msg[]>(seed);
-  const [input, setInput] = useState('');
-  const [started, setStarted] = useState(true);
+  const [input, setInput]       = useState('');
+  const [started, setStarted]   = useState(true);
   const [isTyping, setIsTyping] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
-  const [model, setModel] = useState('GPT-4o');
+  const [composerFocused, setComposerFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -129,6 +230,9 @@ export default function Chat() {
     if (!t) return;
     setStarted(true);
     setInput('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     setMessages(prev => [...prev, { id: Date.now(), role: 'user', text: t }]);
     setIsTyping(true);
     setTimeout(() => {
@@ -136,7 +240,7 @@ export default function Chat() {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'ai',
-        text: `I've received your message: "${t}"\n\nI'm processing this with full context from our conversation. Here's my analysis and next steps based on what you've shared. Let me know if you'd like me to go deeper on any specific aspect.`,
+        text: `I've received your message: "${t}"\n\nI'm processing this with full context from our conversation. Here's my analysis and next steps based on what you've shared.\n\nLet me know if you'd like me to go deeper on any specific aspect.`,
       }]);
     }, 1800);
   };
@@ -145,45 +249,56 @@ export default function Chat() {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   };
 
+  const autoResize = (el: HTMLTextAreaElement) => {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 180) + 'px';
+  };
+
   return (
     <div className="flex h-full overflow-hidden" style={{ background: '#0A0C10' }}>
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
+        {/* ── Empty / welcome state ── */}
         {!started ? (
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 py-12">
+          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 py-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="w-full max-w-2xl"
+              className="w-full max-w-[860px]"
             >
               <div className="text-center mb-10">
                 <div
-                  className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                  style={{ background: '#111318', border: '1px solid #1E222A' }}
+                  className="w-[52px] h-[52px] rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                  style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
                 >
-                  <LogoMark className="w-8 h-8" />
+                  <LogoMark className="w-[30px] h-[30px]" />
                 </div>
-                <h1 className="text-[26px] font-semibold text-[#F8FAFC] tracking-tight mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <h1
+                  className="text-[28px] font-semibold text-[#F8FAFC] tracking-tight mb-2"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
                   What can I help you with?
                 </h1>
                 <p className="text-[14px] text-[#475569]">
-                  Powered by <span className="text-[#6366F1] font-medium">{model}</span>
+                  Powered by <span className="text-[#6366F1] font-medium">GPT-4o</span>
                 </p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+              <div className="grid grid-cols-3 gap-3 mb-8">
                 {prompts.map((p, i) => (
                   <motion.button
                     key={i}
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06, type: 'spring', stiffness: 300 }}
+                    transition={{ delay: i * 0.07, type: 'spring', stiffness: 300 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => send(p.title)}
-                    className="text-left p-4 rounded-2xl transition-all hover:bg-[#1A1D24]"
+                    className="text-left p-4 rounded-2xl transition-colors duration-[160ms] hover:border-[#2E3440]"
                     style={{ background: '#111318', border: '1px solid #1E222A' }}
                   >
-                    <div className="mb-2">{p.icon}</div>
-                    <p className="text-[13px] font-semibold text-[#F8FAFC] mb-0.5">{p.title}</p>
+                    <div className="mb-2.5">{p.icon}</div>
+                    <p className="text-[13px] font-semibold text-[#F8FAFC] mb-1">{p.title}</p>
                     <p className="text-[12px] text-[#475569] leading-snug">{p.desc}</p>
                   </motion.button>
                 ))}
@@ -191,118 +306,193 @@ export default function Chat() {
             </motion.div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-            <AnimatePresence initial={false}>
-              {messages.map(msg => (
-                <div key={msg.id}>
-                  {msg.role === 'user' ? <UserBubble text={msg.text!} /> : <AIMessage text={msg.text!} />}
-                </div>
-              ))}
-              {isTyping && (
-                <motion.div key="typing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-                  <AIAvatar />
-                  <div className="px-4 py-3 rounded-2xl" style={{ background: '#111318', border: '1px solid #1E222A' }}>
-                    <TypingDots />
+          /* ── Conversation messages ── */
+          <div className="flex-1 overflow-y-auto">
+            <div className="max-w-[880px] mx-auto px-6 py-8 space-y-8">
+              <AnimatePresence initial={false}>
+                {messages.map(msg => (
+                  <div key={msg.id}>
+                    {msg.role === 'user'
+                      ? <UserBubble text={msg.text} />
+                      : <AIMessage text={msg.text} />
+                    }
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div ref={bottomRef} />
-          </div>
-        )}
+                ))}
 
-        {started && !isTyping && (
-          <div className="px-6 pb-2 flex gap-2 overflow-x-auto">
-            {['Continue this further', 'Show me an example', 'Explain step by step', 'Generate the code'].map((s, i) => (
-              <button
-                key={i}
-                onClick={() => send(s)}
-                className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all"
-                style={{ border: '1px solid #1E222A' }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Composer */}
-        <div className="px-6 pb-5 pt-2 flex-shrink-0 flex flex-col items-center">
-          <div
-            className="w-full max-w-[773px] flex items-center gap-0 rounded-2xl px-2 transition-all"
-            style={{
-              background: '#111318',
-              minHeight: 52,
-              border: '1px solid #1E222A',
-            }}
-            onFocus={() => {}}
-          >
-            <button
-              title="Add attachment"
-              className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-xl text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all ml-1"
-            >
-              <Plus size={17} />
-            </button>
-
-            <textarea
-              ref={textareaRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              placeholder="Ask anything"
-              rows={1}
-              className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#F8FAFC] placeholder-[#2E3440] text-[15px] leading-[24px] py-[5px] px-2"
-              style={{ maxHeight: 160 }}
-              onInput={e => {
-                const t = e.target as HTMLTextAreaElement;
-                t.style.height = 'auto';
-                t.style.height = Math.min(t.scrollHeight, 160) + 'px';
-              }}
-            />
-
-            <div className="flex items-center gap-1 flex-shrink-0 mr-1">
-              <button
-                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-xl text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all"
-                onClick={() => setVoiceMode(!voiceMode)}
-                title="Voice input"
-              >
-                <Mic size={17} />
-              </button>
-
-              <button
-                onClick={input.trim() ? () => send() : () => setVoiceMode(!voiceMode)}
-                className="flex-shrink-0 flex items-center justify-center rounded-xl transition-all"
-                style={{
-                  width: 36,
-                  height: 36,
-                  background: input.trim() ? '#6366F1' : '#1A1D24',
-                }}
-                title={input.trim() ? 'Send' : 'Voice mode'}
-              >
-                {input.trim() ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
-                  </svg>
-                ) : voiceMode ? (
-                  <div className="flex items-center gap-[3px]">
-                    {[0, 1, 2, 3, 4].map(i => (
-                      <motion.div
-                        key={i}
-                        className="w-[2px] rounded-full bg-[#6366F1]"
-                        animate={{ height: [4, 14 + (i % 3) * 4, 4] }}
-                        transition={{ duration: 0.55, repeat: Infinity, delay: i * 0.11, ease: 'easeInOut' }}
-                        style={{ height: 4 }}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <Send size={15} className="text-[#475569]" />
+                {isTyping && (
+                  <motion.div
+                    key="typing"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex gap-4"
+                  >
+                    <AIAvatar />
+                    <div
+                      className="px-5 py-4 rounded-2xl"
+                      style={{ background: '#111318', border: '1px solid #1E222A' }}
+                    >
+                      <TypingDots />
+                    </div>
+                  </motion.div>
                 )}
-              </button>
+              </AnimatePresence>
+              <div ref={bottomRef} />
             </div>
           </div>
+        )}
 
-          <p className="text-center text-[12px] text-[#2E3440] mt-2.5">
+        {/* ── Bottom area: chips + composer ── */}
+        <div className="flex-shrink-0 pb-5">
+
+          {/* Suggestion chips — 16px gap above composer */}
+          <AnimatePresence>
+            {started && !isTyping && (
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex gap-2 overflow-x-auto px-6 mb-4"
+                style={{ scrollbarWidth: 'none' }}
+              >
+                {chips.map((s, i) => (
+                  <motion.button
+                    key={i}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => send(s)}
+                    className="flex-shrink-0 text-[13px] font-medium text-[#475569] hover:text-[#94A3B8] transition-all duration-[160ms] hover:border-[#2E3440]"
+                    style={{
+                      height: 38,
+                      paddingLeft: 16,
+                      paddingRight: 16,
+                      borderRadius: 999,
+                      border: '1px solid #1E222A',
+                      background: 'transparent',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {s}
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── Composer ── */}
+          <div className="px-6 flex justify-center">
+            <motion.div
+              animate={{
+                boxShadow: composerFocused
+                  ? '0 0 0 1.5px #6366F1, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35)'
+                  : '0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.25)',
+              }}
+              transition={{ duration: 0.18 }}
+              className="relative flex items-center gap-2 w-full"
+              style={{
+                maxWidth: 880,
+                minHeight: 64,
+                background: '#111318',
+                border: composerFocused ? '1px solid rgba(99,102,241,0.45)' : '1px solid #1E222A',
+                borderRadius: 32,
+                paddingLeft: 16,
+                paddingRight: 12,
+                paddingTop: 10,
+                paddingBottom: 10,
+                transition: 'border-color 0.18s ease',
+              }}
+            >
+              {/* Attachment button */}
+              <button
+                className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-[150ms] text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24]"
+              >
+                <Plus size={20} strokeWidth={2} />
+              </button>
+
+              {/* Textarea */}
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKey}
+                onFocus={() => setComposerFocused(true)}
+                onBlur={() => setComposerFocused(false)}
+                onInput={e => autoResize(e.target as HTMLTextAreaElement)}
+                placeholder="Ask anything…"
+                rows={1}
+                className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#F8FAFC] text-[16px] font-[500] leading-[1.5] py-1 px-1"
+                style={{
+                  maxHeight: 180,
+                  caretColor: '#6366F1',
+                }}
+              />
+
+              {/* Right controls */}
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {/* Mic */}
+                <button
+                  onClick={() => setVoiceMode(!voiceMode)}
+                  className="flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-[150ms]"
+                  style={{
+                    background: voiceMode ? 'rgba(99,102,241,0.15)' : 'transparent',
+                    color: voiceMode ? '#6366F1' : '#475569',
+                  }}
+                  onMouseEnter={e => {
+                    if (!voiceMode) {
+                      (e.currentTarget as HTMLElement).style.background = '#1A1D24';
+                      (e.currentTarget as HTMLElement).style.color = '#94A3B8';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!voiceMode) {
+                      (e.currentTarget as HTMLElement).style.background = 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = '#475569';
+                    }
+                  }}
+                >
+                  {voiceMode ? <VoiceWaveform /> : <Mic size={18} strokeWidth={1.8} />}
+                </button>
+
+                {/* Send */}
+                <motion.button
+                  onClick={() => send()}
+                  whileHover={input.trim() ? { scale: 1.03 } : {}}
+                  whileTap={input.trim() ? { scale: 0.97 } : {}}
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  disabled={!input.trim() && !isTyping}
+                  className="flex items-center justify-center rounded-full transition-all duration-[160ms]"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    background: input.trim() ? '#6366F1' : '#1A1D24',
+                    boxShadow: input.trim() ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
+                    cursor: input.trim() ? 'pointer' : 'default',
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={e => {
+                    if (input.trim()) {
+                      (e.currentTarget as HTMLElement).style.background = '#4F46E5';
+                      (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.45)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (input.trim()) {
+                      (e.currentTarget as HTMLElement).style.background = '#6366F1';
+                      (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(99,102,241,0.35)';
+                    }
+                  }}
+                >
+                  {/* Up-arrow send icon */}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: input.trim() ? 1 : 0.3 }}>
+                    <line x1="12" y1="19" x2="12" y2="5" />
+                    <polyline points="5 12 12 5 19 12" />
+                  </svg>
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+
+          <p className="text-center text-[12px] text-[#2E3440] mt-3">
             Conv AI can make mistakes. Check important info.
           </p>
         </div>

@@ -1,0 +1,561 @@
+Improve and refine the entire desktop chat interface to achieve a modern, premium, enterprise-grade AI application comparable to ChatGPT, Cursor, Linear, Notion AI, Claude, Perplexity, Arc Browser, and other world-class AI desktop experiences.
+
+This is a DESKTOP WEBSITE, not a mobile application. Every component should be optimized for desktop layouts, mouse interactions, large screens, and responsive resizing.
+
+The goal is to make the interface feel elegant, premium, spacious, and highly polished while maintaining excellent usability and accessibility.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POPUP ACCOUNT MENU (Highest Priority)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The current popup menu is the weakest part of the interface and should be redesigned to feel like a premium floating account menu.
+
+1. Floating Surface
+
+The popup currently blends into the sidebar.
+
+Instead:
+
+• Use a slightly different background color than the sidebar.
+• Add a subtle 1px border.
+• Add a stronger layered shadow.
+
+Example:
+
+background: #171A20;
+
+border:
+1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.45),
+0 8px 20px rgba(0,0,0,.25);
+
+The popup should immediately read as a floating surface.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. Anchor the Popup
+
+The popup should visually originate from the profile row.
+
+Animation should expand upward from the profile section instead of randomly appearing.
+
+Use:
+
+• Scale
+• Fade
+• Slight upward motion
+
+Duration:
+
+180–220ms
+
+Ease:
+
+ease-out
+
+It should feel attached to the profile button.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. Layering
+
+Ensure the popup always appears above every interface element.
+
+Use:
+
+position: fixed;
+
+or
+
+position: absolute;
+
+z-index: 9999;
+
+Inspect every parent container.
+
+Remove any:
+
+overflow: hidden;
+
+overflow: auto;
+
+overflow: scroll;
+
+that clips the popup.
+
+The popup should never be cut off.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. Reduce Height
+
+Simplify the popup.
+
+Only include:
+
+• Account
+• Settings
+• Theme
+• Keyboard Shortcuts
+• Upgrade Plan
+• Help
+• Log Out
+
+Remove duplicated profile information.
+
+Keep the menu compact and focused.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. Increase Separation
+
+The popup should float away from the sidebar.
+
+Use:
+
+8–10px offset
+
+16px border radius
+
+Large soft shadow
+
+The popup should never visually merge with the sidebar.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. Glass Effect
+
+Use a very subtle premium glass effect.
+
+Example:
+
+backdrop-filter:
+blur(16px);
+
+Very subtle transparency.
+
+No excessive blur.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7. Keep Existing Navigation Selection
+
+The selected navigation item is excellent.
+
+Do NOT redesign it.
+
+Keep:
+
+• Purple accent
+• Rounded shape
+• Hover behavior
+• Active state
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SIDEBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Increase breathing room.
+
+Icons:
+
+24px
+
+Gap between icon and label:
+
+14px
+
+Navigation text:
+
+16px
+
+Medium weight (500)
+
+Increase vertical spacing slightly between items.
+
+Hover states should smoothly animate.
+
+Hover duration:
+
+150–180ms
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOP SEARCH BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Increase height.
+
+Current:
+
+~42px
+
+Target:
+
+48px
+
+Maintain:
+
+• Rounded corners
+• Premium shadow
+• Clean spacing
+• Balanced padding
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHAT INTERFACE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The chat experience is already strong.
+
+Refine it to world-class quality.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Conversation Width
+
+Constrain message width.
+
+Use:
+
+max-width:
+880–960px
+
+margin:
+0 auto
+
+Long responses should remain comfortable to read.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. User Message Bubble
+
+Improve visual balance.
+
+Make it:
+
+• Slightly narrower
+• Slightly taller
+• Radius:
+18–20px
+
+Improve alignment relative to assistant messages.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. Assistant Responses
+
+Improve readability.
+
+Increase:
+
+Line height:
+
+1.6–1.7
+
+Paragraph spacing:
+
+12–16px
+
+Increase spacing above headings.
+
+Improve markdown typography.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. AI Avatar
+
+Increase avatar size.
+
+Current:
+
+28px
+
+Target:
+
+32px
+
+Maintain alignment.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. Message Actions
+
+Improve visibility.
+
+Copy
+
+Like
+
+Dislike
+
+Regenerate
+
+Edit
+
+Increase opacity.
+
+Add hover states.
+
+Example:
+
+opacity:
+0.65
+
+Hover:
+
+• Background
+• Rounded corners
+• Smooth transition
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. Suggestion Chips
+
+Increase overall size.
+
+Height:
+
+36–40px
+
+Horizontal padding:
+
+16px
+
+Radius:
+
+999px
+
+Improve hover animation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHAT COMPOSER (Major Focus)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Redesign the composer into the visual centerpiece of the application.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Container
+
+Height:
+
+60–64px
+
+Radius:
+
+28–32px
+
+Soft shadow
+
+Subtle border
+
+Floating appearance
+
+Premium desktop styling
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Left Side
+
+Attachment button
+
+Lucide icon
+
+20px
+
+Centered vertically
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Center
+
+Placeholder:
+
+Ask anything...
+
+Font size:
+
+16px
+
+Weight:
+
+500
+
+Comfortable horizontal padding
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Right Side
+
+Group together:
+
+• Microphone
+• Animated Voice Waveform
+• Send Button
+
+Maintain even spacing.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Send Button
+
+Premium circular button.
+
+44×44
+
+Accent gradient or brand color.
+
+Hover:
+
+Scale:
+
+1.03
+
+Soft shadow
+
+Active:
+
+Scale:
+
+0.98
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Voice Button
+
+Use the animated waveform consisting of:
+
+• Five rounded vertical bars
+• White
+• Different heights
+• Even spacing
+• Smooth looping animation
+
+Implement using CSS, Framer Motion, GSAP, or Rive.
+
+This animated voice waveform should become the signature interaction of Conv AI.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Composer Width
+
+Increase overall width.
+
+Target:
+
+820–920px
+
+Center it horizontally.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Spacing
+
+Reduce unnecessary vertical whitespace.
+
+Reduce spacing between:
+
+Conversation
+
+↓
+
+Suggestion Chips
+
+↓
+
+Composer
+
+to approximately:
+
+16px
+
+Maintain a clean, balanced layout.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOP NAVIGATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Retain the current structure.
+
+Search
+
+↓
+
+Model Selector
+
+↓
+
+Notification
+
+↓
+
+New Chat
+
+This layout is already strong.
+
+Only refine spacing and hover animations.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MOTION & MICRO-INTERACTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Introduce subtle premium animations throughout the application.
+
+Include:
+
+• Sidebar hover animations
+• Navigation transitions
+• Popup scale + fade
+• Message fade-in
+• Suggestion chip hover
+• Composer focus animation
+• Button scale animation
+• Typing indicator
+• Voice waveform animation
+• Smooth page transitions
+• Loading skeletons where appropriate
+
+Animations should feel responsive and polished.
+
+Avoid flashy or distracting effects.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VISUAL LANGUAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The design language should feel inspired by:
+
+• ChatGPT Desktop
+• Cursor
+• Linear
+• Notion
+• Claude
+• Perplexity
+• Arc Browser
+• Raycast
+
+The interface should communicate:
+
+• Premium
+• Modern
+• Minimal
+• Elegant
+• Enterprise-grade
+• AI-first
+• FinTech-inspired sophistication
+
+Maintain consistency across all components.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPLEMENTATION REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Preserve all existing functionality.
+• Do not break routing, state management, responsiveness, or accessibility.
+• Use reusable React components.
+• Follow the existing design system.
+• Use smooth CSS transitions and Framer Motion where appropriate.
+• Ensure consistent spacing, typography, shadows, border radii, and color usage throughout the application.
+• Validate every updated component across desktop breakpoints.
+• The final result should feel like a production-ready, premium AI desktop web application with exceptional visual polish and interaction quality.
