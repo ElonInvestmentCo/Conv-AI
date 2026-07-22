@@ -108,7 +108,7 @@ export default function MainLayout() {
 
       {/* ─── Sidebar ─── */}
       <motion.aside
-        animate={{ width: collapsed ? 64 : 232 }}
+        animate={{ width: collapsed ? 64 : 259 }}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
         className="relative flex-shrink-0 flex flex-col h-full overflow-hidden"
         style={{ background: '#fff', borderRight: '1px solid rgba(226,232,240,0.8)' }}
