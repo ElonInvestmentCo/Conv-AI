@@ -5,7 +5,7 @@ import {
   Sparkles,
   SquarePen,
 
-  Wand2,
+
   Mic2,
   Mic,
   Bell,
@@ -55,12 +55,24 @@ function ProjectsIcon({ className }: { size?: number; color?: string; strokeWidt
   );
 }
 
+function BuilderIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
+  return (
+    <img
+      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxheW91dC1kYXNoYm9hcmQtaWNvbiBsdWNpZGUtbGF5b3V0LWRhc2hib2FyZCI+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iOSIgeD0iMyIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI1IiB4PSIxNCIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI5IiB4PSIxNCIgeT0iMTIiIHJ4PSIxIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iNSIgeD0iMyIgeT0iMTYiIHJ4PSIxIi8+PC9zdmc+"
+      width={24}
+      height={24}
+      alt="Builder"
+      className={className}
+    />
+  );
+}
+
 const mainNav = [
   { label: 'New Chat', path: '/chat', icon: SquarePen, noColor: true },
   { label: 'Images', path: '/images', icon: ImagesIcon },
   { label: 'Library', path: '/library', icon: LibraryIcon },
   { label: 'Projects', path: '/projects', icon: ProjectsIcon },
-  { label: 'Builder', path: '/builder', icon: Wand2 },
+  { label: 'Builder', path: '/builder', icon: BuilderIcon },
   { label: 'Text to Speech', path: '/tts', icon: Mic2 },
   { label: 'Voice', path: '/voice', icon: Mic },
 ];
