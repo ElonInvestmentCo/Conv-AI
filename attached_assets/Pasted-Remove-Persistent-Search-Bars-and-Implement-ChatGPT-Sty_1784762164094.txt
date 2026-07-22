@@ -1,0 +1,174 @@
+Remove Persistent Search Bars and Implement ChatGPT-Style Search Overlay
+
+Redesign the search experience to match ChatGPT's desktop UI.
+
+Remove the existing search inputs
+
+Delete the following completely:
+
+The search box in the sidebar.
+The search box in the top header.
+
+Do not leave empty space where they were.
+
+The interface should look like ChatGPT, where there is no persistent search input visible.
+
+Sidebar Header
+
+The sidebar header should contain only:
+
+Conv AI logo
+Search icon
+Sidebar collapse button
+
+No search field.
+
+The search icon should be a 20px icon inside a 36×36px clickable area.
+
+Search Behavior
+
+Clicking the Search icon should not navigate to another page.
+
+Instead, it should open a centered modal overlay above the current interface, similar to ChatGPT.
+
+Search Overlay
+
+When opened:
+
+Dim the background.
+Apply a backdrop blur to the entire application.
+Prevent interaction with the background while the overlay is open.
+Animate the overlay in with a smooth fade and slight scale transition (150–200ms).
+
+The overlay should be centered on the screen.
+
+Approximate size:
+
+Width: 780–820px
+Max height: 70vh
+Border radius: 20px
+Overlay Layout
+
+The overlay should contain:
+
+Search Input
+
+Positioned at the top.
+
+Full width
+Height: 52px
+No visible border
+Large placeholder
+
+Placeholder:
+
+Search conversations...
+
+On the right:
+
+Close (×) button
+
+The search field should automatically receive keyboard focus when opened.
+
+Search Results
+
+Below the input display:
+
+Last Opened
+
+Show the most recently opened conversation.
+
+Recent Chats
+
+Display conversations matching the search query.
+
+Each result should include:
+
+Conversation icon
+Conversation title
+Single-line text with ellipsis
+Hover highlight
+Active selection state
+
+No folders.
+
+No project hierarchy.
+
+No nested lists.
+
+Only real conversations.
+
+Background
+
+When the overlay is visible:
+
+Blur the application behind it.
+Reduce background opacity.
+Disable scrolling behind the modal.
+
+Clicking outside the modal or pressing Escape should close it.
+
+Keyboard Shortcut
+
+Implement:
+
+Ctrl + K
+
+and
+
+Cmd + K (macOS)
+
+Both should open the search overlay.
+
+Escape should close it.
+
+Conversation Search
+
+Searching should search only:
+
+Conversation titles
+Conversation content (if indexed)
+
+Results should update as the user types.
+
+Sidebar
+
+The sidebar should match ChatGPT.
+
+Top section:
+
+Logo
+Search icon
+Collapse button
+
+Navigation:
+
+New Chat
+Images
+Library
+Projects
+Builder
+Text to Speech
+Voice
+
+Then:
+
+Recents
+
+Only real conversations should appear here.
+
+Remove all hardcoded or demo conversation items.
+
+New conversations should automatically appear in Recents when created and move to the top whenever they receive new activity.
+
+Goal
+
+The search interaction should closely match ChatGPT's desktop UX:
+
+No always-visible search bars.
+Search is opened only from the Search icon or Ctrl/Cmd + K.
+Opens as a centered modal overlay.
+Background dims and blurs.
+Automatically focuses the search input.
+Searches real conversations.
+Smooth, premium animations and spacing consistent with ChatGPT.
