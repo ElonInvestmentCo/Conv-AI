@@ -268,7 +268,12 @@ export default function Chat() {
                 onClick={() => setVoiceMode(!voiceMode)}
                 title="Voice input"
               >
-                <Mic size={18} />
+                <img
+                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1pYy1pY29uIGx1Y2lkZS1taWMiPjxwYXRoIGQ9Ik0xMiAxOXYzIi8+PHBhdGggZD0iTTE5IDEwdjJhNyA3IDAgMCAxLTE0IDB2LTIiLz48cmVjdCB4PSI5IiB5PSIyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxMyIgcng9IjMiLz48L3N2Zz4="
+                  width={18}
+                  height={18}
+                  alt="Mic"
+                />
               </button>
 
               {/* Voice/waveform circular button — 55×53 from screenshot */}
