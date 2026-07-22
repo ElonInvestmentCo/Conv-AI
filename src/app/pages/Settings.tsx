@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Settings2, Bell, User, Puzzle, Mic, CreditCard, Database,
-  HardDrive, Shield, Lock, Users, Heart, UserCircle, Keyboard,
-  ChevronRight, Plus, Check, AlertCircle, ArrowRight,
-  FileText, Image as ImageIcon, FileSpreadsheet, Presentation,
-  FilePdf2, Grid2x2, Code, Trash2, Archive, Download, Link,
-  Smartphone, Monitor, Eye, Globe, Zap, Layers,
-} from 'lucide-react';
+  RiSettings4Line, RiBellLine, RiUserLine, RiPuzzleLine, RiMicLine,
+  RiBankCardLine, RiDatabase2Line, RiHardDriveLine, RiShieldLine,
+  RiLockLine, RiGroupLine, RiHeartLine, RiAccountCircleLine,
+  RiKeyboardLine, RiArrowRightSLine, RiAddLine, RiInformationLine,
+  RiFileTextLine, RiImageLine, RiGridLine, RiCodeSSlashLine,
+  RiFlashlightLine, RiStackLine,
+} from '@remixicon/react';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const T = {
@@ -70,7 +70,7 @@ const Chip = ({ label, onClick }: { label: string; onClick?: () => void }) => (
     style={{ border: `1px solid ${T.border}`, color: T.muted, background: T.surface }}
   >
     {label}
-    <ChevronRight size={12} />
+    <RiArrowRightSLine size={12} />
   </button>
 );
 
@@ -118,7 +118,7 @@ function GeneralPanel() {
       {!mfaDismissed && (
         <div className="flex items-start gap-3 p-4 rounded-xl mb-5" style={{ background: T.accentBg, border: `1px solid ${T.accentMid}` }}>
           <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: T.accent }}>
-            <Shield size={16} className="text-white" />
+            <RiShieldLine size={16} className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[13.5px] font-[600]" style={{ color: T.text }}>Secure your account</p>
@@ -231,11 +231,11 @@ function PersonalizationPanel() {
 
 function PluginsPanel() {
   const pluginList = [
-    { icon: FileText, label: 'Default templates', color: '#F59E0B' },
-    { icon: FileText, label: 'Documents', color: '#3B82F6' },
-    { icon: FileText, label: 'PDF', color: '#EF4444' },
-    { icon: Layers, label: 'Presentations', color: '#F59E0B' },
-    { icon: FileText, label: 'Spreadsheets', color: '#10B981' },
+    { icon: RiFileTextLine, label: 'Default templates', color: '#F59E0B' },
+    { icon: RiFileTextLine, label: 'Documents', color: '#3B82F6' },
+    { icon: RiFileTextLine, label: 'PDF', color: '#EF4444' },
+    { icon: RiStackLine, label: 'Presentations', color: '#F59E0B' },
+    { icon: RiFileTextLine, label: 'Spreadsheets', color: '#10B981' },
   ];
   return (
     <div>
@@ -244,7 +244,7 @@ function PluginsPanel() {
         <div className="flex items-center justify-between mt-1">
           <p className="text-[12.5px]" style={{ color: T.muted }}>Choose when Conv AI should ask for permission when using plugins.</p>
           <button className="flex items-center gap-1 text-[12.5px] font-[500] flex-shrink-0 ml-3" style={{ color: T.accent }}>
-            Allow low-risk actions <ChevronRight size={12} />
+            Allow low-risk actions <RiArrowRightSLine size={12} />
           </button>
         </div>
       </div>
@@ -260,7 +260,7 @@ function PluginsPanel() {
               </div>
               <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>{p.label}</span>
             </div>
-            <ChevronRight size={15} style={{ color: T.subtle }} />
+            <RiArrowRightSLine size={15} style={{ color: T.subtle }} />
           </div>
         );
         return content;
@@ -268,20 +268,20 @@ function PluginsPanel() {
       <div className="flex items-center justify-between py-3.5 gap-4" style={{ borderBottom: `1px solid ${T.border}` }}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#F1F5F9' }}>
-            <Grid2x2 size={15} style={{ color: T.muted }} />
+            <RiGridLine size={15} style={{ color: T.muted }} />
           </div>
           <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>Browse plugins</span>
         </div>
-        <ChevronRight size={15} style={{ color: T.subtle }} />
+        <RiArrowRightSLine size={15} style={{ color: T.subtle }} />
       </div>
       <div className="flex items-center justify-between py-3.5">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#F1F5F9' }}>
-            <Code size={15} style={{ color: T.muted }} />
+            <RiCodeSSlashLine size={15} style={{ color: T.muted }} />
           </div>
           <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>Developer mode</span>
         </div>
-        <ChevronRight size={15} style={{ color: T.subtle }} />
+        <RiArrowRightSLine size={15} style={{ color: T.subtle }} />
       </div>
     </div>
   );
@@ -367,7 +367,7 @@ function BillingPanel() {
           <div>
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: T.accent }}>
-                <Zap size={14} className="text-white" />
+                <RiFlashlightLine size={14} className="text-white" />
               </div>
               <p className="text-[15px] font-[700]" style={{ color: T.text }}>Conv AI Free</p>
             </div>
@@ -424,7 +424,7 @@ function DataControlsPanel() {
       </SettingRow>
       <SettingRowLast label="Marketing privacy">
         <button className="flex items-center gap-1 text-[12.5px] font-[500]" style={{ color: T.muted }}>
-          Manage <ChevronRight size={12} />
+          Manage <RiArrowRightSLine size={12} />
         </button>
       </SettingRowLast>
     </div>
@@ -454,26 +454,26 @@ function StoragePanel() {
       <div className="flex items-center justify-between py-3.5 cursor-pointer group" style={{ borderBottom: `1px solid ${T.border}` }}>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#EFF6FF' }}>
-            <FileText size={16} style={{ color: T.accent }} />
+            <RiFileTextLine size={16} style={{ color: T.accent }} />
           </div>
           <div>
             <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Files</p>
             <p className="text-[12px]" style={{ color: T.muted }}>140 MB · 44 files</p>
           </div>
         </div>
-        <ChevronRight size={15} style={{ color: T.subtle }} />
+        <RiArrowRightSLine size={15} style={{ color: T.subtle }} />
       </div>
       <div className="flex items-center justify-between py-3.5 cursor-pointer group">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#F5F3FF' }}>
-            <ImageIcon size={16} style={{ color: '#7C3AED' }} />
+            <RiImageLine size={16} style={{ color: '#7C3AED' }} />
           </div>
           <div>
             <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Images</p>
             <p className="text-[12px]" style={{ color: T.muted }}>102 MB · 275 images</p>
           </div>
         </div>
-        <ChevronRight size={15} style={{ color: T.subtle }} />
+        <RiArrowRightSLine size={15} style={{ color: T.subtle }} />
       </div>
     </div>
   );
@@ -522,7 +522,7 @@ function SecurityPanel() {
       </div>
       <SettingRow label="Active sessions" desc="View all devices that have accessed your account. You can review active sessions, remove trusted devices, or use Log out all to end all sessions.">
         <button className="flex items-center gap-1 text-[12.5px] font-[500]" style={{ color: T.muted }}>
-          2 <ChevronRight size={12} />
+          2 <RiArrowRightSLine size={12} />
         </button>
       </SettingRow>
       <div className="pt-4 pb-2" style={{ borderTop: `1px solid ${T.border}`, marginTop: '0.5rem' }}>
@@ -546,7 +546,7 @@ function ParentalPanel() {
       </div>
       <div className="pt-4">
         <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-[600] transition-all hover:opacity-90" style={{ border: `1.5px dashed ${T.border}`, color: T.muted, width: '100%', justifyContent: 'center' }}>
-          <Plus size={15} />
+          <RiAddLine size={15} />
           Add family member
         </button>
       </div>
@@ -565,7 +565,7 @@ function TrustedContactPanel() {
         </p>
       </div>
       <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-[600] transition-all hover:opacity-90 w-full justify-center" style={{ border: `1.5px dashed ${T.border}`, color: T.muted }}>
-        <Plus size={15} />
+        <RiAddLine size={15} />
         Add contact
       </button>
     </div>
@@ -580,12 +580,12 @@ function AccountPanel() {
       </SettingRow>
       <SettingRow label="Username">
         <button className="flex items-center gap-1 text-[13px] font-[500]" style={{ color: T.muted }}>
-          @alexreed <ChevronRight size={12} />
+          @alexreed <RiArrowRightSLine size={12} />
         </button>
       </SettingRow>
       <SettingRow label="Email">
         <button className="flex items-center gap-1 text-[13px] font-[500]" style={{ color: T.muted }}>
-          alex@convai.com <ChevronRight size={12} />
+          alex@convai.com <RiArrowRightSLine size={12} />
         </button>
       </SettingRow>
       <SettingRowLast label="Delete account" danger>
@@ -600,7 +600,7 @@ function AccountPanel() {
         <div className="rounded-xl p-4 flex items-start justify-between" style={{ background: T.surface, border: `1px solid ${T.border}` }}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#2563EB,#7C3AED)' }}>
-              <Zap size={18} className="text-white" />
+              <RiFlashlightLine size={18} className="text-white" />
             </div>
             <div>
               <p className="text-[13px] font-[600]" style={{ color: T.text }}>PlaceholderGPT</p>
@@ -610,7 +610,7 @@ function AccountPanel() {
           <span className="text-[11px] font-[600] uppercase tracking-wide" style={{ color: T.subtle }}>Preview</span>
         </div>
         <div className="flex items-start gap-3 mt-3 p-3.5 rounded-xl" style={{ background: '#FFFBEB', border: '1px solid #FDE68A' }}>
-          <AlertCircle size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+          <RiInformationLine size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
           <p className="text-[12.5px]" style={{ color: '#92400E' }}>
             Complete verification to publish GPTs to everyone. Verify your identity by adding billing details or verifying your phone number.
           </p>
@@ -666,20 +666,20 @@ function KeyboardPanel() {
 
 // ─── Nav items config ─────────────────────────────────────────────────────────
 const navItems = [
-  { id: 'general',         label: 'General',            icon: Settings2,    panel: GeneralPanel },
-  { id: 'notifications',   label: 'Notifications',      icon: Bell,         panel: NotificationsPanel },
-  { id: 'personalization', label: 'Personalization',    icon: User,         panel: PersonalizationPanel },
-  { id: 'plugins',         label: 'Plugins',            icon: Puzzle,       panel: PluginsPanel },
-  { id: 'voice',           label: 'Voice',              icon: Mic,          panel: VoicePanel },
-  { id: 'billing',         label: 'Billing',            icon: CreditCard,   panel: BillingPanel },
-  { id: 'data-controls',   label: 'Data controls',      icon: Database,     panel: DataControlsPanel },
-  { id: 'storage',         label: 'Storage',            icon: HardDrive,    panel: StoragePanel },
-  { id: 'safety',          label: 'Safety',             icon: Shield,       panel: SafetyPanel },
-  { id: 'security',        label: 'Security and login', icon: Lock,         panel: SecurityPanel },
-  { id: 'parental',        label: 'Parental controls',  icon: Users,        panel: ParentalPanel },
-  { id: 'trusted',         label: 'Trusted contact',    icon: Heart,        panel: TrustedContactPanel },
-  { id: 'account',         label: 'Account',            icon: UserCircle,   panel: AccountPanel },
-  { id: 'keyboard',        label: 'Keyboard',           icon: Keyboard,     panel: KeyboardPanel },
+  { id: 'general',         label: 'General',            icon: RiSettings4Line,    panel: GeneralPanel },
+  { id: 'notifications',   label: 'Notifications',      icon: RiBellLine,         panel: NotificationsPanel },
+  { id: 'personalization', label: 'Personalization',    icon: RiUserLine,         panel: PersonalizationPanel },
+  { id: 'plugins',         label: 'Plugins',            icon: RiPuzzleLine,       panel: PluginsPanel },
+  { id: 'voice',           label: 'Voice',              icon: RiMicLine,          panel: VoicePanel },
+  { id: 'billing',         label: 'Billing',            icon: RiBankCardLine,   panel: BillingPanel },
+  { id: 'data-controls',   label: 'Data controls',      icon: RiDatabase2Line,     panel: DataControlsPanel },
+  { id: 'storage',         label: 'Storage',            icon: RiHardDriveLine,    panel: StoragePanel },
+  { id: 'safety',          label: 'Safety',             icon: RiShieldLine,       panel: SafetyPanel },
+  { id: 'security',        label: 'Security and login', icon: RiLockLine,         panel: SecurityPanel },
+  { id: 'parental',        label: 'Parental controls',  icon: RiGroupLine,        panel: ParentalPanel },
+  { id: 'trusted',         label: 'Trusted contact',    icon: RiHeartLine,        panel: TrustedContactPanel },
+  { id: 'account',         label: 'Account',            icon: RiAccountCircleLine,   panel: AccountPanel },
+  { id: 'keyboard',        label: 'RiKeyboardLine',           icon: RiKeyboardLine,     panel: KeyboardPanel },
 ];
 
 // ─── Main Settings page ───────────────────────────────────────────────────────

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Layers, Plus, Sparkles, MessageSquare, Image, Mic2,
-  FileText, MoreHorizontal, ChevronRight, Search,
-  Clock, Users, Star, Folder
-} from 'lucide-react';
+  RiStackLine, RiAddLine, RiSparklingLine, RiMessage3Line, RiImageLine,
+  RiMicLine, RiFileTextLine, RiMoreLine, RiArrowRightSLine,
+  RiSearchLine, RiTimeLine, RiGroupLine, RiStarLine, RiFolderLine,
+} from '@remixicon/react';
 
 const projects = [
   {
@@ -78,7 +78,7 @@ export default function Projects() {
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white"
             style={{ background: 'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}
           >
-            <Plus size={14} />
+            <RiAddLine size={14} />
             New Project
           </motion.button>
         </div>
@@ -131,14 +131,14 @@ export default function Projects() {
           )}
         </AnimatePresence>
 
-        {/* Search */}
+        {/* RiSearchLine */}
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+          <RiSearchLine size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search projects…"
+            placeholder="RiSearchLine projects…"
             className="w-full pl-9 pr-3 py-2.5 text-[13px] rounded-xl outline-none transition-all"
             style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', color: '#0F172A' }}
             onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
@@ -167,18 +167,18 @@ export default function Projects() {
                       className="w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0"
                       style={{ background: `${project.color}12` }}
                     >
-                      <Folder size={18} style={{ color: project.color }} />
+                      <RiFolderLine size={18} style={{ color: project.color }} />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
                         <p className="text-[14px] font-bold text-[#0F172A]">{project.name}</p>
-                        {project.starred && <Star size={12} className="text-amber-400 fill-amber-400" />}
+                        {project.starred && <RiStarLine size={12} className="text-amber-400 fill-amber-400" />}
                       </div>
                       <p className="text-[12px] text-[#94A3B8] mt-0.5 line-clamp-1">{project.description}</p>
                     </div>
                   </div>
                   <button className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-[#64748B] hover:bg-[#F8FAFC] transition-all opacity-0 group-hover:opacity-100">
-                    <MoreHorizontal size={15} />
+                    <RiMoreLine size={15} />
                   </button>
                 </div>
 
@@ -186,19 +186,19 @@ export default function Projects() {
                 <div className="flex items-center gap-3 mb-4">
                   {project.stats.chats > 0 && (
                     <span className="flex items-center gap-1 text-[12px] text-[#64748B]">
-                      <MessageSquare size={12} className="text-[#93C5FD]" />
+                      <RiMessage3Line size={12} className="text-[#93C5FD]" />
                       {project.stats.chats} chats
                     </span>
                   )}
                   {project.stats.images > 0 && (
                     <span className="flex items-center gap-1 text-[12px] text-[#64748B]">
-                      <Image size={12} className="text-[#C4B5FD]" />
+                      <RiImageLine size={12} className="text-[#C4B5FD]" />
                       {project.stats.images} images
                     </span>
                   )}
                   {project.stats.audio > 0 && (
                     <span className="flex items-center gap-1 text-[12px] text-[#64748B]">
-                      <Mic2 size={12} className="text-[#F9A8D4]" />
+                      <RiMicLine size={12} className="text-[#F9A8D4]" />
                       {project.stats.audio} audio
                     </span>
                   )}
@@ -208,11 +208,11 @@ export default function Projects() {
                 <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid rgba(226,232,240,0.6)' }}>
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1 text-[11.5px] text-[#CBD5E1]">
-                      <Clock size={10} />
+                      <RiTimeLine size={10} />
                       {project.updated}
                     </span>
                     <span className="flex items-center gap-1 text-[11.5px] text-[#CBD5E1]">
-                      <Users size={10} />
+                      <RiGroupLine size={10} />
                       {project.members}
                     </span>
                   </div>
@@ -221,7 +221,7 @@ export default function Projects() {
                     style={{ color: project.color, background: `${project.color}10` }}
                   >
                     Open
-                    <ChevronRight size={12} />
+                    <RiArrowRightSLine size={12} />
                   </button>
                 </div>
               </div>
@@ -233,7 +233,7 @@ export default function Projects() {
         {filtered.length === 0 && (
           <div className="rounded-[20px] p-12 text-center" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)' }}>
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#F1F5F9' }}>
-              <Layers size={22} className="text-[#94A3B8]" />
+              <RiStackLine size={22} className="text-[#94A3B8]" />
             </div>
             <p className="text-[15px] font-semibold text-[#0F172A]">No projects found</p>
             <p className="text-[13px] text-[#94A3B8] mt-1">Create a project to organise your AI work</p>

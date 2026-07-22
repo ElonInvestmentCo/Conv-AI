@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Search, SlidersHorizontal, LayoutGrid, List, Plus, ChevronDown,
-  FileText, Image as ImageIcon, File, MoreHorizontal, Download,
-  Share2, Trash2, Star, ChevronUp, ChevronRight,
-} from 'lucide-react';
+  RiSearchLine, RiEqualizerLine, RiLayoutGridLine, RiListView,
+  RiAddLine, RiArrowDownSLine, RiArrowUpSLine, RiArrowRightSLine,
+  RiFileTextLine, RiImageLine, RiFileLine, RiMoreLine,
+  RiDownloadLine, RiShareLine, RiDeleteBinLine, RiStarLine, RiStarFill,
+} from '@remixicon/react';
 
 type FilterTab = 'All' | 'Images' | 'Documents';
 type SortKey = 'name' | 'modified' | 'size';
@@ -96,7 +97,7 @@ export default function Library() {
 
   const SortIcon = ({ k }: { k: SortKey }) => {
     if (sortKey !== k) return <span className="w-3" />;
-    return sortDir === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
+    return sortDir === 'asc' ? <RiArrowUpSLine size={12} /> : <RiArrowDownSLine size={12} />;
   };
 
   return (
@@ -107,14 +108,14 @@ export default function Library() {
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-[22px] font-[800] tracking-[-0.02em]" style={{ color: '#0F172A' }}>Library</h1>
           <div className="flex items-center gap-3">
-            {/* Search */}
+            {/* RiSearchLine */}
             <div className="relative">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
+              <RiSearchLine size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search files…"
+                placeholder="RiSearchLine files…"
                 className="pl-8 pr-3 py-2 text-[13px] rounded-xl outline-none w-52 transition-all"
                 style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', color: '#0F172A' }}
                 onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
@@ -127,7 +128,7 @@ export default function Library() {
               style={{ background: 'linear-gradient(135deg,#0F172A,#1E293B)', boxShadow: '0 2px 8px rgba(15,23,42,0.2)' }}
             >
               New
-              <ChevronDown size={13} />
+              <RiArrowDownSLine size={13} />
             </button>
           </div>
         </div>
@@ -151,7 +152,7 @@ export default function Library() {
           </div>
           <div className="flex items-center gap-1.5">
             <button className="p-2 rounded-lg text-[#94A3B8] hover:text-[#475569] hover:bg-white transition-all" style={{ border: '1px solid rgba(226,232,240,0.9)' }}>
-              <SlidersHorizontal size={14} />
+              <RiEqualizerLine size={14} />
             </button>
             <button
               onClick={() => setView('grid')}
@@ -162,7 +163,7 @@ export default function Library() {
                 border: '1px solid rgba(226,232,240,0.9)',
               }}
             >
-              <LayoutGrid size={14} />
+              <RiLayoutGridLine size={14} />
             </button>
             <button
               onClick={() => setView('list')}
@@ -173,12 +174,12 @@ export default function Library() {
                 border: '1px solid rgba(226,232,240,0.9)',
               }}
             >
-              <List size={14} />
+              <RiListView size={14} />
             </button>
           </div>
         </div>
 
-        {/* List view */}
+        {/* RiListView view */}
         {view === 'list' && (
           <div className="rounded-2xl overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 1px 4px rgba(15,23,42,0.04)' }}>
             {/* Table header */}
@@ -218,7 +219,7 @@ export default function Library() {
                 <div className="flex items-center gap-3 min-w-0">
                   <FileThumb file={file} size={30} />
                   <span className="text-[13px] font-[500] truncate" style={{ color: '#0F172A' }}>{file.name}</span>
-                  {file.starred && <Star size={11} className="flex-shrink-0 fill-amber-400 text-amber-400" />}
+                  {file.starred && <RiStarLine size={11} className="flex-shrink-0 fill-amber-400 text-amber-400" />}
                 </div>
                 {/* Modified */}
                 <span className="text-[12.5px]" style={{ color: '#94A3B8' }}>{file.modified}</span>
@@ -236,7 +237,7 @@ export default function Library() {
                         className="p-1 rounded-lg transition-all"
                         style={{ color: '#94A3B8' }}
                       >
-                        <MoreHorizontal size={15} />
+                        <RiMoreLine size={15} />
                       </motion.button>
                     )}
                   </AnimatePresence>
@@ -253,10 +254,10 @@ export default function Library() {
                       style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 8px 24px rgba(15,23,42,0.12)', width: 160 }}
                     >
                       {[
-                        { icon: Download, label: 'Download' },
-                        { icon: Share2, label: 'Share' },
-                        { icon: Star, label: file.starred ? 'Unstar' : 'Star' },
-                        { icon: Trash2, label: 'Delete', danger: true },
+                        { icon: RiDownloadLine, label: 'RiDownloadLine' },
+                        { icon: RiShareLine, label: 'Share' },
+                        { icon: RiStarLine, label: file.starred ? 'Unstar' : 'RiStarLine' },
+                        { icon: RiDeleteBinLine, label: 'Delete', danger: true },
                       ].map(action => (
                         <button
                           key={action.label}
