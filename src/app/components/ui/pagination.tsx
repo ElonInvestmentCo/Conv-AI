@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "@remixicon/react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "./utils";
 import { Button, buttonVariants } from "./button";
