@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiMicLine, RiSparklingLine, RiPlayLine, RiPauseLine,
-  RiDownloadLine, RiRefreshLine, RiVolumeUpLine, RiEqualizerLine,
-  RiTimeLine, RiFileMusicLine,
-} from '@remixicon/react';
+  Mic, Sparkles, Play, Pause,
+  Download, RefreshCw, Volume2, SlidersHorizontal,
+  Clock, Music,
+} from 'lucide-react';
 
 const voices = [
   { id: 'alloy', name: 'Alloy', desc: 'Neutral, balanced', gender: 'Neutral' },
@@ -146,12 +146,12 @@ export default function TextToSpeech() {
           >
             {generating ? (
               <>
-                <RiRefreshLine size={15} className="animate-spin" />
+                <RefreshCw size={15} className="animate-spin" />
                 Generating audio…
               </>
             ) : (
               <>
-                <RiSparklingLine size={15} />
+                <Sparkles size={15} />
                 Generate Speech
               </>
             )}
@@ -201,20 +201,20 @@ export default function TextToSpeech() {
                   style={{ background: playing === item.id ? 'linear-gradient(135deg, #2563EB, #7C3AED)' : '#EFF6FF' }}
                 >
                   {playing === item.id
-                    ? <RiPauseLine size={14} className="text-white" />
-                    : <RiPlayLine size={14} className="text-[#2563EB]" />
+                    ? <Pause size={14} className="text-white" />
+                    : <Play size={14} className="text-[#2563EB]" />
                   }
                 </button>
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] font-medium text-[#0F172A] line-clamp-1">{item.text}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[11px] text-[#CBD5E1] flex items-center gap-1"><RiVolumeUpLine size={10} />{item.voice}</span>
-                    <span className="text-[11px] text-[#CBD5E1] flex items-center gap-1"><RiTimeLine size={10} />{item.duration}</span>
+                    <span className="text-[11px] text-[#CBD5E1] flex items-center gap-1"><Volume2 size={10} />{item.voice}</span>
+                    <span className="text-[11px] text-[#CBD5E1] flex items-center gap-1"><Clock size={10} />{item.duration}</span>
                     <span className="text-[11px] text-[#CBD5E1]">{item.date}</span>
                   </div>
                 </div>
                 <button className="p-2 rounded-lg text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all flex-shrink-0">
-                  <RiDownloadLine size={15} />
+                  <Download size={15} />
                 </button>
               </motion.div>
             ))}

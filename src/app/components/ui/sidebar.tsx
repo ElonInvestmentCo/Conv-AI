@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { RiSidebarFoldLine } from "@remixicon/react";
+import { PanelLeft } from "lucide-react";
 
 import { useIsMobile } from "./use-mobile";
 import { cn } from "./utils";
@@ -273,7 +273,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <RiSidebarFoldLine />
+      <PanelLeft />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

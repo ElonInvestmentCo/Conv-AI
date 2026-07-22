@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
-  RiMagicLine,
-  RiSparklingLine,
-  RiRobot2Line,
-  RiCpuLine,
-  RiGlobalLine,
-  RiFileTextLine,
-  RiMicLine,
-  RiAddLine,
-  RiArrowRightSLine,
-  RiCodeSSlashLine,
-  RiEqualizerLine,
-  RiSaveLine,
-  RiPlayLine,
-  RiFlashlightLine,
-  RiBookOpenLine,
-  RiShieldLine,
-  RiMessage3Line,
-} from '@remixicon/react';
+  Wand2,
+  Sparkles,
+  Bot,
+  Cpu,
+  Globe,
+  FileText,
+  Mic,
+  Plus,
+  ChevronRight,
+  Code2,
+  SlidersHorizontal,
+  Save,
+  Play,
+  Zap,
+  BookOpen,
+  Shield,
+  MessageSquare,
+} from 'lucide-react';
 
 const capabilities = [
-  { id: 'web', icon: RiGlobalLine, label: 'Web Browse', desc: 'Search and read live web pages', enabled: true },
-  { id: 'code', icon: RiCodeSSlashLine, label: 'Code Execution', desc: 'Run Python, JS, and more', enabled: true },
-  { id: 'files', icon: RiFileTextLine, label: 'File Access', desc: 'Read and write documents', enabled: false },
-  { id: 'voice', icon: RiMicLine, label: 'Voice Input', desc: 'Accept spoken commands', enabled: false },
-  { id: 'memory', icon: RiBookOpenLine, label: 'Memory', desc: 'Persist context across sessions', enabled: true },
-  { id: 'api', icon: RiFlashlightLine, label: 'API Calls', desc: 'Connect to external services', enabled: false },
+  { id: 'web', icon: Globe, label: 'Web Browse', desc: 'Search and read live web pages', enabled: true },
+  { id: 'code', icon: Code2, label: 'Code Execution', desc: 'Run Python, JS, and more', enabled: true },
+  { id: 'files', icon: FileText, label: 'File Access', desc: 'Read and write documents', enabled: false },
+  { id: 'voice', icon: Mic, label: 'Voice Input', desc: 'Accept spoken commands', enabled: false },
+  { id: 'memory', icon: BookOpen, label: 'Memory', desc: 'Persist context across sessions', enabled: true },
+  { id: 'api', icon: Zap, label: 'API Calls', desc: 'Connect to external services', enabled: false },
 ];
 
 const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
@@ -44,10 +44,10 @@ const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
 
 const tones = ['Professional', 'Friendly', 'Concise', 'Creative', 'Technical', 'Empathetic'];
 const templates = [
-  { name: 'Customer Support', icon: RiMessage3Line, color: '#2563EB' },
-  { name: 'Research Bot', icon: RiGlobalLine, color: '#7C3AED' },
-  { name: 'Code Assistant', icon: RiCodeSSlashLine, color: '#059669' },
-  { name: 'Content Writer', icon: RiFileTextLine, color: '#D97706' },
+  { name: 'Customer Support', icon: MessageSquare, color: '#2563EB' },
+  { name: 'Research Bot', icon: Globe, color: '#7C3AED' },
+  { name: 'Code Assistant', icon: Code2, color: '#059669' },
+  { name: 'Content Writer', icon: FileText, color: '#D97706' },
 ];
 
 export default function Builder() {
@@ -73,10 +73,10 @@ export default function Builder() {
           </div>
           <div className="flex items-center gap-2">
             <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-[#475569] transition-all hover:bg-[#F8FAFC]" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
-              <RiPlayLine size={14} /> Preview
+              <Play size={14} /> Preview
             </button>
             <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all" style={{ background: 'linear-gradient(135deg, #2563EB, #4F46E5)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}>
-              <RiSaveLine size={14} /> Save Agent
+              <Save size={14} /> Save Agent
             </button>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default function Builder() {
                   }}
                 >
                   <div className="flex items-center gap-2.5">
-                    <RiCpuLine size={14} className={model === m ? 'text-[#2563EB]' : 'text-[#94A3B8]'} />
+                    <Cpu size={14} className={model === m ? 'text-[#2563EB]' : 'text-[#94A3B8]'} />
                     <span className="text-[13px] font-semibold" style={{ color: model === m ? '#2563EB' : '#0F172A' }}>{m}</span>
                   </div>
                   {model === m && <div className="w-2 h-2 rounded-full bg-[#2563EB]" />}
@@ -209,7 +209,7 @@ export default function Builder() {
             {/* Parameters */}
             <div className="rounded-[20px] p-5 space-y-4" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
               <div className="flex items-center gap-2">
-                <RiEqualizerLine size={14} className="text-[#94A3B8]" />
+                <SlidersHorizontal size={14} className="text-[#94A3B8]" />
                 <p className="text-[12px] font-bold text-[#94A3B8] uppercase tracking-[0.06em]">Parameters</p>
               </div>
               <div>
@@ -242,12 +242,12 @@ export default function Builder() {
             {/* Deploy */}
             <div className="rounded-[20px] p-5 text-center" style={{ background: 'linear-gradient(135deg, #0F172A, #1E1B4B)', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}>
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-                <RiRobot2Line size={18} className="text-white" />
+                <Bot size={18} className="text-white" />
               </div>
               <p className="text-[14px] font-bold text-white mb-1">Ready to deploy?</p>
               <p className="text-[12px] text-[#64748B] mb-4">Share your agent or embed it anywhere</p>
               <button className="w-full py-2.5 rounded-[12px] text-[13px] font-semibold text-white transition-all flex items-center justify-center gap-2" style={{ background: 'linear-gradient(135deg, #2563EB, #4F46E5)' }}>
-                <RiFlashlightLine size={14} /> Deploy Agent
+                <Zap size={14} /> Deploy Agent
               </button>
             </div>
           </div>

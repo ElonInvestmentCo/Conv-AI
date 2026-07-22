@@ -2,41 +2,41 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiSparklingLine,
-  RiMessage3Line,
-  RiImageLine,
-  RiBookOpenLine,
-  RiStackLine,
-  RiMagicLine,
-  RiMic2Line,
-  RiMicLine,
-  RiBellLine,
-  RiSettings4Line,
-  RiUserLine,
-  RiQuestionLine,
-  RiArrowLeftSLine,
-  RiArrowRightSLine,
-  RiSearchLine,
-  RiLogoutBoxLine,
-  RiFlashlightLine,
-} from '@remixicon/react';
+  Sparkles,
+  MessageSquare,
+  Image,
+  BookOpen,
+  Layers,
+  Wand2,
+  Mic2,
+  Mic,
+  Bell,
+  Settings,
+  User,
+  HelpCircle,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  LogOut,
+  Zap,
+} from 'lucide-react';
 
 const mainNav = [
-  { label: 'New Chat', path: '/chat', icon: RiMessage3Line },
-  { label: 'Images', path: '/images', icon: RiImageLine },
-  { label: 'Library', path: '/library', icon: RiBookOpenLine },
-  { label: 'Projects', path: '/projects', icon: RiStackLine },
-  { label: 'Builder', path: '/builder', icon: RiMagicLine },
-  { label: 'Text to Speech', path: '/tts', icon: RiMic2Line },
-  { label: 'Voice', path: '/voice', icon: RiMicLine },
+  { label: 'New Chat', path: '/chat', icon: MessageSquare },
+  { label: 'Images', path: '/images', icon: Image },
+  { label: 'Library', path: '/library', icon: BookOpen },
+  { label: 'Projects', path: '/projects', icon: Layers },
+  { label: 'Builder', path: '/builder', icon: Wand2 },
+  { label: 'Text to Speech', path: '/tts', icon: Mic2 },
+  { label: 'Voice', path: '/voice', icon: Mic },
 ];
 
 const profileMenu = [
-  { icon: RiFlashlightLine, label: 'Upgrade Plan', path: null, accent: true, chevron: false },
-  { icon: RiBellLine, label: 'Notifications', path: '/notifications', accent: false, chevron: false },
-  { icon: RiUserLine, label: 'Account', path: '/account', accent: false, chevron: false },
-  { icon: RiSettings4Line, label: 'Settings', path: '/settings', accent: false, chevron: false },
-  { icon: RiQuestionLine, label: 'Help', path: '/help', accent: false, chevron: true },
+  { icon: Zap, label: 'Upgrade Plan', path: null, accent: true, chevron: false },
+  { icon: Bell, label: 'Notifications', path: '/notifications', accent: false, chevron: false },
+  { icon: User, label: 'Account', path: '/account', accent: false, chevron: false },
+  { icon: Settings, label: 'Settings', path: '/settings', accent: false, chevron: false },
+  { icon: HelpCircle, label: 'Help', path: '/help', accent: false, chevron: true },
 ];
 
 function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }> }; collapsed: boolean }) {
@@ -119,7 +119,7 @@ export default function MainLayout() {
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.35)' }}
           >
-            <RiSparklingLine size={15} className="text-white" />
+            <Sparkles size={15} className="text-white" />
           </div>
           <AnimatePresence initial={false}>
             {!collapsed && (
@@ -174,7 +174,7 @@ export default function MainLayout() {
                     <p className="text-[13px] font-bold text-[#0F172A] truncate">Alex Reed</p>
                     <p className="text-[11px] text-[#94A3B8]">Pro Plan</p>
                   </div>
-                  <RiArrowRightSLine size={16} className="text-[#CBD5E1] flex-shrink-0" />
+                  <ChevronRight size={16} className="text-[#CBD5E1] flex-shrink-0" />
                 </div>
 
                 {/* Menu items */}
@@ -191,7 +191,7 @@ export default function MainLayout() {
                         <span className={`flex-1 text-[13px] font-medium ${item.accent ? 'text-[#7C3AED] font-semibold' : 'text-[#0F172A]'}`}>
                           {item.label}
                         </span>
-                        {item.chevron && <RiArrowRightSLine size={14} className="text-[#CBD5E1]" />}
+                        {item.chevron && <ChevronRight size={14} className="text-[#CBD5E1]" />}
                       </button>
                     );
                   })}
@@ -200,7 +200,7 @@ export default function MainLayout() {
                 {/* Log out */}
                 <div style={{ borderTop: '1px solid rgba(226,232,240,0.7)' }}>
                   <button className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[#FEF2F2]">
-                    <RiLogoutBoxLine size={15} className="text-[#EF4444]" />
+                    <LogOut size={15} className="text-[#EF4444]" />
                     <span className="text-[13px] font-medium text-[#EF4444]">Log out</span>
                   </button>
                 </div>
@@ -242,7 +242,7 @@ export default function MainLayout() {
               onClick={() => setCollapsed(!collapsed)}
               className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all"
             >
-              {collapsed ? <RiArrowRightSLine size={15} /> : <RiArrowLeftSLine size={15} />}
+              {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
             </button>
           </div>
         </div>
@@ -252,7 +252,7 @@ export default function MainLayout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between px-6 h-14 flex-shrink-0" style={{ background: '#fff', borderBottom: '1px solid rgba(226,232,240,0.8)' }}>
           <div className="relative flex-1 max-w-sm">
-            <RiSearchLine size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
             <input
               type="text"
               placeholder="Search conversations, projects, files..."
@@ -268,7 +268,7 @@ export default function MainLayout() {
               GPT-4o
             </div>
             <NavLink to="/notifications" className="relative p-2.5 rounded-xl text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all">
-              <RiBellLine size={16} />
+              <Bell size={16} />
               <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-blue-500 rounded-full" />
             </NavLink>
             <NavLink
@@ -276,7 +276,7 @@ export default function MainLayout() {
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all"
               style={{ background: 'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}
             >
-              <RiSparklingLine size={13} />
+              <Sparkles size={13} />
               New Chat
             </NavLink>
           </div>

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as MenubarPrimitive from "@radix-ui/react-menubar";
-import { RiCheckLine, RiArrowRightSLine, RiCircleFill } from "@remixicon/react";
+import { Check, ChevronRight, Circle } from "@remixicon/react";
 
 import { cn } from "./utils";
 
@@ -129,7 +129,7 @@ function MenubarCheckboxItem({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <MenubarPrimitive.ItemIndicator>
-          <RiCheckLine className="size-4" />
+          <Check className="size-4" />
         </MenubarPrimitive.ItemIndicator>
       </span>
       {children}
@@ -153,7 +153,7 @@ function MenubarRadioItem({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <MenubarPrimitive.ItemIndicator>
-          <RiCircleFill className="size-2" />
+          <Circle className="size-2" />
         </MenubarPrimitive.ItemIndicator>
       </span>
       {children}
@@ -235,7 +235,7 @@ function MenubarSubTrigger({
       {...props}
     >
       {children}
-      <RiArrowRightSLine className="ml-auto h-4 w-4" />
+      <ChevronRight className="ml-auto h-4 w-4" />
     </MenubarPrimitive.SubTrigger>
   );
 }

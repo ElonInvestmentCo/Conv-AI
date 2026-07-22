@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiMicLine, RiAddLine, RiArrowLeftSLine, RiArrowRightSLine,
-  RiDownloadLine, RiLoopRightLine, RiFileCopyLine, RiEditLine,
-  RiMoreLine, RiStarLine, RiSearchLine,
-} from '@remixicon/react';
+  Mic, Plus, ChevronLeft, ChevronRight,
+  Download, RotateCcw, Copy, Pencil,
+  MoreHorizontal, Star, Search,
+} from 'lucide-react';
 
 const stylePresets = [
   { label: 'Handwritten style', color: 'linear-gradient(135deg,#fbbf24,#f97316)', emoji: '✍️' },
@@ -62,10 +62,10 @@ function ImageCard({ img }: { img: typeof gallery[0] }) {
             style={{ background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(2px)' }}
           >
             {[
-              { icon: RiEditLine, title: 'RiEditLine' },
-              { icon: RiDownloadLine, title: 'RiDownloadLine' },
-              { icon: RiFileCopyLine, title: 'RiFileCopyLine' },
-              { icon: RiLoopRightLine, title: 'Regenerate' },
+              { icon: Pencil, title: 'Pencil' },
+              { icon: Download, title: 'Download' },
+              { icon: Copy, title: 'Copy' },
+              { icon: RotateCcw, title: 'Regenerate' },
             ].map(a => (
               <button
                 key={a.title}
@@ -80,13 +80,13 @@ function ImageCard({ img }: { img: typeof gallery[0] }) {
         )}
       </AnimatePresence>
 
-      {/* RiStarLine button */}
+      {/* Star button */}
       <button
         onClick={e => { e.stopPropagation(); setLiked(!liked); }}
         className="absolute top-2.5 right-2.5 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100"
         style={{ background: liked ? '#FEF3C7' : 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)' }}
       >
-        <RiStarLine size={12} className={liked ? 'fill-amber-400 text-amber-400' : 'text-[#94A3B8]'} />
+        <Star size={12} className={liked ? 'fill-amber-400 text-amber-400' : 'text-[#94A3B8]'} />
       </button>
 
       {/* Caption */}
@@ -95,7 +95,7 @@ function ImageCard({ img }: { img: typeof gallery[0] }) {
         <div className="flex items-center justify-between mt-1.5">
           <span className="text-[11px]" style={{ color: '#CBD5E1' }}>{img.style} · {img.date}</span>
           <button className="p-0.5 text-[#CBD5E1] hover:text-[#64748B]">
-            <RiMoreLine size={13} />
+            <MoreHorizontal size={13} />
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function Images() {
           className="flex items-center gap-3 px-4 py-3 rounded-2xl"
           style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 2px 12px rgba(15,23,42,0.06)' }}
         >
-          <RiMicLine size={16} style={{ color: '#CBD5E1', flexShrink: 0 }} />
+          <Mic size={16} style={{ color: '#CBD5E1', flexShrink: 0 }} />
           <input
             type="text"
             value={prompt}
@@ -157,7 +157,7 @@ export default function Images() {
                 transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
               />
             ) : (
-              <RiAddLine size={15} className="text-white" />
+              <Plus size={15} className="text-white" />
             )}
           </button>
         </div>
@@ -173,7 +173,7 @@ export default function Images() {
                 className="p-1.5 rounded-lg transition-all disabled:opacity-30"
                 style={{ border: '1px solid rgba(226,232,240,0.9)', background: '#fff', color: '#64748B' }}
               >
-                <RiArrowLeftSLine size={14} />
+                <ChevronLeft size={14} />
               </button>
               <button
                 onClick={() => setPresetIdx(Math.min(stylePresets.length - visiblePresets, presetIdx + 1))}
@@ -181,7 +181,7 @@ export default function Images() {
                 className="p-1.5 rounded-lg transition-all disabled:opacity-30"
                 style={{ border: '1px solid rgba(226,232,240,0.9)', background: '#fff', color: '#64748B' }}
               >
-                <RiArrowRightSLine size={14} />
+                <ChevronRight size={14} />
               </button>
             </div>
           </div>
@@ -247,12 +247,12 @@ export default function Images() {
           <div className="flex items-center justify-between mb-3">
             <p className="text-[15px] font-[700]" style={{ color: '#0F172A' }}>My images</p>
             <div className="relative">
-              <RiSearchLine size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="RiSearchLine images…"
+                placeholder="Search images…"
                 className="pl-8 pr-3 py-1.5 text-[12.5px] rounded-xl outline-none w-44 transition-all"
                 style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', color: '#0F172A' }}
                 onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}

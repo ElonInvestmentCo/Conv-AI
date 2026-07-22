@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiMicLine,
-  RiMicOffLine,
-  RiVolumeUpLine,
-  RiVolumeMuteLine,
-  RiSparklingLine,
-  RiPhoneLine,
-  RiCloseLine,
-  RiArrowRightSLine,
-} from '@remixicon/react';
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  Phone,
+  X,
+  ChevronRight,
+} from 'lucide-react';
 
 const voices = [
   { id: 'alloy', name: 'Alloy', desc: 'Neutral, balanced', gender: 'Neutral' },
@@ -67,10 +67,10 @@ export default function Voice() {
             >
               {active ? (
                 <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                  <RiSparklingLine size={36} className="text-white" />
+                  <Sparkles size={36} className="text-white" />
                 </motion.div>
               ) : (
-                <RiMicLine size={36} className="text-[#94A3B8]" />
+                <Mic size={36} className="text-[#94A3B8]" />
               )}
             </motion.button>
           </div>
@@ -88,7 +88,7 @@ export default function Voice() {
             className="w-12 h-12 rounded-full flex items-center justify-center transition-all"
             style={{ background: muted ? '#FEF2F2' : '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}
           >
-            {muted ? <RiMicOffLine size={18} className="text-red-500" /> : <RiMicLine size={18} className="text-[#64748B]" />}
+            {muted ? <MicOff size={18} className="text-red-500" /> : <Mic size={18} className="text-[#64748B]" />}
           </button>
 
           {active && (
@@ -97,7 +97,7 @@ export default function Voice() {
               className="w-14 h-14 rounded-full flex items-center justify-center transition-all"
               style={{ background: '#FEF2F2', border: '1px solid #FECACA' }}
             >
-              <RiCloseLine size={22} className="text-red-500" />
+              <X size={22} className="text-red-500" />
             </button>
           )}
 
@@ -106,7 +106,7 @@ export default function Voice() {
             className="w-12 h-12 rounded-full flex items-center justify-center transition-all"
             style={{ background: speakerOff ? '#FEF2F2' : '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)' }}
           >
-            {speakerOff ? <RiVolumeMuteLine size={18} className="text-red-500" /> : <RiVolumeUpLine size={18} className="text-[#64748B]" />}
+            {speakerOff ? <VolumeX size={18} className="text-red-500" /> : <Volume2 size={18} className="text-[#64748B]" />}
           </button>
         </div>
 

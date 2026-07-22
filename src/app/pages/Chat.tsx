@@ -1,35 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiSparklingLine,
-  RiSendPlaneLine,
-  RiAttachmentLine,
-  RiMicLine,
-  RiMicOffLine,
-  RiImageLine,
-  RiFileTextLine,
-  RiGlobalLine,
-  RiCodeSSlashLine,
-  RiLightbulbLine,
-  RiPencilLine,
-  RiSearchLine,
-  RiFlashlightLine,
-  RiArrowDownSLine,
-  RiLoopRightLine,
-  RiFileCopyLine,
-  RiThumbUpLine,
-  RiThumbDownLine,
-  RiStopCircleLine,
-  RiRobot2Line,
-} from '@remixicon/react';
+  Sparkles,
+  Send,
+  Paperclip,
+  Mic,
+  MicOff,
+  Image,
+  FileText,
+  Globe,
+  Code2,
+  Lightbulb,
+  Pencil,
+  Search,
+  Zap,
+  ChevronDown,
+  RotateCcw,
+  Copy,
+  ThumbsUp,
+  ThumbsDown,
+  StopCircle,
+  Bot,
+} from 'lucide-react';
 
 const prompts = [
-  { icon: <RiCodeSSlashLine size={15} className="text-blue-500" />, title: 'Write code', desc: 'Debug, refactor, or build something new', bg: '#EFF6FF', border: '#BFDBFE' },
-  { icon: <RiPencilLine size={15} className="text-violet-500" />, title: 'Draft content', desc: 'Emails, blog posts, social copy', bg: '#F5F3FF', border: '#DDD6FE' },
-  { icon: <RiSearchLine size={15} className="text-emerald-500" />, title: 'Research', desc: 'Deep analysis and comprehensive summaries', bg: '#F0FDF4', border: '#BBF7D0' },
-  { icon: <RiLightbulbLine size={15} className="text-amber-500" />, title: 'Brainstorm', desc: 'Generate ideas and explore possibilities', bg: '#FFFBEB', border: '#FDE68A' },
-  { icon: <RiFileTextLine size={15} className="text-rose-500" />, title: 'Analyze document', desc: 'Upload files for instant AI analysis', bg: '#FFF1F2', border: '#FECDD3' },
-  { icon: <RiGlobalLine size={15} className="text-cyan-500" />, title: 'Browse the web', desc: 'Search and summarize live information', bg: '#ECFEFF', border: '#A5F3FC' },
+  { icon: <Code2 size={15} className="text-blue-500" />, title: 'Write code', desc: 'Debug, refactor, or build something new', bg: '#EFF6FF', border: '#BFDBFE' },
+  { icon: <Pencil size={15} className="text-violet-500" />, title: 'Draft content', desc: 'Emails, blog posts, social copy', bg: '#F5F3FF', border: '#DDD6FE' },
+  { icon: <Search size={15} className="text-emerald-500" />, title: 'Research', desc: 'Deep analysis and comprehensive summaries', bg: '#F0FDF4', border: '#BBF7D0' },
+  { icon: <Lightbulb size={15} className="text-amber-500" />, title: 'Brainstorm', desc: 'Generate ideas and explore possibilities', bg: '#FFFBEB', border: '#FDE68A' },
+  { icon: <FileText size={15} className="text-rose-500" />, title: 'Analyze document', desc: 'Upload files for instant AI analysis', bg: '#FFF1F2', border: '#FECDD3' },
+  { icon: <Globe size={15} className="text-cyan-500" />, title: 'Browse the web', desc: 'Search and summarize live information', bg: '#ECFEFF', border: '#A5F3FC' },
 ];
 
 type Msg = { id: number; role: 'user' | 'ai'; text?: string; thinking?: boolean };
@@ -73,7 +73,7 @@ const AIAvatar = () => (
     className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
     style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}
   >
-    <RiSparklingLine size={12} className="text-white" />
+    <Sparkles size={12} className="text-white" />
   </div>
 );
 
@@ -95,7 +95,7 @@ const AIMessage = ({ text }: { text: string }) => {
           ))}
         </div>
         <div className="flex items-center gap-1 mt-3">
-          {[RiFileCopyLine, RiThumbUpLine, RiThumbDownLine, RiLoopRightLine].map((Icon, i) => (
+          {[Copy, ThumbsUp, ThumbsDown, RotateCcw].map((Icon, i) => (
             <button key={i} className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-[#64748B] hover:bg-[#F8FAFC] transition-all">
               <Icon size={13} />
             </button>
@@ -160,7 +160,7 @@ export default function Chat() {
                   className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
                   style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)', boxShadow: '0 4px 20px rgba(37,99,235,0.3)' }}
                 >
-                  <RiSparklingLine size={24} className="text-white" />
+                  <Sparkles size={24} className="text-white" />
                 </div>
                 <h1 className="text-[28px] font-bold text-[#0F172A] tracking-[-0.03em] mb-2">What can I help you with?</h1>
                 <p className="text-[15px] text-[#64748B]">Powered by <span className="font-semibold text-[#2563EB]">{model}</span></p>
@@ -268,7 +268,7 @@ export default function Chat() {
                 onClick={() => setVoiceMode(!voiceMode)}
                 title="Voice input"
               >
-                <RiMicLine size={18} />
+                <Mic size={18} />
               </button>
 
               {/* Voice/waveform circular button — 55×53 from screenshot */}

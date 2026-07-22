@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiQuestionLine,
-  RiSearchLine,
-  RiArrowDownSLine,
-  RiArrowRightSLine,
-  RiMessage3Line,
-  RiRobot2Line,
-  RiFlashlightLine,
-  RiBookOpenLine,
-  RiCodeSSlashLine,
-  RiGlobalLine,
-  RiExternalLinkLine,
-  RiMailLine,
-  RiSparklingLine,
-} from '@remixicon/react';
+  HelpCircle,
+  Search,
+  ChevronDown,
+  ChevronRight,
+  MessageSquare,
+  Bot,
+  Zap,
+  BookOpen,
+  Code2,
+  Globe,
+  ExternalLink,
+  Mail,
+  Sparkles,
+} from 'lucide-react';
 
 const faqs = [
   { q: 'What is Conv AI?', a: 'Conv AI is a premium AI platform that gives you access to the world\'s best AI models — including GPT-4o, Claude 3.5, and o1 — in a single, beautifully designed workspace. You can chat, generate images, run agents, automate workflows, and more.' },
@@ -28,12 +28,12 @@ const faqs = [
 ];
 
 const guides = [
-  { title: 'Getting started with Conv AI', icon: RiSparklingLine, color: '#2563EB', bg: '#EFF6FF', time: '5 min' },
-  { title: 'Building your first AI Agent', icon: RiRobot2Line, color: '#7C3AED', bg: '#F5F3FF', time: '10 min' },
-  { title: 'Setting up Automations', icon: RiFlashlightLine, color: '#D97706', bg: '#FFFBEB', time: '8 min' },
-  { title: 'Knowledge Base best practices', icon: RiBookOpenLine, color: '#059669', bg: '#F0FDF4', time: '12 min' },
-  { title: 'Using the API', icon: RiCodeSSlashLine, color: '#0891B2', bg: '#ECFEFF', time: '15 min' },
-  { title: 'Prompt engineering tips', icon: RiMessage3Line, color: '#DB2777', bg: '#FDF2F8', time: '7 min' },
+  { title: 'Getting started with Conv AI', icon: Sparkles, color: '#2563EB', bg: '#EFF6FF', time: '5 min' },
+  { title: 'Building your first AI Agent', icon: Bot, color: '#7C3AED', bg: '#F5F3FF', time: '10 min' },
+  { title: 'Setting up Automations', icon: Zap, color: '#D97706', bg: '#FFFBEB', time: '8 min' },
+  { title: 'Knowledge Base best practices', icon: BookOpen, color: '#059669', bg: '#F0FDF4', time: '12 min' },
+  { title: 'Using the API', icon: Code2, color: '#0891B2', bg: '#ECFEFF', time: '15 min' },
+  { title: 'Prompt engineering tips', icon: MessageSquare, color: '#DB2777', bg: '#FDF2F8', time: '7 min' },
 ];
 
 export default function Help() {
@@ -52,7 +52,7 @@ export default function Help() {
         </div>
 
         <div className="relative">
-          <RiSearchLine size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -85,7 +85,7 @@ export default function Help() {
                     <p className="text-[13px] font-semibold text-[#0F172A] leading-snug">{guide.title}</p>
                     <p className="text-[11.5px] text-[#94A3B8] mt-0.5">{guide.time} read</p>
                   </div>
-                  <RiArrowRightSLine size={15} className="text-[#E2E8F0] group-hover:text-[#94A3B8] transition-colors flex-shrink-0" />
+                  <ChevronRight size={15} className="text-[#E2E8F0] group-hover:text-[#94A3B8] transition-colors flex-shrink-0" />
                 </motion.button>
               );
             })}
@@ -104,7 +104,7 @@ export default function Help() {
                   className="w-full flex items-center justify-between px-5 py-4 text-left"
                 >
                   <p className="text-[14px] font-semibold text-[#0F172A] pr-4">{faq.q}</p>
-                  <RiArrowDownSLine
+                  <ChevronDown
                     size={16}
                     className="text-[#94A3B8] flex-shrink-0 transition-transform duration-200"
                     style={{ transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)' }}
@@ -132,16 +132,16 @@ export default function Help() {
 
         <div className="rounded-[20px] p-6 text-center" style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%)', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}>
           <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-            <RiMessage3Line size={20} className="text-white" />
+            <MessageSquare size={20} className="text-white" />
           </div>
           <p className="text-[16px] font-bold text-white mb-1">Still need help?</p>
           <p className="text-[13px] text-[#64748B] mb-4">Our support team typically responds in under 2 hours.</p>
           <div className="flex items-center justify-center gap-3">
             <button className="flex items-center gap-2 px-4 py-2.5 rounded-[12px] text-[13px] font-semibold text-white transition-all" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <RiMailLine size={14} /> Email Support
+              <Mail size={14} /> Email Support
             </button>
             <button className="flex items-center gap-2 px-4 py-2.5 rounded-[12px] text-[13px] font-semibold text-white transition-all" style={{ background: 'linear-gradient(135deg, #2563EB, #4F46E5)', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>
-              <RiMessage3Line size={14} /> Live Chat
+              <MessageSquare size={14} /> Live Chat
             </button>
           </div>
         </div>
