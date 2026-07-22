@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -24,10 +24,12 @@ import {
   Pencil,
   Archive,
   Trash2,
+  MessageSquare,
+  X,
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
 
-// ── Conv AI Logo Mark ──────────────────────────────────────────────────────────
+// ── Logo ───────────────────────────────────────────────────────────────────────
 const LogoMark = ({ size = 22 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
     <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill="#F8FAFC" />
@@ -35,7 +37,7 @@ const LogoMark = ({ size = 22 }: { size?: number }) => (
   </svg>
 );
 
-// ── Static nav (non-chat items) ────────────────────────────────────────────────
+// ── Static nav ─────────────────────────────────────────────────────────────────
 const secondaryNav = [
   { label: 'Images',         path: '/images',    Icon: Images          },
   { label: 'Library',        path: '/library',   Icon: LibraryBig      },
@@ -45,7 +47,7 @@ const secondaryNav = [
   { label: 'Voice',          path: '/voice',     Icon: Mic             },
 ];
 
-// ── Profile popup menu ─────────────────────────────────────────────────────────
+// ── Profile menu ───────────────────────────────────────────────────────────────
 const popupMenu = [
   { Icon: User,       label: 'Account',            path: '/account',  divideAfter: false, accent: false },
   { Icon: Settings,   label: 'Settings',           path: '/settings', divideAfter: false, accent: false },
@@ -56,7 +58,9 @@ const popupMenu = [
 ];
 
 // ── Nav item ───────────────────────────────────────────────────────────────────
-function NavItem({ path, label, Icon, collapsed }: { path: string; label: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>; collapsed: boolean }) {
+type IconComponent = React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
+
+function NavItem({ path, label, Icon, collapsed }: { path: string; label: string; Icon: IconComponent; collapsed: boolean }) {
   return (
     <NavLink
       to={path}
@@ -78,8 +82,9 @@ function NavItem({ path, label, Icon, collapsed }: { path: string; label: string
           />
           <AnimatePresence initial={false}>
             {!collapsed && (
-              <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.17 }} className="relative overflow-hidden whitespace-nowrap"
+              <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }} transition={{ duration: 0.17 }}
+                className="relative overflow-hidden whitespace-nowrap"
                 style={{ fontSize: 16, fontWeight: 500, lineHeight: '24px', letterSpacing: '-0.01em' }}>
                 {label}
               </motion.span>
@@ -116,43 +121,27 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
   const showActions = hovered || menuOpen;
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <button
-        onClick={onClick}
-        className="w-full flex items-center text-left transition-all duration-[160ms] rounded-[10px]"
+    <div className="relative" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      <button onClick={onClick} className="w-full flex items-center text-left transition-all duration-[160ms] rounded-[10px]"
         style={{
-          height: 40,
-          paddingLeft: 12,
-          paddingRight: showActions ? 36 : 12,
-          borderRadius: 10,
+          height: 40, paddingLeft: 12, paddingRight: showActions ? 36 : 12, borderRadius: 10,
           background: isActive ? 'rgba(255,255,255,0.07)' : showActions ? 'rgba(255,255,255,0.04)' : 'transparent',
-        }}
-      >
-        <span className="truncate block w-full" style={{
-          fontSize: 15, fontWeight: isActive ? 500 : 400,
-          lineHeight: '22px', color: isActive ? '#F8FAFC' : '#94A3B8',
         }}>
+        <span className="truncate block w-full"
+          style={{ fontSize: 15, fontWeight: isActive ? 500 : 400, lineHeight: '22px', color: isActive ? '#F8FAFC' : '#94A3B8' }}>
           {conv.title}
         </span>
       </button>
 
-      {/* Three-dot button + dropdown */}
       <AnimatePresence>
         {showActions && (
           <motion.div ref={menuRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }} className="absolute right-1 top-1/2 -translate-y-1/2">
-            <button
-              onClick={e => { e.stopPropagation(); setMenuOpen(v => !v); }}
+            <button onClick={e => { e.stopPropagation(); setMenuOpen(v => !v); }}
               className="flex items-center justify-center rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-white/[0.06] transition-all duration-[140ms]"
-              style={{ width: 28, height: 28 }}
-            >
+              style={{ width: 28, height: 28 }}>
               <MoreHorizontal size={15} strokeWidth={1.8} />
             </button>
-
             <AnimatePresence>
               {menuOpen && (
                 <motion.div initial={{ opacity: 0, scale: 0.94, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -161,8 +150,7 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
                     position: 'absolute', top: 32, right: 0, width: 160, zIndex: 9999,
                     background: '#171A20', border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.4)', overflow: 'hidden',
-                  }}
-                >
+                  }}>
                   {[
                     { Icon: Pencil,  label: 'Rename',  color: '#94A3B8', action: onRename  },
                     { Icon: Archive, label: 'Archive', color: '#94A3B8', action: onArchive },
@@ -171,8 +159,7 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
                     <button key={label}
                       onClick={e => { e.stopPropagation(); setMenuOpen(false); action(); }}
                       className="w-full flex items-center gap-2.5 px-3 text-left transition-all duration-[130ms] hover:bg-white/[0.05]"
-                      style={{ height: 38, color }}
-                    >
+                      style={{ height: 38, color }}>
                       <Icon size={14} strokeWidth={1.8} />
                       <span style={{ fontSize: 14, fontWeight: 400 }}>{label}</span>
                     </button>
@@ -187,20 +174,214 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
   );
 }
 
+// ── Search overlay ─────────────────────────────────────────────────────────────
+function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { conversations } = useConversations();
+
+  // Auto-focus and reset on open
+  useEffect(() => {
+    if (open) {
+      setQuery('');
+      // Small delay so AnimatePresence has mounted the input
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [open]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  // Prevent body scroll
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  // Filtered results
+  const q = query.trim().toLowerCase();
+  const lastOpened = conversations[0] ?? null;
+  const recentChats = q
+    ? conversations.filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.messages.some(m => m.text.toLowerCase().includes(q))
+      )
+    : conversations.slice(1, 8); // show up to 7 recents when no query
+
+  const go = (id: string) => {
+    navigate(`/chat/${id}`);
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={onClose}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 10000,
+              background: 'rgba(0,0,0,0.55)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+            }}
+          />
+
+          {/* Modal */}
+          <motion.div
+            ref={modalRef}
+            initial={{ opacity: 0, scale: 0.96, y: -12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -12 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'fixed',
+              top: '12%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100%',
+              maxWidth: 800,
+              maxHeight: '70vh',
+              zIndex: 10001,
+              background: '#171A20',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 20,
+              boxShadow: '0 24px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Search input row */}
+            <div className="flex items-center flex-shrink-0"
+              style={{ height: 60, paddingLeft: 20, paddingRight: 16, borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 12 }}>
+              <Search size={18} strokeWidth={1.8} style={{ color: '#475569', flexShrink: 0 }} />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search conversations..."
+                className="flex-1 outline-none bg-transparent"
+                style={{
+                  fontSize: 17, fontWeight: 400, color: '#F8FAFC',
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                }}
+              />
+              <button onClick={onClose}
+                className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-white/[0.06] transition-all duration-[140ms]"
+                style={{ width: 32, height: 32 }}>
+                <X size={16} strokeWidth={2} />
+              </button>
+            </div>
+
+            {/* Results */}
+            <div className="overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#1E222A transparent' }}>
+              {conversations.length === 0 ? (
+                <div className="flex items-center justify-center py-12">
+                  <p style={{ fontSize: 14, color: '#475569' }}>No conversations yet. Start a new chat!</p>
+                </div>
+              ) : (
+                <div style={{ padding: '12px 8px' }}>
+                  {/* Last opened */}
+                  {!q && lastOpened && (
+                    <div style={{ marginBottom: 4 }}>
+                      <p className="uppercase tracking-wider" style={{ fontSize: 11, fontWeight: 600, color: '#2E3440', paddingLeft: 12, marginBottom: 4 }}>
+                        Last opened
+                      </p>
+                      <SearchResultRow conv={lastOpened} onClick={() => go(lastOpened.id)} />
+                    </div>
+                  )}
+
+                  {/* Recent chats / search results */}
+                  {recentChats.length > 0 && (
+                    <div style={{ marginTop: !q && lastOpened ? 12 : 0 }}>
+                      <p className="uppercase tracking-wider" style={{ fontSize: 11, fontWeight: 600, color: '#2E3440', paddingLeft: 12, marginBottom: 4 }}>
+                        {q ? 'Results' : 'Recent chats'}
+                      </p>
+                      {recentChats.map(conv => (
+                        <SearchResultRow key={conv.id} conv={conv} onClick={() => go(conv.id)} query={q} />
+                      ))}
+                    </div>
+                  )}
+
+                  {q && recentChats.length === 0 && (
+                    <div className="flex items-center justify-center py-10">
+                      <p style={{ fontSize: 14, color: '#475569' }}>No conversations match "{query}"</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function SearchResultRow({ conv, onClick, query = '' }: { conv: { id: string; title: string }; onClick: () => void; query?: string }) {
+  const [hovered, setHovered] = useState(false);
+
+  // Highlight matching portion of title
+  const renderTitle = () => {
+    if (!query) return <span>{conv.title}</span>;
+    const idx = conv.title.toLowerCase().indexOf(query);
+    if (idx === -1) return <span>{conv.title}</span>;
+    return (
+      <span>
+        {conv.title.slice(0, idx)}
+        <mark style={{ background: 'rgba(99,102,241,0.3)', color: '#F8FAFC', borderRadius: 3, padding: '0 2px' }}>
+          {conv.title.slice(idx, idx + query.length)}
+        </mark>
+        {conv.title.slice(idx + query.length)}
+      </span>
+    );
+  };
+
+  return (
+    <button onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="w-full flex items-center gap-3 text-left transition-all duration-[140ms] rounded-[10px]"
+      style={{
+        height: 44, paddingLeft: 12, paddingRight: 16,
+        background: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+      }}>
+      <MessageSquare size={15} strokeWidth={1.6} style={{ color: '#475569', flexShrink: 0 }} />
+      <span className="truncate" style={{ fontSize: 15, fontWeight: 400, lineHeight: '22px', color: '#94A3B8' }}>
+        {renderTitle()}
+      </span>
+    </button>
+  );
+}
+
 // ── Main layout ────────────────────────────────────────────────────────────────
 export default function MainLayout() {
-  const [collapsed, setCollapsed]   = useState(false);
+  const [collapsed, setCollapsed]     = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [renameId, setRenameId]     = useState<string | null>(null);
+  const [searchOpen, setSearchOpen]   = useState(false);
+  const [renameId, setRenameId]       = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
-  const profileRef  = useRef<HTMLDivElement>(null);
-  const renameRef   = useRef<HTMLInputElement>(null);
-  const navigate    = useNavigate();
+  const profileRef = useRef<HTMLDivElement>(null);
+  const renameRef  = useRef<HTMLInputElement>(null);
+  const navigate   = useNavigate();
   const { id: activeId } = useParams<{ id?: string }>();
-
   const { conversations, createConversation, renameConversation, deleteConversation, archiveConversation } = useConversations();
 
-  // Close profile popup on outside click
+  // Close profile on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false);
@@ -209,10 +390,21 @@ export default function MainLayout() {
     return () => document.removeEventListener('mousedown', handler);
   }, [profileOpen]);
 
-  // Focus rename input when it appears
+  // Focus rename input
+  useEffect(() => { if (renameId) renameRef.current?.focus(); }, [renameId]);
+
+  // Ctrl/Cmd+K global shortcut
+  const openSearch = useCallback(() => setSearchOpen(true), []);
   useEffect(() => {
-    if (renameId) renameRef.current?.focus();
-  }, [renameId]);
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        openSearch();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [openSearch]);
 
   const handleNewChat = () => {
     const id = createConversation();
@@ -244,20 +436,23 @@ export default function MainLayout() {
     <div className="flex h-screen w-full overflow-hidden"
       style={{ background: '#0A0C10', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
+      {/* ── Search overlay ──────────────────────────────────────── */}
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+
       {/* ════ SIDEBAR ═══════════════════════════════════════════════ */}
       <motion.aside
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ type: 'spring', stiffness: 420, damping: 42 }}
         className="flex-shrink-0 flex flex-col h-full overflow-hidden"
-        style={{ background: '#0A0C10', borderRight: '1px solid #1E222A' }}
-      >
+        style={{ background: '#0A0C10', borderRight: '1px solid #1E222A' }}>
 
         {/* ── SECTION 1: Fixed Header ─────────────────────────────── */}
         <div className="flex-shrink-0" style={{ borderBottom: '1px solid #1E222A' }}>
 
-          {/* Top toolbar */}
-          <div className="flex items-center" style={{ height: 58, paddingLeft: 16, paddingRight: 8, gap: 10 }}>
+          {/* Top toolbar — logo | search icon | collapse button */}
+          <div className="flex items-center" style={{ height: 58, paddingLeft: 16, paddingRight: 8, gap: 8 }}>
             <LogoMark size={22} />
+
             <AnimatePresence initial={false}>
               {!collapsed && (
                 <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
@@ -268,44 +463,28 @@ export default function MainLayout() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <button onClick={() => setCollapsed(v => !v)} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+
+            {/* Search icon — 20px icon, 36×36 click target */}
+            <button onClick={openSearch} title="Search (⌘K)"
               className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms] ml-auto"
+              style={{ width: 36, height: 36 }}>
+              <Search size={20} strokeWidth={1.75} />
+            </button>
+
+            {/* Collapse toggle — 36×36 */}
+            <button onClick={() => setCollapsed(v => !v)} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms]"
               style={{ width: 36, height: 36 }}>
               {collapsed ? <ChevronRight size={20} strokeWidth={1.75} /> : <ChevronLeft size={20} strokeWidth={1.75} />}
             </button>
           </div>
 
-          {/* Search */}
-          <AnimatePresence initial={false}>
-            {!collapsed && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.17 }}
-                className="overflow-hidden" style={{ paddingLeft: 16, paddingRight: 16, paddingBottom: 10 }}>
-                <div className="relative">
-                  <Search size={20} strokeWidth={1.75} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#2E3440]" />
-                  <input type="text" placeholder="Search…" className="w-full outline-none transition-all duration-[160ms]"
-                    style={{
-                      paddingLeft: 36, paddingRight: 12, fontSize: 15, fontWeight: 400, lineHeight: '22px',
-                      height: 36, borderRadius: 10, background: '#111318', border: '1px solid #1E222A',
-                      color: '#94A3B8', fontFamily: 'Inter, system-ui, sans-serif',
-                    }}
-                    onFocus={e => { e.target.style.borderColor = '#6366F1'; e.target.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'; }}
-                    onBlur={e  => { e.target.style.borderColor = '#1E222A'; e.target.style.boxShadow = 'none'; }}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Primary nav */}
-          <div style={{ paddingLeft: 8, paddingRight: 8, paddingBottom: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {/* New Chat — creates a conversation on click */}
-            <button
-              onClick={handleNewChat}
-              title={collapsed ? 'New Chat' : undefined}
+          {/* Primary nav — no search input */}
+          <div style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 6, paddingBottom: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* New Chat */}
+            <button onClick={handleNewChat} title={collapsed ? 'New Chat' : undefined}
               className="group relative flex items-center gap-[14px] rounded-[10px] transition-all duration-[160ms] cursor-pointer text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8]"
-              style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44 }}
-            >
+              style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44 }}>
               <SquarePen size={20} strokeWidth={1.75} className="relative flex-shrink-0 opacity-50 group-hover:opacity-75 transition-opacity duration-[160ms]" />
               <AnimatePresence initial={false}>
                 {!collapsed && (
@@ -335,7 +514,7 @@ export default function MainLayout() {
                 style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 16, paddingBottom: 12 }}>
 
                 {conversations.length === 0 ? (
-                  <p className="text-[#2E3440] text-center" style={{ fontSize: 13, paddingTop: 8, paddingLeft: 12 }}>
+                  <p className="text-[#2E3440] text-center" style={{ fontSize: 13, paddingTop: 8 }}>
                     No conversations yet
                   </p>
                 ) : (
@@ -345,39 +524,27 @@ export default function MainLayout() {
                       Recents
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      {conversations.map(conv => (
+                      {conversations.map(conv =>
                         renameId === conv.id ? (
-                          /* Inline rename input */
-                          <div key={conv.id} style={{ height: 40, paddingLeft: 12, paddingRight: 12 }}
-                            className="flex items-center">
-                            <input
-                              ref={renameRef}
-                              value={renameValue}
+                          <div key={conv.id} className="flex items-center"
+                            style={{ height: 40, paddingLeft: 12, paddingRight: 12 }}>
+                            <input ref={renameRef} value={renameValue}
                               onChange={e => setRenameValue(e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === 'Enter') commitRename();
-                                if (e.key === 'Escape') setRenameId(null);
-                              }}
+                              onKeyDown={e => { if (e.key === 'Enter') commitRename(); if (e.key === 'Escape') setRenameId(null); }}
                               onBlur={commitRename}
                               className="w-full outline-none bg-transparent"
-                              style={{
-                                fontSize: 15, fontWeight: 400, color: '#F8FAFC',
-                                borderBottom: '1px solid #6366F1', paddingBottom: 1,
-                              }}
+                              style={{ fontSize: 15, fontWeight: 400, color: '#F8FAFC', borderBottom: '1px solid #6366F1', paddingBottom: 1 }}
                             />
                           </div>
                         ) : (
-                          <ConvRow
-                            key={conv.id}
-                            conv={conv}
-                            isActive={activeId === conv.id}
+                          <ConvRow key={conv.id} conv={conv} isActive={activeId === conv.id}
                             onClick={() => navigate(`/chat/${conv.id}`)}
                             onRename={() => startRename(conv.id, conv.title)}
                             onArchive={() => archiveConversation(conv.id)}
                             onDelete={() => handleDelete(conv.id)}
                           />
                         )
-                      ))}
+                      )}
                     </div>
                   </>
                 )}
@@ -398,16 +565,15 @@ export default function MainLayout() {
                 style={{
                   position: 'fixed', bottom: 76, left: 12, width: 236, zIndex: 9999,
                   background: '#171A20', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.45), 0 8px 20px rgba(0,0,0,0.25)',
-                  backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', overflow: 'hidden',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.45)', backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)', overflow: 'hidden',
                 }}>
                 <div className="py-1">
                   {popupMenu.map(item => {
                     const { Icon } = item;
                     return (
                       <React.Fragment key={item.label}>
-                        <button
-                          onClick={() => { setProfileOpen(false); if (item.path) navigate(item.path); }}
+                        <button onClick={() => { setProfileOpen(false); if (item.path) navigate(item.path); }}
                           className="w-full flex items-center gap-3 px-4 text-left transition-all duration-[150ms] hover:bg-white/[0.05]"
                           style={{ height: 40 }}>
                           <Icon size={15} className={item.accent ? 'text-[#6366F1]' : 'text-[#475569]'} strokeWidth={1.8} />
@@ -420,7 +586,7 @@ export default function MainLayout() {
                     );
                   })}
                   <div style={{ padding: '6px 12px 4px' }}>
-                    <button className="w-full flex items-center justify-center gap-2 text-white font-semibold transition-all duration-[150ms] hover:bg-[#4F46E5]"
+                    <button className="w-full flex items-center justify-center gap-2 text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
                       style={{ height: 34, borderRadius: 10, background: '#6366F1', fontSize: 14, fontWeight: 600 }}>
                       <Zap size={14} strokeWidth={2} />Upgrade to Pro
                     </button>
@@ -461,28 +627,28 @@ export default function MainLayout() {
 
       {/* ════ MAIN CONTENT ══════════════════════════════════════════ */}
       <div className="flex-1 flex flex-col overflow-hidden">
+
+        {/* Header — no search bar, just model selector + bell + new chat */}
         <header className="flex items-center justify-between px-6 flex-shrink-0"
           style={{ background: '#0A0C10', borderBottom: '1px solid #1E222A', height: 58 }}>
-          <div className="relative flex-1 max-w-[400px]">
-            <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2E3440]" />
-            <input type="text" placeholder="Search conversations, projects, files…"
-              className="w-full pl-9 pr-4 text-[13px] rounded-xl outline-none transition-all duration-[160ms]"
-              style={{ height: 48, background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
-              onFocus={e => { e.target.style.borderColor = '#6366F1'; e.target.style.color = '#F8FAFC'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
-              onBlur={e  => { e.target.style.borderColor = '#1E222A'; e.target.style.color = '#94A3B8';  e.target.style.boxShadow = 'none'; }}
-            />
-          </div>
-          <div className="flex items-center gap-2 ml-4">
+
+          {/* Left — nothing, keeps header balanced */}
+          <div />
+
+          {/* Right actions */}
+          <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 px-3.5 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-[150ms] hover:bg-[#1A1D24]"
               style={{ border: '1px solid #1E222A', height: 38, color: '#94A3B8' }}>
               <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" /><span>GPT-4o</span>
             </div>
+
             <NavLink to="/notifications"
               className="relative flex items-center justify-center rounded-xl text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms]"
               style={{ width: 38, height: 38, border: '1px solid #1E222A' }}>
               <Bell size={15} strokeWidth={1.8} />
               <span className="absolute top-[9px] right-[9px] w-1.5 h-1.5 bg-[#6366F1] rounded-full" />
             </NavLink>
+
             <button onClick={handleNewChat}
               className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-semibold text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
               style={{ height: 38, background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.28)' }}
@@ -492,6 +658,7 @@ export default function MainLayout() {
             </button>
           </div>
         </header>
+
         <main className="flex-1 overflow-hidden"><Outlet /></main>
       </div>
     </div>
