@@ -220,84 +220,104 @@ export default function Chat() {
           </div>
         )}
 
-        {/* Input bar */}
-        <div className="px-6 pb-6 pt-2 flex-shrink-0">
+        {/* Input bar — ChatGPT-style composer */}
+        <div className="px-6 pb-5 pt-2 flex-shrink-0 flex flex-col items-center">
+          {/* Pill container */}
           <div
-            className="rounded-[20px] overflow-hidden transition-all"
-            style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
+            className="w-full max-w-[773px] flex items-center gap-0 rounded-full px-2 transition-all"
+            style={{
+              background: '#212121',
+              minHeight: 52,
+              boxShadow: '0 2px 16px rgba(0,0,0,0.18)',
+            }}
           >
+            {/* Leading — + button */}
+            <button
+              title="Add attachment"
+              className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#8E8EA0] hover:text-white hover:bg-white/10 transition-all ml-1"
+              onClick={() => {}}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </button>
+
+            {/* Primary — textarea */}
             <textarea
               ref={textareaRef}
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Message Conv AI…"
+              placeholder="Ask anything"
               rows={1}
-              className="w-full px-5 pt-4 pb-2 text-[14px] text-[#0F172A] placeholder-[#CBD5E1] resize-none outline-none"
-              style={{ background: 'transparent', maxHeight: 160 }}
+              className="flex-1 min-w-0 resize-none outline-none bg-transparent text-white placeholder-[#8E8EA0] text-[16px] leading-[24px] py-[5px] px-2"
+              style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif', maxHeight: 160 }}
               onInput={e => {
                 const t = e.target as HTMLTextAreaElement;
                 t.style.height = 'auto';
                 t.style.height = Math.min(t.scrollHeight, 160) + 'px';
               }}
             />
-            <div className="flex items-center justify-between px-4 pb-3">
-              <div className="flex items-center gap-1">
-                {[
-                  { icon: RiAttachmentLine, title: 'Attach file' },
-                  { icon: RiImageLine, title: 'Upload image' },
-                  { icon: RiFileTextLine, title: 'Upload document' },
-                ].map(({ icon: Icon, title }) => (
-                  <button key={title} title={title} className="p-2 rounded-xl text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC] transition-all">
-                    <Icon size={16} />
-                  </button>
-                ))}
-                <div className="w-px h-4 bg-[#E2E8F0] mx-1" />
-                <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[12.5px] font-medium text-[#64748B] hover:bg-[#F8FAFC] transition-all">
-                  <RiRobot2Line size={13} className="text-[#94A3B8]" />
-                  {model}
-                  <RiArrowDownSLine size={13} className="text-[#CBD5E1]" />
-                </button>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setVoiceMode(!voiceMode)}
-                  className={`flex items-center gap-1 px-2 py-2 rounded-xl transition-all ${voiceMode ? 'bg-blue-50' : 'text-[#94A3B8] hover:text-[#475569] hover:bg-[#F8FAFC]'}`}
-                >
-                  {voiceMode ? (
-                    <div className="flex items-center gap-[3px]">
-                      {[0, 1, 2, 3, 4].map(i => (
-                        <motion.div
-                          key={i}
-                          className="w-[3px] rounded-full bg-blue-400"
-                          animate={{ height: [8, 20 + (i % 3) * 6, 8] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.12, ease: 'easeInOut' }}
-                          style={{ height: 8 }}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <RiMicLine size={16} />
-                  )}
-                </button>
-                <button
-                  onClick={() => send()}
-                  disabled={!input.trim() && !isTyping}
-                  className="w-8 h-8 rounded-xl flex items-center justify-center transition-all"
-                  style={{
-                    background: isTyping ? '#FEF2F2' : input.trim() ? 'linear-gradient(135deg, #2563EB, #4F46E5)' : '#F1F5F9',
-                    color: isTyping ? '#EF4444' : input.trim() ? '#fff' : '#CBD5E1',
-                    boxShadow: input.trim() && !isTyping ? '0 2px 8px rgba(37,99,235,0.3)' : 'none',
-                  }}
-                >
-                  {isTyping ? <RiStopCircleLine size={15} /> : <RiSendPlaneLine size={15} />}
-                </button>
-              </div>
+            {/* Trailing — mic + voice button */}
+            <div className="flex items-center gap-1 flex-shrink-0 mr-1">
+              {/* Mic icon */}
+              <button
+                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#8E8EA0] hover:text-white hover:bg-white/10 transition-all"
+                onClick={() => setVoiceMode(!voiceMode)}
+                title="Voice input"
+              >
+                <RiMicLine size={18} />
+              </button>
+
+              {/* Voice/waveform circular button — 55×53 from screenshot */}
+              <button
+                onClick={input.trim() ? () => send() : () => setVoiceMode(!voiceMode)}
+                className="flex-shrink-0 flex items-center justify-center rounded-full transition-all"
+                style={{
+                  width: 55,
+                  height: 53,
+                  background: input.trim() ? '#ECECEC' : '#2F2F2F',
+                }}
+                title={input.trim() ? 'Send' : 'Voice mode'}
+              >
+                {input.trim() ? (
+                  /* Up-arrow send icon when text is present */
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#212121" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
+                  </svg>
+                ) : voiceMode ? (
+                  /* Animated waveform bars when recording */
+                  <div className="flex items-center gap-[3px]">
+                    {[0, 1, 2, 3, 4].map(i => (
+                      <motion.div
+                        key={i}
+                        className="w-[3px] rounded-full bg-white"
+                        animate={{ height: [6, 18 + (i % 3) * 5, 6] }}
+                        transition={{ duration: 0.55, repeat: Infinity, delay: i * 0.11, ease: 'easeInOut' }}
+                        style={{ height: 6 }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  /* Static waveform / audio icon when idle */
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8EA0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="2"  y1="12" x2="2"  y2="12" />
+                    <line x1="5"  y1="9"  x2="5"  y2="15" />
+                    <line x1="8"  y1="6"  x2="8"  y2="18" />
+                    <line x1="11" y1="9"  x2="11" y2="15" />
+                    <line x1="14" y1="7"  x2="14" y2="17" />
+                    <line x1="17" y1="10" x2="17" y2="14" />
+                    <line x1="20" y1="9"  x2="20" y2="15" />
+                    <line x1="23" y1="12" x2="23" y2="12" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
-          <p className="text-center text-[11.5px] text-[#CBD5E1] mt-2.5">
-            Conv AI can make mistakes. Verify important information.
+
+          <p className="text-center text-[12px] text-[#8E8EA0] mt-2.5" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif' }}>
+            Conv AI can make mistakes. Check important info.
           </p>
         </div>
       </div>
