@@ -55,6 +55,18 @@ function ProjectsIcon({ className }: { size?: number; color?: string; strokeWidt
   );
 }
 
+function TTSIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
+  return (
+    <img
+      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZpbGUtc2lnbmFsLWljb24gbHVjaWRlLWZpbGUtc2lnbmFsIj48cGF0aCBkPSJNNiAyMmEyIDIgMCAwIDEtMi0yVjRhMiAyIDAgMCAxIDItMmg4YTIuNCAyLjQgMCAwIDEgMS43MDQuNzA2bDMuNTg4IDMuNTg4QTIuNCAyLjQgMCAwIDEgMjAgOHYxMmEyIDIgMCAwIDEtMiAyeiIvPjxwYXRoIGQ9Ik0xNCAydjVhMSAxIDAgMCAwIDEgMWg1Ii8+PHBhdGggZD0iTTggMTVoLjAxIi8+PHBhdGggZD0iTTExLjUgMTMuNWEyLjUgMi41IDAgMCAxIDAgMyIvPjxwYXRoIGQ9Ik0xNSAxMmE1IDUgMCAwIDEgMCA2Ii8+PC9zdmc+"
+      width={24}
+      height={24}
+      alt="Text to Speech"
+      className={className}
+    />
+  );
+}
+
 function BuilderIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
   return (
     <img
@@ -73,7 +85,7 @@ const mainNav = [
   { label: 'Library', path: '/library', icon: LibraryIcon },
   { label: 'Projects', path: '/projects', icon: ProjectsIcon },
   { label: 'Builder', path: '/builder', icon: BuilderIcon },
-  { label: 'Text to Speech', path: '/tts', icon: Mic2 },
+  { label: 'Text to Speech', path: '/tts', icon: TTSIcon },
   { label: 'Voice', path: '/voice', icon: Mic },
 ];
 
