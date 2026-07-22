@@ -26,22 +26,29 @@ import {
 } from 'lucide-react';
 
 // ── Conv AI Logo Mark ──────────────────────────────────────────────────────────
-const LogoMark = ({ className = 'w-7 h-7', color = '#F8FAFC' }: { className?: string; color?: string }) => (
-  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill={color} />
-    <path d="M26 22C26 24.2091 24.2091 26 22 26H16V14C16 9.58172 19.5817 6 24 6H26V22Z" fill={color} fillOpacity={0.5} />
+const LogoMark = ({ size = 22 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ flexShrink: 0 }}
+  >
+    <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill="#F8FAFC" />
+    <path d="M26 22C26 24.2091 24.2091 26 22 26H16V14C16 9.58172 19.5817 6 24 6H26V22Z" fill="#F8FAFC" fillOpacity={0.5} />
   </svg>
 );
 
 // ── Nav config ─────────────────────────────────────────────────────────────────
 const mainNav = [
-  { label: 'New Chat',       path: '/chat',      Icon: SquarePen     },
-  { label: 'Images',         path: '/images',    Icon: Images        },
-  { label: 'Library',        path: '/library',   Icon: LibraryBig    },
-  { label: 'Projects',       path: '/projects',  Icon: FolderClosed  },
+  { label: 'New Chat',       path: '/chat',      Icon: SquarePen      },
+  { label: 'Images',         path: '/images',    Icon: Images         },
+  { label: 'Library',        path: '/library',   Icon: LibraryBig     },
+  { label: 'Projects',       path: '/projects',  Icon: FolderClosed   },
   { label: 'Builder',        path: '/builder',   Icon: LayoutDashboard },
-  { label: 'Text to Speech', path: '/tts',       Icon: FileAudio     },
-  { label: 'Voice',          path: '/voice',     Icon: Mic           },
+  { label: 'Text to Speech', path: '/tts',       Icon: FileAudio      },
+  { label: 'Voice',          path: '/voice',     Icon: Mic            },
 ];
 
 // ── Mock conversation history ──────────────────────────────────────────────────
@@ -105,7 +112,7 @@ const popupMenu = [
   { Icon: HelpCircle, label: 'Help',               path: '/help',     divideAfter: true,  accent: false },
 ];
 
-// ── Reusable nav item ──────────────────────────────────────────────────────────
+// ── Nav item — specs: 260px sidebar, 44px row, 20px icon, 14px gap, 16px h-padding, 10px v-padding, 10px radius
 function NavItem({ item, collapsed }: { item: typeof mainNav[0]; collapsed: boolean }) {
   const { Icon } = item;
   return (
@@ -113,19 +120,20 @@ function NavItem({ item, collapsed }: { item: typeof mainNav[0]; collapsed: bool
       to={item.path}
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>
-        `group relative flex items-center gap-[14px] px-3 py-[9px] rounded-xl transition-all duration-[160ms] cursor-pointer
+        `group relative flex items-center gap-[14px] rounded-[10px] transition-all duration-[160ms] cursor-pointer
         ${isActive
           ? 'bg-[#6366F1]/10 text-[#6366F1]'
           : 'text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8]'
         }`
       }
+      style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44 }}
     >
       {({ isActive }) => (
         <>
           {isActive && (
             <motion.div
               layoutId="sidebarActive"
-              className="absolute inset-0 rounded-xl bg-[#6366F1]/10"
+              className="absolute inset-0 rounded-[10px] bg-[#6366F1]/10"
               transition={{ type: 'spring', stiffness: 420, damping: 38 }}
             />
           )}
@@ -141,7 +149,13 @@ function NavItem({ item, collapsed }: { item: typeof mainNav[0]; collapsed: bool
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.17 }}
-                className="relative overflow-hidden whitespace-nowrap text-[16px] font-[500] leading-none"
+                className="relative overflow-hidden whitespace-nowrap"
+                style={{
+                  fontSize: 16,
+                  fontWeight: 500,
+                  lineHeight: '24px',
+                  letterSpacing: '-0.01em',
+                }}
               >
                 {item.label}
               </motion.span>
@@ -153,13 +167,42 @@ function NavItem({ item, collapsed }: { item: typeof mainNav[0]; collapsed: bool
   );
 }
 
-// ── Conversation history row ───────────────────────────────────────────────────
+// ── Recent chat row — 15px/400, 40px row, 10px radius, 12px h-padding
 function ConvItem({ label }: { label: string }) {
   return (
-    <button className="group w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-left text-[13px] text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8] transition-all duration-[140ms]">
+    <button
+      className="group w-full flex items-center gap-2.5 text-left text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8] transition-all duration-[140ms]"
+      style={{
+        fontSize: 15,
+        fontWeight: 400,
+        lineHeight: '22px',
+        height: 40,
+        borderRadius: 10,
+        paddingLeft: 12,
+        paddingRight: 12,
+      }}
+    >
       <MessageSquare size={13} strokeWidth={1.6} className="flex-shrink-0 opacity-40 group-hover:opacity-60" />
       <span className="truncate">{label}</span>
     </button>
+  );
+}
+
+// ── Section header — 15px/600, marginTop 20px, marginBottom 12px
+function SectionHeader({ label, icon: Icon }: { label: string; icon?: React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }> }) {
+  return (
+    <div
+      className="flex items-center gap-1.5"
+      style={{ paddingLeft: 12, marginTop: 20, marginBottom: 12 }}
+    >
+      {Icon && <Icon size={11} strokeWidth={2.2} className="text-[#2E3440]" />}
+      <span
+        className="uppercase tracking-wider text-[#2E3440]"
+        style={{ fontSize: 15, fontWeight: 600, letterSpacing: '0.04em' }}
+      >
+        {label}
+      </span>
+    </div>
   );
 }
 
@@ -186,21 +229,29 @@ export default function MainLayout() {
       style={{ background: '#0A0C10', fontFamily: 'Inter, system-ui, sans-serif' }}
     >
       {/* ════════════════════════════════════════════════════════════
-          SIDEBAR  —  flex column, never scrolls as a whole
+          SIDEBAR — flex column, never scrolls as a whole
       ════════════════════════════════════════════════════════════ */}
       <motion.aside
-        animate={{ width: collapsed ? 68 : 248 }}
+        animate={{ width: collapsed ? 72 : 260 }}
         transition={{ type: 'spring', stiffness: 420, damping: 42 }}
         className="flex-shrink-0 flex flex-col h-full overflow-hidden"
         style={{ background: '#0A0C10', borderRight: '1px solid #1E222A' }}
       >
 
-        {/* ── SECTION 1: Fixed Header ─────────────────────────────── */}
+        {/* ── SECTION 1: Fixed Header ──────────────────────────────────
+            Logo (22px) + toolbar icons (20px, 36×36 click target), search, nav items
+        ─────────────────────────────────────────────────────────────── */}
         <div className="flex-shrink-0" style={{ borderBottom: '1px solid #1E222A' }}>
 
-          {/* Logo row + collapse toggle */}
-          <div className="flex items-center gap-3 px-4 h-[58px]">
-            <LogoMark className="w-[26px] h-[26px] flex-shrink-0" color="#F8FAFC" />
+          {/* Top toolbar row — 58px tall, 16px h-padding */}
+          <div
+            className="flex items-center"
+            style={{ height: 58, paddingLeft: 16, paddingRight: 8, gap: 10 }}
+          >
+            {/* Logo — 22px per spec */}
+            <LogoMark size={22} />
+
+            {/* Wordmark */}
             <AnimatePresence initial={false}>
               {!collapsed && (
                 <motion.div
@@ -210,17 +261,20 @@ export default function MainLayout() {
                   transition={{ duration: 0.17 }}
                   className="overflow-hidden flex items-baseline flex-1"
                 >
-                  <span className="text-[15px] font-semibold text-[#F8FAFC] tracking-tight whitespace-nowrap">Conv</span>
-                  <span className="text-[15px] font-normal text-[#94A3B8] whitespace-nowrap ml-[3px]">AI</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: '#F8FAFC', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>Conv</span>
+                  <span style={{ fontSize: 15, fontWeight: 400, color: '#94A3B8', marginLeft: 3, whiteSpace: 'nowrap' }}>AI</span>
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Collapse toggle — 36×36 click target, 20px icon */}
             <button
               onClick={() => setCollapsed(!collapsed)}
               title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms] ml-auto"
+              className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms] ml-auto"
+              style={{ width: 36, height: 36 }}
             >
-              {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+              {collapsed ? <ChevronRight size={20} strokeWidth={1.75} /> : <ChevronLeft size={20} strokeWidth={1.75} />}
             </button>
           </div>
 
@@ -232,19 +286,28 @@ export default function MainLayout() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.17 }}
-                className="overflow-hidden px-3 pb-3"
+                className="overflow-hidden"
+                style={{ paddingLeft: 16, paddingRight: 16, paddingBottom: 10 }}
               >
                 <div className="relative">
-                  <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E3440]" />
+                  {/* Search icon — 20px, 36px click target */}
+                  <Search size={20} strokeWidth={1.75} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#2E3440]" />
                   <input
                     type="text"
                     placeholder="Search…"
-                    className="w-full pl-8 pr-3 text-[13px] rounded-lg outline-none transition-all duration-[160ms]"
+                    className="w-full outline-none transition-all duration-[160ms]"
                     style={{
-                      height: 34,
+                      paddingLeft: 36,
+                      paddingRight: 12,
+                      fontSize: 15,
+                      fontWeight: 400,
+                      lineHeight: '22px',
+                      height: 36,
+                      borderRadius: 10,
                       background: '#111318',
                       border: '1px solid #1E222A',
                       color: '#94A3B8',
+                      fontFamily: 'Inter, system-ui, sans-serif',
                     }}
                     onFocus={e => {
                       e.target.style.borderColor = '#6366F1';
@@ -260,18 +323,20 @@ export default function MainLayout() {
             )}
           </AnimatePresence>
 
-          {/* Primary nav items */}
-          <div className="px-2 pb-3 space-y-[2px]">
+          {/* Primary nav items — 16px h-padding container */}
+          <div style={{ paddingLeft: 8, paddingRight: 8, paddingBottom: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {mainNav.map((item) => (
               <NavItem key={item.path} item={item} collapsed={collapsed} />
             ))}
           </div>
         </div>
 
-        {/* ── SECTION 2: Scrollable Conversation History ──────────── */}
+        {/* ── SECTION 2: Scrollable Conversation History ──────────────
+            flex: 1, overflow-y: auto — ONLY this section scrolls
+        ─────────────────────────────────────────────────────────────── */}
         <div
-          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#1E222A transparent' }}
+          className="flex-1 min-h-0 overflow-x-hidden"
+          style={{ overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: '#1E222A transparent' }}
         >
           <AnimatePresence initial={false}>
             {!collapsed && (
@@ -280,66 +345,68 @@ export default function MainLayout() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="py-3"
+                style={{ paddingLeft: 8, paddingRight: 8, paddingBottom: 12 }}
               >
-                {/* Pinned chats */}
+                {/* Pinned */}
                 {pinnedChats.length > 0 && (
-                  <div className="mb-1">
-                    <div className="flex items-center gap-1.5 px-4 py-1 mb-1">
-                      <Pin size={10} strokeWidth={2} className="text-[#2E3440]" />
-                      <span className="text-[11px] font-semibold tracking-wider uppercase text-[#2E3440]">Pinned</span>
-                    </div>
-                    <div className="px-2 space-y-[1px]">
+                  <>
+                    <SectionHeader label="Pinned" icon={Pin} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {pinnedChats.map(c => <ConvItem key={c.id} label={c.label} />)}
                     </div>
-                  </div>
+                  </>
                 )}
 
                 {/* Folders */}
                 {folders.length > 0 && (
-                  <div className="mb-1">
-                    <div className="flex items-center gap-1.5 px-4 py-1 mb-1">
-                      <Folder size={10} strokeWidth={2} className="text-[#2E3440]" />
-                      <span className="text-[11px] font-semibold tracking-wider uppercase text-[#2E3440]">Folders</span>
-                    </div>
-                    <div className="px-2 space-y-[1px]">
+                  <>
+                    <SectionHeader label="Folders" icon={Folder} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {folders.map(f => (
                         <button
                           key={f.id}
-                          className="group w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-left text-[13px] text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8] transition-all duration-[140ms]"
+                          className="group w-full flex items-center text-left text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8] transition-all duration-[140ms]"
+                          style={{
+                            fontSize: 15,
+                            fontWeight: 400,
+                            lineHeight: '22px',
+                            height: 40,
+                            borderRadius: 10,
+                            paddingLeft: 12,
+                            paddingRight: 12,
+                            gap: 10,
+                          }}
                         >
                           <Folder size={13} strokeWidth={1.6} className="flex-shrink-0 opacity-40 group-hover:opacity-60" />
                           <span className="truncate flex-1">{f.label}</span>
-                          <span className="text-[11px] text-[#2E3440] group-hover:text-[#475569]">{f.count}</span>
+                          <span className="text-[#2E3440] group-hover:text-[#475569]" style={{ fontSize: 13 }}>{f.count}</span>
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </>
                 )}
 
                 {/* Date-grouped conversation history */}
                 {conversationGroups.map(group => (
-                  <div key={group.heading} className="mb-1">
-                    <div className="px-4 py-1 mb-1">
-                      <span className="text-[11px] font-semibold tracking-wider uppercase text-[#2E3440]">
-                        {group.heading}
-                      </span>
-                    </div>
-                    <div className="px-2 space-y-[1px]">
+                  <React.Fragment key={group.heading}>
+                    <SectionHeader label={group.heading} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {group.items.map(c => <ConvItem key={c.id} label={c.label} />)}
                     </div>
-                  </div>
+                  </React.Fragment>
                 ))}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* ── SECTION 3: Fixed Footer ──────────────────────────────── */}
+        {/* ── SECTION 3: Fixed Footer ──────────────────────────────────
+            Avatar 32px, username 16px/600, plan 13px/400
+        ─────────────────────────────────────────────────────────────── */}
         <div
           ref={profileRef}
-          className="flex-shrink-0 px-2 py-2 relative"
-          style={{ borderTop: '1px solid #1E222A', overflow: 'visible' }}
+          className="flex-shrink-0 relative"
+          style={{ borderTop: '1px solid #1E222A', padding: '8px 8px', overflow: 'visible' }}
         >
           {/* Profile popup */}
           <AnimatePresence>
@@ -351,9 +418,9 @@ export default function MainLayout() {
                 transition={{ duration: 0.18, ease: 'easeOut' }}
                 style={{
                   position: 'fixed',
-                  bottom: 72,
+                  bottom: 76,
                   left: 12,
-                  width: 224,
+                  width: 236,
                   zIndex: 9999,
                   background: '#171A20',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -374,10 +441,14 @@ export default function MainLayout() {
                             setProfileOpen(false);
                             if (item.path) navigate(item.path);
                           }}
-                          className="w-full flex items-center gap-3 px-4 py-[10px] text-left transition-all duration-[150ms] hover:bg-white/[0.05]"
+                          className="w-full flex items-center gap-3 px-4 text-left transition-all duration-[150ms] hover:bg-white/[0.05]"
+                          style={{ height: 40 }}
                         >
                           <Icon size={15} className={item.accent ? 'text-[#6366F1]' : 'text-[#475569]'} strokeWidth={1.8} />
-                          <span className={`text-[14px] font-medium ${item.accent ? 'text-[#6366F1]' : 'text-[#94A3B8]'}`}>
+                          <span
+                            className={item.accent ? 'text-[#6366F1]' : 'text-[#94A3B8]'}
+                            style={{ fontSize: 14, fontWeight: 500 }}
+                          >
                             {item.label}
                           </span>
                         </button>
@@ -387,31 +458,60 @@ export default function MainLayout() {
                       </React.Fragment>
                     );
                   })}
+
+                  {/* Upgrade button */}
+                  <div style={{ padding: '6px 12px 4px' }}>
+                    <button
+                      className="w-full flex items-center justify-center gap-2 rounded-[10px] text-white font-semibold transition-all duration-[150ms] hover:bg-[#4F46E5]"
+                      style={{
+                        height: 34,
+                        background: '#6366F1',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        boxShadow: '0 2px 8px rgba(99,102,241,0.28)',
+                      }}
+                    >
+                      <Zap size={14} strokeWidth={2} />
+                      Upgrade to Pro
+                    </button>
+                  </div>
+
                   <div className="mx-3 my-1" style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
                   <button
                     onClick={() => setProfileOpen(false)}
-                    className="w-full flex items-center gap-3 px-4 py-[10px] text-left transition-all duration-[150ms] hover:bg-[#EF4444]/10"
+                    className="w-full flex items-center gap-3 px-4 text-left transition-all duration-[150ms] hover:bg-[#EF4444]/10"
+                    style={{ height: 40 }}
                   >
                     <LogOut size={15} className="text-[#EF4444]" strokeWidth={1.8} />
-                    <span className="text-[14px] font-medium text-[#EF4444]">Log out</span>
+                    <span className="text-[#EF4444]" style={{ fontSize: 14, fontWeight: 500 }}>Log out</span>
                   </button>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Profile row */}
+          {/* Profile row — avatar 32px, username 16px/600, plan 13px/400 */}
           <button
             onClick={() => setProfileOpen(!profileOpen)}
             title={collapsed ? 'Alex Reed' : undefined}
-            className="w-full flex items-center gap-2 px-2 py-[7px] rounded-xl cursor-pointer hover:bg-[#1A1D24] transition-all duration-[150ms]"
+            className="w-full flex items-center rounded-[10px] cursor-pointer hover:bg-[#1A1D24] transition-all duration-[150ms]"
+            style={{ gap: 10, padding: '6px 10px', minHeight: 48 }}
           >
+            {/* Avatar — 32px */}
             <div
-              className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #6366F1, #06B6D4)' }}
+              className="flex items-center justify-center text-white font-bold flex-shrink-0"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #6366F1, #06B6D4)',
+                fontSize: 12,
+                fontWeight: 700,
+              }}
             >
               A
             </div>
+
             <AnimatePresence initial={false}>
               {!collapsed && (
                 <motion.div
@@ -419,10 +519,16 @@ export default function MainLayout() {
                   animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.17 }}
-                  className="flex-1 overflow-hidden text-left"
+                  className="overflow-hidden text-left flex-1"
                 >
-                  <p className="text-[13px] font-medium text-[#F8FAFC] whitespace-nowrap">Alex Reed</p>
-                  <p className="text-[11px] text-[#475569] whitespace-nowrap">Pro Plan</p>
+                  {/* Username — 16px / 600 */}
+                  <p className="whitespace-nowrap text-[#F8FAFC]" style={{ fontSize: 16, fontWeight: 600, lineHeight: '22px' }}>
+                    Alex Reed
+                  </p>
+                  {/* Plan — 13px / 400 */}
+                  <p className="whitespace-nowrap text-[#475569]" style={{ fontSize: 13, fontWeight: 400 }}>
+                    Pro Plan
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -434,14 +540,9 @@ export default function MainLayout() {
           MAIN CONTENT
       ════════════════════════════════════════════════════════════ */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top nav bar */}
         <header
           className="flex items-center justify-between px-6 flex-shrink-0"
-          style={{
-            background: '#0A0C10',
-            borderBottom: '1px solid #1E222A',
-            height: 58,
-          }}
+          style={{ background: '#0A0C10', borderBottom: '1px solid #1E222A', height: 58 }}
         >
           <div className="relative flex-1 max-w-[400px]">
             <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2E3440]" />
@@ -449,12 +550,7 @@ export default function MainLayout() {
               type="text"
               placeholder="Search conversations, projects, files…"
               className="w-full pl-9 pr-4 text-[13px] rounded-xl outline-none transition-all duration-[160ms]"
-              style={{
-                height: 48,
-                background: '#111318',
-                border: '1px solid #1E222A',
-                color: '#94A3B8',
-              }}
+              style={{ height: 48, background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
               onFocus={e => {
                 e.target.style.borderColor = '#6366F1';
                 e.target.style.color = '#F8FAFC';
@@ -489,11 +585,7 @@ export default function MainLayout() {
             <NavLink
               to="/chat"
               className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-semibold text-white transition-all duration-[150ms]"
-              style={{
-                height: 38,
-                background: '#6366F1',
-                boxShadow: '0 2px 8px rgba(99,102,241,0.28)',
-              }}
+              style={{ height: 38, background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.28)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.4)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(99,102,241,0.28)'; }}
             >
