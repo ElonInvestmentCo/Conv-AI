@@ -4,8 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
   SquarePen,
-
-
   Mic2,
   Bell,
   Settings,
