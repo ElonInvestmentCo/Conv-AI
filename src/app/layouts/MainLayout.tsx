@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
   SquarePen,
-  Image,
+  Images,
   BookOpen,
   Layers,
   Wand2,
@@ -22,8 +22,8 @@ import {
 } from 'lucide-react';
 
 const mainNav = [
-  { label: 'New Chat', path: '/chat', icon: SquarePen },
-  { label: 'Images', path: '/images', icon: Image },
+  { label: 'New Chat', path: '/chat', icon: SquarePen, noColor: true },
+  { label: 'Images', path: '/images', icon: Images },
   { label: 'Library', path: '/library', icon: BookOpen },
   { label: 'Projects', path: '/projects', icon: Layers },
   { label: 'Builder', path: '/builder', icon: Wand2 },
@@ -39,7 +39,7 @@ const profileMenu = [
   { icon: HelpCircle, label: 'Help', path: '/help', accent: false, chevron: true },
 ];
 
-function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }> }; collapsed: boolean }) {
+function NavItem({ item, collapsed }: { item: { label: string; path: string; icon: React.ComponentType<{ size?: number; className?: string }>; noColor?: boolean }; collapsed: boolean }) {
   const Icon = item.icon;
   return (
     <NavLink
@@ -64,7 +64,7 @@ function NavItem({ item, collapsed }: { item: { label: string; path: string; ico
           )}
           <Icon
             size={16}
-            className={`relative flex-shrink-0 transition-colors ${
+            className={item.noColor ? 'relative flex-shrink-0' : `relative flex-shrink-0 transition-colors ${
               isActive ? 'text-[#2563EB]' : 'text-[#94A3B8] group-hover:text-[#475569]'
             }`}
           />
