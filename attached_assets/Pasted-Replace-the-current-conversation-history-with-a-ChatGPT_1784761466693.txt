@@ -1,0 +1,150 @@
+Replace the current conversation history with a ChatGPT-style Recent Conversations sidebar
+
+Remove the existing sidebar conversation organization entirely.
+
+Remove these sections:
+
+Pinned
+Folders
+Research
+Work projects
+Conversation counts (8, 14, etc.)
+Folder hierarchy
+Nested expandable lists
+File-explorer behavior
+
+Replace them with a single Recent Conversations list that behaves like ChatGPT.
+
+Layout
+
+The sidebar should contain, in this order:
+
+Top toolbar
+Primary navigation (New Chat, Images, Library, etc.)
+Recents heading
+Scrollable conversation history
+Bottom account/profile card
+
+No folders. No pinned section. No nested categories.
+
+Conversation behavior
+
+Each conversation is represented by one row.
+
+Each row displays:
+
+Automatically generated conversation title
+Single-line text
+Ellipsis (...) when text is too long
+
+Example:
+
+Recents
+
+Design Conv AI Sidebar
+Git LFS Push Error
+LangGraph Implementation
+React DnD Drag Ordering
+Image Generation Prompts
+Dashboard Layout Options
+Active conversation
+
+The currently opened conversation should remain highlighted.
+
+Use:
+
+rounded 10px pill
+subtle gray background
+no border
+
+Only one conversation can be active.
+
+Hover behavior
+
+When hovering a conversation:
+
+fade in a rounded gray background
+show a three-dot (⋯) menu on the right
+smooth 150–200ms animation
+
+The menu should contain:
+
+Rename
+Archive
+Delete
+Clicking a conversation
+
+Clicking a conversation should:
+
+open that conversation
+restore all previous messages
+restore uploaded files
+restore generated images
+restore AI responses
+restore scroll position if available
+update the active highlight
+
+The previous conversation is automatically saved before switching.
+
+Creating a new chat
+
+Pressing New Chat should:
+
+create a new empty conversation
+make it active
+place it at the top of Recents
+initially display "New chat"
+
+After several user/assistant messages, automatically generate a descriptive title.
+
+Examples:
+
+Fix Git Push Error
+Fintech Dashboard UI
+LangGraph Agent Design
+
+Users can rename conversations later.
+
+Ordering
+
+Always sort conversations by last activity, newest first.
+
+Newest conversation appears at the top.
+
+Do not allow manual ordering.
+
+Scrolling
+
+Only the conversation list scrolls.
+
+The top toolbar, navigation, and bottom profile remain fixed.
+
+Typography
+
+Conversation title:
+
+Inter
+15px
+400
+line-height: 22px
+
+Row:
+
+height: 40px
+radius: 10px
+horizontal padding: 12px
+Remove
+
+Do not implement:
+
+folders
+pinned conversations
+project folders
+expandable trees
+counts
+nested navigation
+research/work categories
+
+This application is an AI chat product, not a file manager.
+
+The sidebar should behave like ChatGPT's Recent Conversations list.
