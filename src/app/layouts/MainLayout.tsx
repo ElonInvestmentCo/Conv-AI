@@ -14,52 +14,18 @@ import {
   Zap,
   Sun,
   Keyboard,
+  Images,
+  LibraryBig,
+  FolderClosed,
+  FileAudio,
+  LayoutDashboard,
 } from 'lucide-react';
 
-function ImagesIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvcHktaW1hZ2UtaWNvbiBsdWNpZGUtY29weS1pbWFnZSI+PHBhdGggZD0iTTQgMTZhMiAyIDAgMCAxLTItMlY0YTIgMiAwIDAgMSAyLTJoMTBhMiAyIDAgMCAxIDIgMiIvPjxyZWN0IHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgeD0iOCIgeT0iOCIgcng9IjIiLz48Y2lyY2xlIGN4PSIxNCIgY3k9IjE0IiByPSIyIi8+PHBhdGggZD0ibTEzLjQgMjIgNC43LTMuOWMuOC0uOCAyLS44IDIuOCAwbDEuMSAxLjEiLz48L3N2Zz4="
-      width={20} height={20} alt="Images" className={className}
-    />
-  );
-}
-
-function LibraryIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpYnJhcnktYmlnLWljb24gbHVjaWRlLWxpYnJhcnktYmlnIj48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjEiLz48cGF0aCBkPSJNNyAzdjE4Ii8+PHBhdGggZD0iTTIwLjQgMTguOWMuMi41LS4xIDEuMS0uNiAxLjNsLTEuOS43Yy0uNS4yLTEuMS0uMS0xLjMtLjZMMTEuMSA1LjFjLS4yLS41LjEtMS4xLjYtMS4zbDEuOS0uN2MuNS0uMiAxLjEuMSAxLjMuNloiLz48L3N2Zz4="
-      width={20} height={20} alt="Library" className={className}
-    />
-  );
-}
-
-function ProjectsIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZvbGRlci1jbG9zZWQtaWNvbiBsdWNpZGUtZm9sZGVyLWNsb3NlZCI+PHBhdGggZD0iTTIwIDIwYTIgMiAwIDAgMCAyLTJWOGEyIDIgMCAwIDAtMi0yaC03LjlhMiAyIDAgMCAxLTEuNjktLjlMOS42IDMuOUEyIDIgMCAwIDAgNy45MyAzSDRhMiAyIDAgMCAwLTIgMnYxM2EyIDIgMCAwIDAgMiAyWiIvPjxwYXRoIGQ9Ik0yIDEwaDIwIi8+PC9zdmc+"
-      width={20} height={20} alt="Projects" className={className}
-    />
-  );
-}
-
-function TTSIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZpbGUtc2lnbmFsLWljb24gbHVjaWRlLWZpbGUtc2lnbmFsIj48cGF0aCBkPSJNNiAyMmEyIDIgMCAwIDEtMi0yVjRhMiAyIDAgMCAxIDItMmg4YTIuNCAyLjQgMCAwIDEgMS43MDQuNzA2bDMuNTg4IDMuNTg4QTIuNCAyLjQgMCAwIDEgMjAgOHYxMmEyIDIgMCAwIDEtMiAyeiIvPjxwYXRoIGQ9Ik0xNCAydjVhMSAxIDAgMCAwIDEgMWg1Ii8+PHBhdGggZD0iTTggMTVoLjAxIi8+PHBhdGggZD0iTTExLjUgMTMuNWEyLjUgMi41IDAgMCAxIDAgMyIvPjxwYXRoIGQ9Ik0xNSAxMmE1IDUgMCAwIDEgMCA2Ii8+PC9zdmc+"
-      width={20} height={20} alt="Text to Speech" className={className}
-    />
-  );
-}
-
-function BuilderIcon({ className }: { size?: number; color?: string; strokeWidth?: number; className?: string }) {
-  return (
-    <img
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxheW91dC1kYXNoYm9hcmQtaWNvbiBsdWNpZGUtbGF5b3V0LWRhc2hib2FyZCI+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iOSIgeD0iMyIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI1IiB4PSIxNCIgeT0iMyIgcng9IjEiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI5IiB4PSIxNCIgeT0iMTIiIHJ4PSIxIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iNSIgeD0iMyIgeT0iMTYiIHJ4PSIxIi8+PC9zdmc+"
-      width={20} height={20} alt="Builder" className={className}
-    />
-  );
-}
+const ImagesIcon = Images;
+const LibraryIcon = LibraryBig;
+const ProjectsIcon = FolderClosed;
+const TTSIcon = FileAudio;
+const BuilderIcon = LayoutDashboard;
 
 // ── Conv AI Logo Mark ─────────────────────────────────────────────────────────
 const LogoMark = ({ className = 'w-7 h-7', color = '#F8FAFC' }: { className?: string; color?: string }) => (
