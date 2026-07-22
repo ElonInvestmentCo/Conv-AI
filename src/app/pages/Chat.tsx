@@ -345,14 +345,14 @@ export default function Chat() {
         {/* ── Bottom area: chips + composer ── */}
         <div className="flex-shrink-0 pb-5">
 
-          {/* Suggestion chips — 16px gap above composer */}
+          {/* Suggestion chips */}
           <AnimatePresence>
             {started && !isTyping && (
               <motion.div
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="flex gap-2 overflow-x-auto px-6 mb-4"
+                className="flex gap-2 overflow-x-auto px-6 mb-3"
                 style={{ scrollbarWidth: 'none' }}
               >
                 {chips.map((s, i) => (
@@ -361,16 +361,8 @@ export default function Chat() {
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => send(s)}
-                    className="flex-shrink-0 text-[13px] font-medium text-[#475569] hover:text-[#94A3B8] transition-all duration-[160ms] hover:border-[#2E3440]"
-                    style={{
-                      height: 38,
-                      paddingLeft: 16,
-                      paddingRight: 16,
-                      borderRadius: 999,
-                      border: '1px solid #1E222A',
-                      background: 'transparent',
-                      whiteSpace: 'nowrap',
-                    }}
+                    className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12.5px] font-medium text-[#475569] hover:text-[#94A3B8] transition-all hover:border-[#2E3440]"
+                    style={{ border: '1px solid #1E222A', whiteSpace: 'nowrap' }}
                   >
                     {s}
                   </motion.button>
@@ -379,34 +371,25 @@ export default function Chat() {
             )}
           </AnimatePresence>
 
-          {/* ── Composer ── */}
-          <div className="px-6 flex justify-center">
-            <motion.div
-              animate={{
-                boxShadow: composerFocused
-                  ? '0 0 0 1.5px #6366F1, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35)'
-                  : '0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.25)',
-              }}
-              transition={{ duration: 0.18 }}
-              className="relative flex items-center gap-2 w-full"
+          {/* ── Composer — original pill style ── */}
+          <div className="px-6 pb-0 pt-2 flex-shrink-0 flex flex-col items-center">
+            <div
+              className="w-full max-w-[773px] flex items-center gap-0 rounded-full px-2 transition-all"
               style={{
-                maxWidth: 880,
-                minHeight: 64,
-                background: '#111318',
-                border: composerFocused ? '1px solid rgba(99,102,241,0.45)' : '1px solid #1E222A',
-                borderRadius: 32,
-                paddingLeft: 16,
-                paddingRight: 12,
-                paddingTop: 10,
-                paddingBottom: 10,
-                transition: 'border-color 0.18s ease',
+                background: '#ffffff',
+                minHeight: 52,
+                border: '1px solid #e5e5e5',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
               }}
             >
-              {/* Attachment button */}
+              {/* Leading — + button */}
               <button
-                className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-[150ms] text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24]"
+                title="Add attachment"
+                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all ml-1"
               >
-                <Plus size={20} strokeWidth={2} />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
               </button>
 
               {/* Textarea */}
@@ -418,83 +401,64 @@ export default function Chat() {
                 onFocus={() => setComposerFocused(true)}
                 onBlur={() => setComposerFocused(false)}
                 onInput={e => autoResize(e.target as HTMLTextAreaElement)}
-                placeholder="Ask anything…"
+                placeholder="Ask anything"
                 rows={1}
-                className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#F8FAFC] text-[16px] font-[500] leading-[1.5] py-1 px-1"
-                style={{
-                  maxHeight: 180,
-                  caretColor: '#6366F1',
-                }}
+                className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#0d0d0d] placeholder-[#8e8ea0] text-[16px] leading-[24px] py-[5px] px-2"
+                style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif', maxHeight: 160 }}
               />
 
-              {/* Right controls */}
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                {/* Mic */}
+              {/* Trailing — mic + send */}
+              <div className="flex items-center gap-1 flex-shrink-0 mr-1">
+                {/* Mic icon */}
                 <button
+                  className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all"
                   onClick={() => setVoiceMode(!voiceMode)}
-                  className="flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-[150ms]"
-                  style={{
-                    background: voiceMode ? 'rgba(99,102,241,0.15)' : 'transparent',
-                    color: voiceMode ? '#6366F1' : '#475569',
-                  }}
-                  onMouseEnter={e => {
-                    if (!voiceMode) {
-                      (e.currentTarget as HTMLElement).style.background = '#1A1D24';
-                      (e.currentTarget as HTMLElement).style.color = '#94A3B8';
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!voiceMode) {
-                      (e.currentTarget as HTMLElement).style.background = 'transparent';
-                      (e.currentTarget as HTMLElement).style.color = '#475569';
-                    }
-                  }}
+                  title="Voice input"
                 >
-                  {voiceMode ? <VoiceWaveform /> : <Mic size={18} strokeWidth={1.8} />}
+                  <img
+                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1pYy1pY29uIGx1Y2lkZS1taWMiPjxwYXRoIGQ9Ik0xMiAxOXYzIi8+PHBhdGggZD0iTTE5IDEwdjJhNyA3IDAgMCAxLTE0IDB2LTIiLz48cmVjdCB4PSI5IiB5PSIyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxMyIgcng9IjMiLz48L3N2Zz4="
+                    width={18} height={18} alt="Mic"
+                  />
                 </button>
 
-                {/* Send */}
-                <motion.button
-                  onClick={() => send()}
-                  whileHover={input.trim() ? { scale: 1.03 } : {}}
-                  whileTap={input.trim() ? { scale: 0.97 } : {}}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  disabled={!input.trim() && !isTyping}
-                  className="flex items-center justify-center rounded-full transition-all duration-[160ms]"
-                  style={{
-                    width: 44,
-                    height: 44,
-                    background: input.trim() ? '#6366F1' : '#1A1D24',
-                    boxShadow: input.trim() ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
-                    cursor: input.trim() ? 'pointer' : 'default',
-                    flexShrink: 0,
-                  }}
-                  onMouseEnter={e => {
-                    if (input.trim()) {
-                      (e.currentTarget as HTMLElement).style.background = '#4F46E5';
-                      (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.45)';
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (input.trim()) {
-                      (e.currentTarget as HTMLElement).style.background = '#6366F1';
-                      (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(99,102,241,0.35)';
-                    }
-                  }}
+                {/* Send / voice circular button */}
+                <button
+                  onClick={input.trim() ? () => send() : () => setVoiceMode(!voiceMode)}
+                  className="flex-shrink-0 flex items-center justify-center rounded-full transition-all"
+                  style={{ width: 55, height: 53, background: '#0d0d0d' }}
+                  title={input.trim() ? 'Send' : 'Voice mode'}
                 >
-                  {/* Up-arrow send icon */}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: input.trim() ? 1 : 0.3 }}>
-                    <line x1="12" y1="19" x2="12" y2="5" />
-                    <polyline points="5 12 12 5 19 12" />
-                  </svg>
-                </motion.button>
+                  {input.trim() ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
+                    </svg>
+                  ) : voiceMode ? (
+                    <div className="flex items-center gap-[3px]">
+                      {[0, 1, 2, 3, 4].map(i => (
+                        <motion.div
+                          key={i}
+                          className="w-[3px] rounded-full bg-white"
+                          animate={{ height: [6, 18 + (i % 3) * 5, 6] }}
+                          transition={{ duration: 0.55, repeat: Infinity, delay: i * 0.11, ease: 'easeInOut' }}
+                          style={{ height: 6 }}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <img
+                      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWF1ZGlvLWxpbmVzLWljb24gbHVjaWRlLWF1ZGlvLWxpbmVzIj48cGF0aCBkPSJNMiAxMHYzIi8+PHBhdGggZD0iTTYgNnYxMSIvPjxwYXRoIGQ9Ik0xMCAzdjE4Ii8+PHBhdGggZD0iTTE0IDh2NyIvPjxwYXRoIGQ9Ik0xOCA1djEzIi8+PHBhdGggZD0iTTIyIDEwdjMiLz48L3N2Zz4="
+                      width={20} height={20} alt="Voice"
+                      style={{ filter: 'brightness(0) invert(1)' }}
+                    />
+                  )}
+                </button>
               </div>
-            </motion.div>
-          </div>
+            </div>
 
-          <p className="text-center text-[12px] text-[#2E3440] mt-3">
-            Conv AI can make mistakes. Check important info.
-          </p>
+            <p className="text-center text-[12px] text-[#8E8EA0] mt-2.5" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif' }}>
+              Conv AI can make mistakes. Check important info.
+            </p>
+          </div>
         </div>
       </div>
     </div>
