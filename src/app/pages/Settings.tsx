@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Settings, Bell, User, Puzzle, Mic,
+  Settings as SettingsIcon, Bell, User, Puzzle, Mic,
   CreditCard, Database, HardDrive, Shield,
   Lock, Users, Heart, UserCircle,
   Keyboard, ChevronRight, Plus, Info,
   FileText, Image, Grid3X3, Code2,
   Zap, Layers,
-} from '@remixicon/react';
+} from 'lucide-react';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const T = {
@@ -666,7 +666,7 @@ function KeyboardPanel() {
 
 // ─── Nav items config ─────────────────────────────────────────────────────────
 const navItems = [
-  { id: 'general',         label: 'General',            icon: Settings,    panel: GeneralPanel },
+  { id: 'general',         label: 'General',            icon: SettingsIcon,    panel: GeneralPanel },
   { id: 'notifications',   label: 'Notifications',      icon: Bell,         panel: NotificationsPanel },
   { id: 'personalization', label: 'Personalization',    icon: User,         panel: PersonalizationPanel },
   { id: 'plugins',         label: 'Plugins',            icon: Puzzle,       panel: PluginsPanel },
