@@ -1,188 +1,313 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
-  BookOpen, Sparkles, Search, Filter, Star, Clock,
-  MessageSquare, Image, FileText, Mic2, Plus, ChevronRight
+  Search, SlidersHorizontal, LayoutGrid, List, Plus, ChevronDown,
+  FileText, Image as ImageIcon, File, MoreHorizontal, Download,
+  Share2, Trash2, Star, ChevronUp, ChevronRight,
 } from 'lucide-react';
 
-type ItemType = 'all' | 'chat' | 'image' | 'audio' | 'document';
+type FilterTab = 'All' | 'Images' | 'Documents';
+type SortKey = 'name' | 'modified' | 'size';
+type SortDir = 'asc' | 'desc';
 
-const typeIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  chat: MessageSquare,
-  image: Image,
-  audio: Mic2,
-  document: FileText,
-};
+interface LibFile {
+  id: number;
+  name: string;
+  type: 'image' | 'document' | 'svg';
+  modified: string;
+  modifiedTs: number;
+  size: string;
+  sizeKb: number;
+  starred: boolean;
+  thumb: string; // gradient for placeholder
+}
 
-const typeColors: Record<string, string> = {
-  chat: '#2563EB',
-  image: '#7C3AED',
-  audio: '#DB2777',
-  document: '#059669',
-};
-
-const items = [
-  { id: 1, type: 'chat', title: 'Build a multi-agent research pipeline', preview: 'We discussed orchestrating multiple AI agents to handle complex research tasks autonomously…', date: '2 min ago', starred: true, tokens: '4.2k' },
-  { id: 2, type: 'image', title: 'Product launch visuals — neon cityscape', preview: 'Generated 6 images · Cinematic style · 16:9', date: '1 hr ago', starred: false, tokens: null },
-  { id: 3, type: 'chat', title: 'Summarize 80-page technical report', preview: 'The document covered cloud infrastructure patterns, cost optimization strategies…', date: '3 hrs ago', starred: true, tokens: '12.1k' },
-  { id: 4, type: 'audio', title: 'Onboarding narration — Nova voice', preview: 'Generated 2m 34s · Nova · MP3', date: 'Yesterday', starred: false, tokens: null },
-  { id: 5, type: 'document', title: 'API integration docs — Stripe webhooks', preview: 'A comprehensive guide on handling Stripe webhook events including signature verification…', date: 'Yesterday', starred: true, tokens: '8.7k' },
-  { id: 6, type: 'chat', title: 'Automate email workflow with AI', preview: 'We designed a pipeline that reads incoming emails, classifies intent, and drafts replies…', date: '2 days ago', starred: false, tokens: '6.3k' },
-  { id: 7, type: 'image', title: 'Brand identity assets — minimal style', preview: 'Generated 12 images · Digital Art style · 1:1', date: '2 days ago', starred: true, tokens: null },
-  { id: 8, type: 'audio', title: 'Product demo voiceover — Echo voice', preview: 'Generated 5m 12s · Echo · WAV', date: '3 days ago', starred: false, tokens: null },
+const files: LibFile[] = [
+  { id: 1,  name: '38d07014-4028-42ec-b2e7-e6f78adefa22.png', type: 'image',    modified: 'Jul 21, 8:17 PM', modifiedTs: 8,  size: '185 KB', sizeKb: 185,  starred: false, thumb: 'linear-gradient(135deg,#667EEA,#764BA2)' },
+  { id: 2,  name: '48706ed2-69e1-4c58-977a-ffe9cbe97663.png', type: 'image',    modified: 'Jul 21, 8:00 PM', modifiedTs: 7,  size: '240 KB', sizeKb: 240,  starred: false, thumb: 'linear-gradient(135deg,#F093FB,#F5576C)' },
+  { id: 3,  name: '08661b6c-5da8-4186-8744-9278ad7abc7c.png', type: 'image',    modified: 'Jul 21, 7:20 PM', modifiedTs: 6,  size: '533 KB', sizeKb: 533,  starred: true,  thumb: 'linear-gradient(135deg,#4FACFE,#00F2FE)' },
+  { id: 4,  name: '6578dc41-99b6-44d3-a745-ff830727fb41.png', type: 'image',    modified: 'Jul 21, 7:46 PM', modifiedTs: 5,  size: '274 KB', sizeKb: 274,  starred: false, thumb: 'linear-gradient(135deg,#43E97B,#38F9D7)' },
+  { id: 5,  name: '11a92260-1fdf-4694-8148-6cf6f7490f1c.png', type: 'image',    modified: 'Jul 21, 7:46 PM', modifiedTs: 5,  size: '274 KB', sizeKb: 274,  starred: false, thumb: 'linear-gradient(135deg,#FA709A,#FEE140)' },
+  { id: 6,  name: 'Speech bubble with gradient sound waves.png', type: 'image', modified: 'Jul 21, 4:25 PM', modifiedTs: 4,  size: '1.30 MB', sizeKb: 1300, starred: true,  thumb: 'linear-gradient(135deg,#a78bfa,#60a5fa)' },
+  { id: 7,  name: 'Gradient speech bubble with sound waves.png', type: 'image', modified: 'Jul 21, 4:23 PM', modifiedTs: 3,  size: '1.32 MB', sizeKb: 1320, starred: false, thumb: 'linear-gradient(135deg,#fb7185,#c084fc)' },
+  { id: 8,  name: 'AI conversation logo with speech bubble.png', type: 'image', modified: 'Jul 21, 4:22 PM', modifiedTs: 3,  size: '692 KB', sizeKb: 692,  starred: false, thumb: 'linear-gradient(135deg,#34d399,#60a5fa)' },
+  { id: 9,  name: 'gemini_sparkle_aurora_33f86dc0c0257da337c63.svg', type: 'svg', modified: 'Jul 21, 4:21 PM', modifiedTs: 2, size: '27.1 KB', sizeKb: 27,  starred: false, thumb: 'linear-gradient(135deg,#fbbf24,#f97316)' },
+  { id: 10, name: 'b56486b7-ba82-40c4-b775-477df9e5733b.png', type: 'image',    modified: 'Jul 21, 12:05 PM', modifiedTs: 1, size: '145 KB', sizeKb: 145,  starred: false, thumb: 'linear-gradient(135deg,#818cf8,#6ee7b7)' },
+  { id: 11, name: 'AI workflow diagram.pdf',                   type: 'document', modified: 'Jul 21, 10:00 AM', modifiedTs: 0, size: '14.2 MB', sizeKb: 14200, starred: true, thumb: '' },
+  { id: 12, name: 'Application workspace terminology.docx',    type: 'document', modified: 'Jul 21, 9:30 AM',  modifiedTs: 0, size: '80.6 KB', sizeKb: 80,   starred: false, thumb: '' },
+  { id: 13, name: 'Branch - AI workflow diagram.pdf',          type: 'document', modified: 'Jul 21, 9:00 AM',  modifiedTs: 0, size: '14.2 MB', sizeKb: 14200, starred: false, thumb: '' },
+  { id: 14, name: 'Dev Server Setup Plan.txt',                 type: 'document', modified: 'Jul 20',           modifiedTs: 0, size: '34.1 KB', sizeKb: 34,   starred: false, thumb: '' },
 ];
 
+const docColor = (name: string) => {
+  const ext = name.split('.').pop()?.toLowerCase();
+  if (ext === 'pdf') return { color: '#EF4444', bg: '#FFF1F2' };
+  if (ext === 'docx' || ext === 'doc') return { color: '#2563EB', bg: '#EFF6FF' };
+  if (ext === 'txt') return { color: '#64748B', bg: '#F8FAFC' };
+  return { color: '#64748B', bg: '#F8FAFC' };
+};
+
+function FileThumb({ file, size = 32 }: { file: LibFile; size?: number }) {
+  if (file.type === 'image' || file.type === 'svg') {
+    return (
+      <div
+        className="rounded-lg flex-shrink-0"
+        style={{ width: size, height: size, background: file.thumb }}
+      />
+    );
+  }
+  const { color, bg } = docColor(file.name);
+  const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
+  return (
+    <div className="rounded-lg flex-shrink-0 flex items-center justify-center" style={{ width: size, height: size, background: bg }}>
+      <span className="text-[9px] font-[800]" style={{ color }}>{ext.slice(0, 3)}</span>
+    </div>
+  );
+}
+
 export default function Library() {
-  const [filter, setFilter] = useState<ItemType>('all');
+  const [tab, setTab] = useState<FilterTab>('All');
   const [search, setSearch] = useState('');
-  const [starredOnly, setStarredOnly] = useState(false);
+  const [view, setView] = useState<'list' | 'grid'>('list');
+  const [sortKey, setSortKey] = useState<SortKey>('modified');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [actionRow, setActionRow] = useState<number | null>(null);
 
-  const filters: { key: ItemType; label: string }[] = [
-    { key: 'all', label: 'All' },
-    { key: 'chat', label: 'Chats' },
-    { key: 'image', label: 'Images' },
-    { key: 'audio', label: 'Audio' },
-    { key: 'document', label: 'Documents' },
-  ];
+  const filtered = files
+    .filter(f => {
+      if (tab === 'Images') return f.type === 'image' || f.type === 'svg';
+      if (tab === 'Documents') return f.type === 'document';
+      return true;
+    })
+    .filter(f => !search || f.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      let diff = 0;
+      if (sortKey === 'name') diff = a.name.localeCompare(b.name);
+      if (sortKey === 'modified') diff = a.modifiedTs - b.modifiedTs;
+      if (sortKey === 'size') diff = a.sizeKb - b.sizeKb;
+      return sortDir === 'asc' ? diff : -diff;
+    });
 
-  const filtered = items.filter(item => {
-    if (filter !== 'all' && item.type !== filter) return false;
-    if (starredOnly && !item.starred) return false;
-    if (search && !item.title.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+  const handleSort = (key: SortKey) => {
+    if (key === sortKey) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('desc'); }
+  };
+
+  const SortIcon = ({ k }: { k: SortKey }) => {
+    if (sortKey !== k) return <span className="w-3" />;
+    return sortDir === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
+  };
 
   return (
-    <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
-      <div className="max-w-4xl mx-auto p-6 space-y-5">
+    <div className="h-full overflow-y-auto" style={{ background: '#F8FAFC' }}>
+      <div className="max-w-5xl mx-auto p-6">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em]">Library</h1>
-            <p className="text-[14px] text-[#64748B] mt-0.5">All your AI-generated content in one place</p>
-          </div>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }}
-          >
-            <Plus size={14} />
-            New Chat
-          </motion.button>
-        </div>
-
-        {/* Search + filters */}
-        <div className="rounded-[20px] p-4" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-          <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center justify-between mb-5">
+          <h1 className="text-[22px] font-[800] tracking-[-0.02em]" style={{ color: '#0F172A' }}>Library</h1>
+          <div className="flex items-center gap-3">
             {/* Search */}
-            <div className="relative flex-1 min-w-[200px]">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]" />
+            <div className="relative">
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#CBD5E1' }} />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search library…"
-                className="w-full pl-9 pr-3 py-2 text-[13px] rounded-xl outline-none transition-all"
-                style={{ background: '#F8FAFC', border: '1px solid rgba(226,232,240,0.8)', color: '#0F172A' }}
-                onFocus={e => { e.target.style.borderColor = '#93C5FD'; e.target.style.background = '#fff'; }}
-                onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.8)'; e.target.style.background = '#F8FAFC'; }}
+                placeholder="Search files…"
+                className="pl-8 pr-3 py-2 text-[13px] rounded-xl outline-none w-52 transition-all"
+                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', color: '#0F172A' }}
+                onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
+                onBlur={e => { e.target.style.borderColor = 'rgba(226,232,240,0.9)'; }}
               />
             </div>
-
-            {/* Type filters */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {filters.map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => setFilter(f.key)}
-                  className="px-3 py-1.5 rounded-[10px] text-[12.5px] font-semibold transition-all"
-                  style={{
-                    background: filter === f.key ? '#0F172A' : '#F8FAFC',
-                    color: filter === f.key ? '#fff' : '#64748B',
-                    border: `1px solid ${filter === f.key ? '#0F172A' : 'rgba(226,232,240,0.8)'}`,
-                  }}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Starred toggle */}
+            {/* New button */}
             <button
-              onClick={() => setStarredOnly(!starredOnly)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-[12.5px] font-semibold transition-all"
-              style={{
-                background: starredOnly ? '#FFFBEB' : '#F8FAFC',
-                color: starredOnly ? '#D97706' : '#94A3B8',
-                border: `1px solid ${starredOnly ? '#FDE68A' : 'rgba(226,232,240,0.8)'}`,
-              }}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-[600] text-white transition-all"
+              style={{ background: 'linear-gradient(135deg,#0F172A,#1E293B)', boxShadow: '0 2px 8px rgba(15,23,42,0.2)' }}
             >
-              <Star size={12} className={starredOnly ? 'fill-amber-400 text-amber-400' : ''} />
-              Starred
+              New
+              <ChevronDown size={13} />
             </button>
           </div>
         </div>
 
-        {/* Items */}
-        <div className="space-y-2">
-          {filtered.length === 0 ? (
-            <div className="rounded-[20px] p-12 text-center" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)' }}>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#F1F5F9' }}>
-                <BookOpen size={22} className="text-[#94A3B8]" />
-              </div>
-              <p className="text-[15px] font-semibold text-[#0F172A]">Nothing here yet</p>
-              <p className="text-[13px] text-[#94A3B8] mt-1">Start a chat or generate content to populate your library</p>
+        {/* Filter tabs + view controls */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)' }}>
+            {(['All', 'Images', 'Documents'] as FilterTab[]).map(t => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className="px-3.5 py-1.5 rounded-lg text-[12.5px] font-[600] transition-all"
+                style={{
+                  background: tab === t ? '#0F172A' : 'transparent',
+                  color: tab === t ? '#fff' : '#64748B',
+                }}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button className="p-2 rounded-lg text-[#94A3B8] hover:text-[#475569] hover:bg-white transition-all" style={{ border: '1px solid rgba(226,232,240,0.9)' }}>
+              <SlidersHorizontal size={14} />
+            </button>
+            <button
+              onClick={() => setView('grid')}
+              className="p-2 rounded-lg transition-all"
+              style={{
+                background: view === 'grid' ? '#EFF6FF' : 'transparent',
+                color: view === 'grid' ? '#2563EB' : '#94A3B8',
+                border: '1px solid rgba(226,232,240,0.9)',
+              }}
+            >
+              <LayoutGrid size={14} />
+            </button>
+            <button
+              onClick={() => setView('list')}
+              className="p-2 rounded-lg transition-all"
+              style={{
+                background: view === 'list' ? '#EFF6FF' : 'transparent',
+                color: view === 'list' ? '#2563EB' : '#94A3B8',
+                border: '1px solid rgba(226,232,240,0.9)',
+              }}
+            >
+              <List size={14} />
+            </button>
+          </div>
+        </div>
+
+        {/* List view */}
+        {view === 'list' && (
+          <div className="rounded-2xl overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 1px 4px rgba(15,23,42,0.04)' }}>
+            {/* Table header */}
+            <div
+              className="grid px-4 py-2.5"
+              style={{ gridTemplateColumns: '1fr 140px 100px 36px', borderBottom: '1px solid rgba(226,232,240,0.9)', background: '#F8FAFC' }}
+            >
+              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em] text-left" style={{ color: '#94A3B8' }} onClick={() => handleSort('name')}>
+                Name <SortIcon k="name" />
+              </button>
+              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em]" style={{ color: '#94A3B8' }} onClick={() => handleSort('modified')}>
+                Modified <SortIcon k="modified" />
+              </button>
+              <button className="flex items-center gap-1 text-[11.5px] font-[700] uppercase tracking-[0.06em]" style={{ color: '#94A3B8' }} onClick={() => handleSort('size')}>
+                Size <SortIcon k="size" />
+              </button>
+              <div />
             </div>
-          ) : filtered.map((item, i) => {
-            const Icon = typeIcons[item.type];
-            const color = typeColors[item.type];
-            return (
+
+            {/* Rows */}
+            {filtered.map((file, i) => (
               <motion.div
-                key={item.id}
+                key={file.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: i * 0.02 }}
+                onMouseEnter={() => setHovered(file.id)}
+                onMouseLeave={() => { setHovered(null); if (actionRow === file.id) setActionRow(null); }}
+                className="grid px-4 py-2.5 items-center cursor-pointer transition-all relative"
+                style={{
+                  gridTemplateColumns: '1fr 140px 100px 36px',
+                  borderBottom: i < filtered.length - 1 ? '1px solid rgba(226,232,240,0.6)' : 'none',
+                  background: hovered === file.id ? '#F8FAFC' : 'transparent',
+                }}
+              >
+                {/* Name + thumb */}
+                <div className="flex items-center gap-3 min-w-0">
+                  <FileThumb file={file} size={30} />
+                  <span className="text-[13px] font-[500] truncate" style={{ color: '#0F172A' }}>{file.name}</span>
+                  {file.starred && <Star size={11} className="flex-shrink-0 fill-amber-400 text-amber-400" />}
+                </div>
+                {/* Modified */}
+                <span className="text-[12.5px]" style={{ color: '#94A3B8' }}>{file.modified}</span>
+                {/* Size */}
+                <span className="text-[12.5px]" style={{ color: '#94A3B8' }}>{file.size}</span>
+                {/* Actions */}
+                <div className="flex justify-end">
+                  <AnimatePresence>
+                    {hovered === file.id && (
+                      <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={e => { e.stopPropagation(); setActionRow(actionRow === file.id ? null : file.id); }}
+                        className="p-1 rounded-lg transition-all"
+                        style={{ color: '#94A3B8' }}
+                      >
+                        <MoreHorizontal size={15} />
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Context menu */}
+                <AnimatePresence>
+                  {actionRow === file.id && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="absolute right-4 top-10 z-10 rounded-xl overflow-hidden"
+                      style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)', boxShadow: '0 8px 24px rgba(15,23,42,0.12)', width: 160 }}
+                    >
+                      {[
+                        { icon: Download, label: 'Download' },
+                        { icon: Share2, label: 'Share' },
+                        { icon: Star, label: file.starred ? 'Unstar' : 'Star' },
+                        { icon: Trash2, label: 'Delete', danger: true },
+                      ].map(action => (
+                        <button
+                          key={action.label}
+                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] font-[500] transition-all hover:bg-[#F8FAFC] text-left"
+                          style={{ color: action.danger ? '#EF4444' : '#0F172A' }}
+                        >
+                          <action.icon size={13} />
+                          {action.label}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+
+            {filtered.length === 0 && (
+              <div className="py-16 text-center">
+                <p className="text-[14px] font-[500]" style={{ color: '#94A3B8' }}>No files found</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Grid view */}
+        {view === 'grid' && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {filtered.map((file, i) => (
+              <motion.div
+                key={file.id}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="group rounded-[16px] p-4 flex items-start gap-4 cursor-pointer transition-all hover:shadow-sm"
-                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)' }}
+                className="group rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-md"
+                style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.9)' }}
               >
-                <div
-                  className="w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0 mt-0.5"
-                  style={{ background: `${color}12` }}
-                >
-                  <Icon size={18} style={{ color }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="text-[14px] font-semibold text-[#0F172A] leading-snug">{item.title}</p>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      {item.starred && <Star size={13} className="text-amber-400 fill-amber-400" />}
-                      <ChevronRight size={14} className="text-[#CBD5E1] group-hover:text-[#94A3B8] transition-colors" />
-                    </div>
+                {file.type === 'image' || file.type === 'svg' ? (
+                  <div className="w-full h-28" style={{ background: file.thumb }} />
+                ) : (
+                  <div className="w-full h-28 flex items-center justify-center" style={{ background: '#F8FAFC' }}>
+                    <FileThumb file={file} size={40} />
                   </div>
-                  <p className="text-[12.5px] text-[#94A3B8] mt-0.5 line-clamp-1">{item.preview}</p>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className="text-[11px] text-[#CBD5E1] flex items-center gap-1">
-                      <Clock size={10} />
-                      {item.date}
-                    </span>
-                    {item.tokens && (
-                      <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-md" style={{ background: '#F1F5F9', color: '#64748B' }}>
-                        {item.tokens} tokens
-                      </span>
-                    )}
-                    <span
-                      className="text-[11px] font-semibold px-1.5 py-0.5 rounded-md capitalize"
-                      style={{ background: `${color}12`, color }}
-                    >
-                      {item.type}
-                    </span>
-                  </div>
+                )}
+                <div className="p-3">
+                  <p className="text-[12px] font-[600] truncate" style={{ color: '#0F172A' }}>{file.name}</p>
+                  <p className="text-[11px] mt-0.5" style={{ color: '#94A3B8' }}>{file.size} · {file.modified}</p>
                 </div>
               </motion.div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

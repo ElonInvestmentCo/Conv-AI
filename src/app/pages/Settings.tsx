@@ -1,174 +1,741 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
-  RiSparklingLine,
-  RiMoonLine,
-  RiGlobalLine,
-  RiBellLine,
-  RiShieldLine,
-  RiPaletteLine,
-  RiDatabase2Line,
-  RiCpuLine,
-  RiArrowRightSLine,
-  RiMessage3Line,
-  RiMicLine,
-  RiEyeLine,
-  RiFlashlightLine,
-} from '@remixicon/react';
+  Settings2, Bell, User, Puzzle, Mic, CreditCard, Database,
+  HardDrive, Shield, Lock, Users, Heart, UserCircle, Keyboard,
+  ChevronRight, Plus, Check, AlertCircle, ArrowRight,
+  FileText, Image as ImageIcon, FileSpreadsheet, Presentation,
+  FilePdf2, Grid2x2, Code, Trash2, Archive, Download, Link,
+  Smartphone, Monitor, Eye, Globe, Zap, Layers,
+} from 'lucide-react';
 
+// ─── Design tokens ────────────────────────────────────────────────────────────
+const T = {
+  bg: '#FFFFFF',
+  surface: '#F8FAFC',
+  border: 'rgba(226,232,240,0.9)',
+  text: '#0F172A',
+  muted: '#64748B',
+  subtle: '#94A3B8',
+  accent: '#2563EB',
+  accentBg: '#EFF6FF',
+  accentMid: '#BFDBFE',
+  danger: '#EF4444',
+  dangerBg: '#FFF1F2',
+  success: '#10B981',
+};
+
+// ─── Shared primitives ────────────────────────────────────────────────────────
 const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   <button
     onClick={onChange}
-    className="relative w-11 h-6 rounded-full transition-all flex-shrink-0"
-    style={{ background: on ? '#2563EB' : '#E2E8F0' }}
+    className="relative w-10 h-[22px] rounded-full transition-all duration-200 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1"
+    style={{ background: on ? T.accent : '#CBD5E1' }}
   >
     <span
-      className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-all duration-200"
-      style={{ left: on ? '22px' : '2px' }}
+      className="absolute top-[2px] w-[18px] h-[18px] bg-white rounded-full shadow-sm transition-all duration-200"
+      style={{ left: on ? '20px' : '2px' }}
     />
   </button>
 );
 
-const sections = [
-  {
-    title: 'AI & Models',
-    icon: RiSparklingLine,
-    settings: [
-      { label: 'Default Model', desc: 'AI model for new conversations', type: 'select', value: 'GPT-4o' },
-      { label: 'Streaming Responses', desc: 'Display responses as they generate', type: 'toggle', value: true },
-      { label: 'Deep Analysis Mode', desc: 'Use extended reasoning for complex queries', type: 'toggle', value: false },
-      { label: 'Voice Responses', desc: 'Read AI responses aloud', type: 'toggle', value: false },
-    ],
-  },
-  {
-    title: 'Chat Behavior',
-    icon: RiMessage3Line,
-    settings: [
-      { label: 'Auto-save Conversations', desc: 'Save all chats to history automatically', type: 'toggle', value: true },
-      { label: 'Follow-up Suggestions', desc: 'Show suggested next prompts after responses', type: 'toggle', value: true },
-      { label: 'Markdown Rendering', desc: 'Render bold, code, and formatting in responses', type: 'toggle', value: true },
-      { label: 'Code Syntax Highlighting', desc: 'Highlight code blocks with language colors', type: 'toggle', value: true },
-    ],
-  },
-  {
-    title: 'Appearance',
-    icon: RiPaletteLine,
-    settings: [
-      { label: 'Theme', desc: 'Interface color scheme', type: 'select', value: 'Light' },
-      { label: 'Font Size', desc: 'Text size throughout the app', type: 'select', value: 'Medium (14px)' },
-      { label: 'Compact Mode', desc: 'Reduce spacing for more content', type: 'toggle', value: false },
-      { label: 'Sidebar Collapsed by Default', desc: 'Start with sidebar minimized', type: 'toggle', value: false },
-    ],
-  },
-  {
-    title: 'Voice',
-    icon: RiMicLine,
-    settings: [
-      { label: 'Voice', desc: 'AI voice for spoken responses', type: 'select', value: 'Nova' },
-      { label: 'Auto-detect Speech End', desc: 'Automatically send when you stop speaking', type: 'toggle', value: true },
-      { label: 'Noise Cancellation', desc: 'Filter background noise during voice input', type: 'toggle', value: true },
-    ],
-  },
-  {
-    title: 'Notifications',
-    icon: RiBellLine,
-    settings: [
-      { label: 'Agent Completion', desc: 'Notify when an agent finishes a task', type: 'toggle', value: true },
-      { label: 'Automation Alerts', desc: 'Notify on automation errors or failures', type: 'toggle', value: true },
-      { label: 'Weekly Usage Report', desc: 'Receive weekly AI usage summary by email', type: 'toggle', value: false },
-      { label: 'New Features', desc: 'Get notified about Conv AI updates', type: 'toggle', value: true },
-    ],
-  },
-  {
-    title: 'Privacy & Security',
-    icon: RiShieldLine,
-    settings: [
-      { label: 'Two-Factor Authentication', desc: 'Extra security for your account', type: 'toggle', value: true },
-      { label: 'Conversation Privacy', desc: 'Exclude my data from model training', type: 'toggle', value: true },
-      { label: 'Analytics Sharing', desc: 'Share anonymized usage to improve Conv AI', type: 'toggle', value: false },
-      { label: 'Biometric Login', desc: 'Use Face ID or fingerprint to sign in', type: 'toggle', value: false },
-    ],
-  },
-  {
-    title: 'Data & Storage',
-    icon: RiDatabase2Line,
-    settings: [
-      { label: 'Auto-delete History', desc: 'Automatically delete chats older than', type: 'select', value: 'Never' },
-      { label: 'Export Format', desc: 'Default format for conversation exports', type: 'select', value: 'Markdown' },
-      { label: 'Sync Across Devices', desc: 'Keep conversations in sync everywhere', type: 'toggle', value: true },
-    ],
-  },
+const SettingRow = ({
+  label, desc, children, danger,
+}: { label: string; desc?: string; children: React.ReactNode; danger?: boolean }) => (
+  <div className="flex items-center justify-between py-3.5 gap-4" style={{ borderBottom: `1px solid ${T.border}` }}>
+    <div className="min-w-0">
+      <p className={`text-[13.5px] font-[500] leading-snug ${danger ? 'text-[#EF4444]' : ''}`} style={{ color: danger ? T.danger : T.text }}>{label}</p>
+      {desc && <p className="text-[12.5px] mt-0.5 leading-relaxed" style={{ color: T.muted }}>{desc}</p>}
+    </div>
+    <div className="flex-shrink-0">{children}</div>
+  </div>
+);
+
+const SettingRowLast = ({
+  label, desc, children, danger,
+}: { label: string; desc?: string; children: React.ReactNode; danger?: boolean }) => (
+  <div className="flex items-center justify-between py-3.5 gap-4">
+    <div className="min-w-0">
+      <p className="text-[13.5px] font-[500] leading-snug" style={{ color: danger ? T.danger : T.text }}>{label}</p>
+      {desc && <p className="text-[12.5px] mt-0.5 leading-relaxed" style={{ color: T.muted }}>{desc}</p>}
+    </div>
+    <div className="flex-shrink-0">{children}</div>
+  </div>
+);
+
+const Chip = ({ label, onClick }: { label: string; onClick?: () => void }) => (
+  <button
+    onClick={onClick}
+    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12.5px] font-[500] transition-all hover:bg-opacity-90"
+    style={{ border: `1px solid ${T.border}`, color: T.muted, background: T.surface }}
+  >
+    {label}
+    <ChevronRight size={12} />
+  </button>
+);
+
+const ActionBtn = ({
+  label, variant = 'default', onClick,
+}: { label: string; variant?: 'default' | 'danger' | 'primary'; onClick?: () => void }) => {
+  const styles = {
+    default: { bg: T.surface, color: T.text, border: T.border },
+    danger: { bg: T.dangerBg, color: T.danger, border: '#FECDD3' },
+    primary: { bg: T.accentBg, color: T.accent, border: T.accentMid },
+  }[variant];
+  return (
+    <button
+      onClick={onClick}
+      className="px-3.5 py-1.5 rounded-lg text-[12.5px] font-[600] transition-all hover:opacity-80"
+      style={{ background: styles.bg, color: styles.color, border: `1px solid ${styles.border}` }}
+    >
+      {label}
+    </button>
+  );
+};
+
+const Select = ({ value, options }: { value: string; options: string[] }) => (
+  <select
+    defaultValue={value}
+    className="text-[12.5px] font-[500] px-3 py-1.5 rounded-lg appearance-none cursor-pointer outline-none transition-all"
+    style={{ border: `1px solid ${T.border}`, color: T.text, background: T.surface }}
+  >
+    {options.map(o => <option key={o}>{o}</option>)}
+  </select>
+);
+
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-[11px] font-[700] uppercase tracking-[0.08em] mb-1 mt-5 first:mt-0" style={{ color: T.subtle }}>{children}</p>
+);
+
+// ─── Panel content components ─────────────────────────────────────────────────
+
+function GeneralPanel() {
+  const [mfaDismissed, setMfaDismissed] = useState(false);
+  const [intelligence, setIntelligence] = useState(true);
+  const [dictation, setDictation] = useState(false);
+  return (
+    <div>
+      {!mfaDismissed && (
+        <div className="flex items-start gap-3 p-4 rounded-xl mb-5" style={{ background: T.accentBg, border: `1px solid ${T.accentMid}` }}>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: T.accent }}>
+            <Shield size={16} className="text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[13.5px] font-[600]" style={{ color: T.text }}>Secure your account</p>
+            <p className="text-[12.5px] mt-0.5 leading-relaxed" style={{ color: T.muted }}>
+              Add multi-factor authentication (MFA), like a text message or authenticator app, to help protect your account.
+            </p>
+            <button className="mt-2.5 px-3.5 py-1.5 rounded-lg text-[12.5px] font-[600] text-white transition-all" style={{ background: T.accent }}>
+              Set up MFA
+            </button>
+          </div>
+          <button onClick={() => setMfaDismissed(true)} className="text-[#94A3B8] hover:text-[#64748B] transition-colors p-0.5">
+            ✕
+          </button>
+        </div>
+      )}
+      <SettingRow label="Appearance" desc="Interface color scheme">
+        <Select value="Light" options={['Light', 'Dark', 'System']} />
+      </SettingRow>
+      <SettingRow label="Contrast">
+        <Select value="System" options={['System', 'Standard', 'High']} />
+      </SettingRow>
+      <SettingRow label="Accent color">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full border" style={{ background: T.accent, borderColor: T.accentMid }} />
+          <Select value="Default" options={['Default', 'Blue', 'Indigo', 'Violet', 'Rose']} />
+        </div>
+      </SettingRow>
+      <SettingRow label="Language">
+        <Select value="Auto-detect" options={['Auto-detect', 'English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese']} />
+      </SettingRow>
+      <SettingRow label="Higher intelligence" desc="Automatically use a higher intelligence setting when you ask a complex question.">
+        <Toggle on={intelligence} onChange={() => setIntelligence(!intelligence)} />
+      </SettingRow>
+      <SettingRowLast label="Enable Dictation" desc="Use voice input to type messages hands-free.">
+        <Toggle on={dictation} onChange={() => setDictation(!dictation)} />
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function NotificationsPanel() {
+  const notifItems = [
+    { key: 'codex', label: 'Codex', desc: 'Get notified about Codex tasks.', value: 'Push' },
+    { key: 'group', label: 'Group chats', desc: "You'll receive notifications for new messages in group chats.", value: 'Push' },
+    { key: 'marketing', label: 'Marketing', desc: 'Stay in the loop on new tools and features.', value: 'Push, Email' },
+    { key: 'tips', label: 'Personalized tips', desc: 'Get helpful recommendations based on your conversations.', value: 'Push, Email' },
+    { key: 'projects', label: 'Projects', desc: 'Get notified when you receive an email invitation to a shared project.', value: 'Email' },
+    { key: 'responses', label: 'Responses', desc: 'Get notified when responses to requests are ready.', value: 'Push' },
+    { key: 'tasks', label: 'Tasks', desc: "Get notified when tasks you've created have updates.", value: 'Push, Email' },
+  ];
+  return (
+    <div>
+      {notifItems.map((item, i) => {
+        const isLast = i === notifItems.length - 1;
+        const Row = isLast ? SettingRowLast : SettingRow;
+        return (
+          <Row key={item.key} label={item.label} desc={item.desc}>
+            <Chip label={item.value} />
+          </Row>
+        );
+      })}
+    </div>
+  );
+}
+
+function PersonalizationPanel() {
+  const [fastAnswers, setFastAnswers] = useState(true);
+  const [memory, setMemory] = useState(true);
+  const chars = ['Warm', 'Enthusiastic', 'Headers & Lists', 'Emoji'];
+  return (
+    <div>
+      <SettingRow label="Base style and tone" desc="Set the style and tone of how Conv AI responds to you.">
+        <Select value="Default" options={['Default', 'Concise', 'Detailed', 'Casual', 'Professional']} />
+      </SettingRow>
+      <div className="py-3.5" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Characteristics</p>
+        <p className="text-[12.5px] mt-0.5" style={{ color: T.muted }}>Choose additional customizations on top of your base style and tone.</p>
+        <div className="mt-3 space-y-2.5">
+          {chars.map(c => (
+            <div key={c} className="flex items-center justify-between">
+              <span className="text-[13px]" style={{ color: T.text }}>{c}</span>
+              <Select value="Default" options={['Default', 'On', 'Off']} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <SettingRow label="Fast answers" desc="Conv AI can sometimes use its general knowledge to give fast, in-depth answers. These aren't personalized and don't use your memory.">
+        <Toggle on={fastAnswers} onChange={() => setFastAnswers(!fastAnswers)} />
+      </SettingRow>
+      <div className="py-3.5" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Custom instructions</p>
+        <textarea
+          placeholder="Additional behavior, style, and tone preferences"
+          rows={3}
+          className="mt-2 w-full px-3.5 py-3 text-[13px] rounded-xl outline-none resize-none transition-all"
+          style={{ border: `1px solid ${T.border}`, color: T.text, background: T.surface }}
+          onFocus={e => { e.target.style.borderColor = '#93C5FD'; }}
+          onBlur={e => { e.target.style.borderColor = T.border; }}
+        />
+      </div>
+      <SettingRow label="About you" desc="Help Conv AI personalize responses by sharing information about yourself.">
+        <Chip label="Manage" />
+      </SettingRow>
+      <SettingRowLast label="Memory" desc="Conv AI will remember things from your conversations to personalize your experience.">
+        <Toggle on={memory} onChange={() => setMemory(!memory)} />
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function PluginsPanel() {
+  const pluginList = [
+    { icon: FileText, label: 'Default templates', color: '#F59E0B' },
+    { icon: FileText, label: 'Documents', color: '#3B82F6' },
+    { icon: FileText, label: 'PDF', color: '#EF4444' },
+    { icon: Layers, label: 'Presentations', color: '#F59E0B' },
+    { icon: FileText, label: 'Spreadsheets', color: '#10B981' },
+  ];
+  return (
+    <div>
+      <div className="py-3.5" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] font-[600]" style={{ color: T.text }}>Permissions</p>
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-[12.5px]" style={{ color: T.muted }}>Choose when Conv AI should ask for permission when using plugins.</p>
+          <button className="flex items-center gap-1 text-[12.5px] font-[500] flex-shrink-0 ml-3" style={{ color: T.accent }}>
+            Allow low-risk actions <ChevronRight size={12} />
+          </button>
+        </div>
+      </div>
+      {pluginList.map((p, i) => {
+        const Icon = p.icon;
+        const isLast = i === pluginList.length - 1;
+        const Row = isLast ? undefined : SettingRow;
+        const content = (
+          <div key={p.label} className="flex items-center justify-between py-3.5 gap-4" style={{ borderBottom: isLast ? 'none' : `1px solid ${T.border}` }}>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${p.color}18` }}>
+                <Icon size={15} style={{ color: p.color }} />
+              </div>
+              <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>{p.label}</span>
+            </div>
+            <ChevronRight size={15} style={{ color: T.subtle }} />
+          </div>
+        );
+        return content;
+      })}
+      <div className="flex items-center justify-between py-3.5 gap-4" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#F1F5F9' }}>
+            <Grid2x2 size={15} style={{ color: T.muted }} />
+          </div>
+          <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>Browse plugins</span>
+        </div>
+        <ChevronRight size={15} style={{ color: T.subtle }} />
+      </div>
+      <div className="flex items-center justify-between py-3.5">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#F1F5F9' }}>
+            <Code size={15} style={{ color: T.muted }} />
+          </div>
+          <span className="text-[13.5px] font-[500]" style={{ color: T.text }}>Developer mode</span>
+        </div>
+        <ChevronRight size={15} style={{ color: T.subtle }} />
+      </div>
+    </div>
+  );
+}
+
+const voices = [
+  { name: 'Alloy', desc: 'Neutral and balanced' },
+  { name: 'Echo', desc: 'Warm and natural' },
+  { name: 'Fable', desc: 'Expressive and dynamic' },
+  { name: 'Juniper', desc: 'Open and upbeat' },
+  { name: 'Nova', desc: 'Bright and conversational' },
+  { name: 'Onyx', desc: 'Deep and authoritative' },
+  { name: 'Sage', desc: 'Calm and thoughtful' },
+  { name: 'Shimmer', desc: 'Clear and precise' },
+  { name: 'Verse', desc: 'Rich and nuanced' },
 ];
 
+const voiceColors = [
+  'linear-gradient(135deg,#a855f7,#6366f1)',
+  'linear-gradient(135deg,#3b82f6,#06b6d4)',
+  'linear-gradient(135deg,#f59e0b,#ef4444)',
+  'linear-gradient(135deg,#8b5cf6,#a3e635)',
+  'linear-gradient(135deg,#ec4899,#f97316)',
+  'linear-gradient(135deg,#1e293b,#475569)',
+  'linear-gradient(135deg,#10b981,#3b82f6)',
+  'linear-gradient(135deg,#f472b6,#a855f7)',
+  'linear-gradient(135deg,#fbbf24,#84cc16)',
+];
+
+function VoicePanel() {
+  const [activeVoice, setActiveVoice] = useState(3);
+  return (
+    <div>
+      <div className="pt-1 pb-5" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <div className="flex items-center gap-3 overflow-x-auto pb-1 -mx-0.5 px-0.5">
+          {voices.map((v, i) => (
+            <button
+              key={v.name}
+              onClick={() => setActiveVoice(i)}
+              className="flex-shrink-0 flex flex-col items-center gap-2 group"
+            >
+              <div
+                className="w-16 h-16 rounded-full transition-all"
+                style={{
+                  background: voiceColors[i % voiceColors.length],
+                  boxShadow: activeVoice === i ? '0 0 0 3px #BFDBFE, 0 0 0 5px #2563EB' : '0 2px 8px rgba(0,0,0,0.08)',
+                  transform: activeVoice === i ? 'scale(1.08)' : 'scale(1)',
+                }}
+              />
+              <div className="text-center">
+                <p className="text-[12px] font-[600]" style={{ color: activeVoice === i ? T.accent : T.text }}>{v.name}</p>
+                <p className="text-[11px]" style={{ color: T.subtle }}>{v.desc}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1.5 justify-center mt-3">
+          {voices.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveVoice(i)}
+              className="w-1.5 h-1.5 rounded-full transition-all"
+              style={{ background: i === activeVoice ? T.accent : T.border }}
+            />
+          ))}
+        </div>
+      </div>
+      <SettingRow label="Model">
+        <Select value="Live" options={['Live', 'Advanced', 'Standard']} />
+      </SettingRow>
+      <SettingRowLast label="Language">
+        <Select value="Auto-detect" options={['Auto-detect', 'English', 'Spanish', 'French', 'German', 'Japanese']} />
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function BillingPanel() {
+  return (
+    <div>
+      <div className="rounded-xl p-4 mb-0" style={{ background: T.surface, border: `1px solid ${T.border}` }}>
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: T.accent }}>
+                <Zap size={14} className="text-white" />
+              </div>
+              <p className="text-[15px] font-[700]" style={{ color: T.text }}>Conv AI Free</p>
+            </div>
+            <p className="text-[12.5px] mt-1 ml-9" style={{ color: T.muted }}>Intelligence for everyday tasks</p>
+          </div>
+          <button className="px-3.5 py-1.5 rounded-lg text-[12.5px] font-[600] text-white" style={{ background: 'linear-gradient(135deg,#2563EB,#4F46E5)' }}>
+            Upgrade
+          </button>
+        </div>
+      </div>
+      <div className="pt-4 mt-4" style={{ borderTop: `1px solid ${T.border}` }}>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[14px] font-[600]" style={{ color: T.text }}>Billing information</p>
+          <ActionBtn label="Edit" />
+        </div>
+        <div className="py-3" style={{ borderBottom: `1px solid ${T.border}` }}>
+          <p className="text-[12px] font-[500] uppercase tracking-wide mb-1" style={{ color: T.subtle }}>Billing email</p>
+          <p className="text-[13.5px]" style={{ color: T.text }}>alex@convai.com</p>
+        </div>
+        <div className="py-3">
+          <p className="text-[12px] font-[500] uppercase tracking-wide mb-1" style={{ color: T.subtle }}>Next billing date</p>
+          <p className="text-[13.5px]" style={{ color: T.muted }}>No active subscription</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DataControlsPanel() {
+  const [location, setLocation] = useState(false);
+  const [improve, setImprove] = useState(true);
+  return (
+    <div>
+      <SettingRow label="Improve the model for everyone" desc="Allow your data to help improve Conv AI models for all users.">
+        <Toggle on={improve} onChange={() => setImprove(!improve)} />
+      </SettingRow>
+      <SettingRow label="Location" desc="When enabled, your location helps Conv AI provide more relevant information, like local recommendations, news, and weather.">
+        <ActionBtn label={location ? 'Turn off' : 'Turn on'} onClick={() => setLocation(!location)} />
+      </SettingRow>
+      <SettingRow label="Shared links">
+        <ActionBtn label="Manage" />
+      </SettingRow>
+      <SettingRow label="Archived chats">
+        <ActionBtn label="Manage" />
+      </SettingRow>
+      <SettingRow label="Archive all chats">
+        <ActionBtn label="Archive all" />
+      </SettingRow>
+      <SettingRow label="Delete all chats" desc="Permanently removes all conversations. This cannot be undone.">
+        <ActionBtn label="Delete all" variant="danger" />
+      </SettingRow>
+      <SettingRow label="Export data" desc="Download a copy of your data including conversations.">
+        <ActionBtn label="Export" />
+      </SettingRow>
+      <SettingRowLast label="Marketing privacy">
+        <button className="flex items-center gap-1 text-[12.5px] font-[500]" style={{ color: T.muted }}>
+          Manage <ChevronRight size={12} />
+        </button>
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function StoragePanel() {
+  const used = 243;
+  const total = 512;
+  const pct = (used / total) * 100;
+  return (
+    <div>
+      <div className="py-4" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] font-[600] mb-3" style={{ color: T.text }}>{used} MB of {total} MB used</p>
+        <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: '#E2E8F0' }}>
+          <div
+            className="h-full rounded-full transition-all"
+            style={{ width: `${pct}%`, background: 'linear-gradient(90deg,#2563EB,#4F46E5)' }}
+          />
+        </div>
+        <p className="text-[12px] mt-2" style={{ color: T.muted }}>{total - used} MB remaining</p>
+      </div>
+      <div className="py-3" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <p className="text-[13px] font-[600] mb-3" style={{ color: T.text }}>Manage storage</p>
+        <p className="text-[12.5px]" style={{ color: T.muted }}>Manage your library to free up storage</p>
+      </div>
+      <div className="flex items-center justify-between py-3.5 cursor-pointer group" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#EFF6FF' }}>
+            <FileText size={16} style={{ color: T.accent }} />
+          </div>
+          <div>
+            <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Files</p>
+            <p className="text-[12px]" style={{ color: T.muted }}>140 MB · 44 files</p>
+          </div>
+        </div>
+        <ChevronRight size={15} style={{ color: T.subtle }} />
+      </div>
+      <div className="flex items-center justify-between py-3.5 cursor-pointer group">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#F5F3FF' }}>
+            <ImageIcon size={16} style={{ color: '#7C3AED' }} />
+          </div>
+          <div>
+            <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Images</p>
+            <p className="text-[12px]" style={{ color: T.muted }}>102 MB · 275 images</p>
+          </div>
+        </div>
+        <ChevronRight size={15} style={{ color: T.subtle }} />
+      </div>
+    </div>
+  );
+}
+
+function SafetyPanel() {
+  const [sensitive, setSensitive] = useState(false);
+  return (
+    <div>
+      <SettingRowLast
+        label="Reduce sensitive content"
+        desc="Add extra safeguards around sensitive topics and limit certain types of content in Conv AI."
+      >
+        <Toggle on={sensitive} onChange={() => setSensitive(!sensitive)} />
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function SecurityPanel() {
+  const [mfa, setMfa] = useState(false);
+  const [passkey, setPasskey] = useState(false);
+  const [linkedIn, setLinkedIn] = useState(false);
+  return (
+    <div>
+      <SettingRow label="Password">
+        <ActionBtn label="Add →" />
+      </SettingRow>
+      <div className="py-3.5" style={{ borderBottom: `1px solid ${T.border}` }}>
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-[13.5px] font-[500]" style={{ color: T.text }}>Security keys &amp; passkeys</p>
+            <p className="text-[12.5px] mt-0.5" style={{ color: T.muted }}>Use hardware security keys or passkeys to sign in. These phishing-resistant methods provide stronger protection.</p>
+          </div>
+          <ActionBtn label="Add →" />
+        </div>
+      </div>
+      <div className="pt-4 pb-2">
+        <p className="text-[14px] font-[700]" style={{ color: T.text }}>Multi-factor authentication (MFA)</p>
+      </div>
+      <SettingRow label="Authenticator app" desc="Use one-time codes from an authenticator app.">
+        <Toggle on={mfa} onChange={() => setMfa(!mfa)} />
+      </SettingRow>
+      <div className="pt-4 pb-2" style={{ borderTop: `1px solid ${T.border}`, marginTop: '0.5rem' }}>
+        <p className="text-[14px] font-[700]" style={{ color: T.text }}>Sessions</p>
+      </div>
+      <SettingRow label="Active sessions" desc="View all devices that have accessed your account. You can review active sessions, remove trusted devices, or use Log out all to end all sessions.">
+        <button className="flex items-center gap-1 text-[12.5px] font-[500]" style={{ color: T.muted }}>
+          2 <ChevronRight size={12} />
+        </button>
+      </SettingRow>
+      <div className="pt-4 pb-2" style={{ borderTop: `1px solid ${T.border}`, marginTop: '0.5rem' }}>
+        <p className="text-[14px] font-[700]" style={{ color: T.text }}>Advanced security</p>
+      </div>
+      <SettingRowLast label="Advanced account security" desc="Adds the highest level of account security by requiring stronger sign-in methods and applying stricter protections.">
+        <ActionBtn label="Enroll →" />
+      </SettingRowLast>
+    </div>
+  );
+}
+
+function ParentalPanel() {
+  return (
+    <div>
+      <div className="py-3 rounded-xl p-4 mb-1" style={{ background: T.surface, border: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] leading-relaxed" style={{ color: T.muted }}>
+          Parents and teens can link accounts, giving parents tools to adjust certain features, set limits, and add safeguards that work for their family.{' '}
+          <button className="font-[500] underline" style={{ color: T.accent }}>Learn more</button>
+        </p>
+      </div>
+      <div className="pt-4">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-[600] transition-all hover:opacity-90" style={{ border: `1.5px dashed ${T.border}`, color: T.muted, width: '100%', justifyContent: 'center' }}>
+          <Plus size={15} />
+          Add family member
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function TrustedContactPanel() {
+  return (
+    <div>
+      <div className="py-3 rounded-xl p-4 mb-4" style={{ background: T.surface, border: `1px solid ${T.border}` }}>
+        <p className="text-[13.5px] font-[600] mb-1" style={{ color: T.text }}>Having a trusted contact can make it easier to get support from someone who knows you well.</p>
+        <p className="text-[12.5px] leading-relaxed mt-2" style={{ color: T.muted }}>
+          In the future, if you discuss a serious safety concern, we may automatically notify your trusted contact so they can check in with you. They must be 18+ to participate.{' '}
+          <button className="font-[500] underline" style={{ color: T.accent }}>Learn more</button>
+        </p>
+      </div>
+      <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-[600] transition-all hover:opacity-90 w-full justify-center" style={{ border: `1.5px dashed ${T.border}`, color: T.muted }}>
+        <Plus size={15} />
+        Add contact
+      </button>
+    </div>
+  );
+}
+
+function AccountPanel() {
+  return (
+    <div>
+      <SettingRow label="Name">
+        <span className="text-[13px] font-[500]" style={{ color: T.muted }}>Alex Reed</span>
+      </SettingRow>
+      <SettingRow label="Username">
+        <button className="flex items-center gap-1 text-[13px] font-[500]" style={{ color: T.muted }}>
+          @alexreed <ChevronRight size={12} />
+        </button>
+      </SettingRow>
+      <SettingRow label="Email">
+        <button className="flex items-center gap-1 text-[13px] font-[500]" style={{ color: T.muted }}>
+          alex@convai.com <ChevronRight size={12} />
+        </button>
+      </SettingRow>
+      <SettingRowLast label="Delete account" danger>
+        <ActionBtn label="Delete" variant="danger" />
+      </SettingRowLast>
+
+      <div className="mt-5 pt-5" style={{ borderTop: `1px solid ${T.border}` }}>
+        <p className="text-[14px] font-[700] mb-1" style={{ color: T.text }}>GPT builder profile</p>
+        <p className="text-[12.5px] mb-4" style={{ color: T.muted }}>
+          Personalize your builder profile to connect with users of your GPTs. These settings apply to publicly shared GPTs.
+        </p>
+        <div className="rounded-xl p-4 flex items-start justify-between" style={{ background: T.surface, border: `1px solid ${T.border}` }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#2563EB,#7C3AED)' }}>
+              <Zap size={18} className="text-white" />
+            </div>
+            <div>
+              <p className="text-[13px] font-[600]" style={{ color: T.text }}>PlaceholderGPT</p>
+              <p className="text-[11.5px]" style={{ color: T.subtle }}>By community builder</p>
+            </div>
+          </div>
+          <span className="text-[11px] font-[600] uppercase tracking-wide" style={{ color: T.subtle }}>Preview</span>
+        </div>
+        <div className="flex items-start gap-3 mt-3 p-3.5 rounded-xl" style={{ background: '#FFFBEB', border: '1px solid #FDE68A' }}>
+          <AlertCircle size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+          <p className="text-[12.5px]" style={{ color: '#92400E' }}>
+            Complete verification to publish GPTs to everyone. Verify your identity by adding billing details or verifying your phone number.
+          </p>
+        </div>
+        <div className="mt-3">
+          <p className="text-[12px] font-[500] uppercase tracking-wide mb-2" style={{ color: T.subtle }}>Select a domain</p>
+          <ActionBtn label="+ Add" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const shortcuts = [
+  { label: 'Open new chat', keys: 'Ctrl + Shift + O', on: true },
+  { label: 'Show shortcuts', keys: 'Ctrl + /', on: true },
+  { label: 'Search', keys: 'Ctrl + K', on: true },
+  { label: 'Toggle dev mode', keys: 'Ctrl + .', on: true },
+  { label: 'Toggle sidebar', keys: 'Ctrl + Shift + S', on: true },
+  { label: 'Set custom instructions', keys: 'Ctrl + Shift + I', on: true },
+  { label: 'Copy last code block', keys: 'Ctrl + Shift + ;', on: true },
+  { label: 'Delete chat', keys: 'Ctrl + Shift + ⌫', on: true },
+];
+
+function KeyboardPanel() {
+  const [states, setStates] = useState(shortcuts.map(s => s.on));
+  const toggle = (i: number) => setStates(prev => prev.map((v, idx) => idx === i ? !v : v));
+  return (
+    <div>
+      <p className="text-[12.5px] pb-4" style={{ color: T.muted, borderBottom: `1px solid ${T.border}` }}>
+        To change a shortcut, select the key combination, and then type the new keys.
+      </p>
+      <p className="text-[11px] font-[700] uppercase tracking-[0.08em] mt-4 mb-2" style={{ color: T.subtle }}>App</p>
+      <div className="space-y-0">
+        {shortcuts.map((s, i) => (
+          <div key={s.label} className="flex items-center justify-between py-3" style={{ borderBottom: i < shortcuts.length - 1 ? `1px solid ${T.border}` : 'none' }}>
+            <div className="flex items-center gap-3">
+              <Toggle on={states[i]} onChange={() => toggle(i)} />
+              <span className="text-[13px] font-[500]" style={{ color: T.text }}>{s.label}</span>
+            </div>
+            <span className="text-[12px] font-[500] px-2.5 py-1 rounded-md" style={{ background: T.surface, color: T.muted, border: `1px solid ${T.border}`, fontFamily: 'monospace' }}>
+              {s.keys}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 flex justify-end">
+        <ActionBtn label="Restore defaults" />
+      </div>
+    </div>
+  );
+}
+
+// ─── Nav items config ─────────────────────────────────────────────────────────
+const navItems = [
+  { id: 'general',         label: 'General',            icon: Settings2,    panel: GeneralPanel },
+  { id: 'notifications',   label: 'Notifications',      icon: Bell,         panel: NotificationsPanel },
+  { id: 'personalization', label: 'Personalization',    icon: User,         panel: PersonalizationPanel },
+  { id: 'plugins',         label: 'Plugins',            icon: Puzzle,       panel: PluginsPanel },
+  { id: 'voice',           label: 'Voice',              icon: Mic,          panel: VoicePanel },
+  { id: 'billing',         label: 'Billing',            icon: CreditCard,   panel: BillingPanel },
+  { id: 'data-controls',   label: 'Data controls',      icon: Database,     panel: DataControlsPanel },
+  { id: 'storage',         label: 'Storage',            icon: HardDrive,    panel: StoragePanel },
+  { id: 'safety',          label: 'Safety',             icon: Shield,       panel: SafetyPanel },
+  { id: 'security',        label: 'Security and login', icon: Lock,         panel: SecurityPanel },
+  { id: 'parental',        label: 'Parental controls',  icon: Users,        panel: ParentalPanel },
+  { id: 'trusted',         label: 'Trusted contact',    icon: Heart,        panel: TrustedContactPanel },
+  { id: 'account',         label: 'Account',            icon: UserCircle,   panel: AccountPanel },
+  { id: 'keyboard',        label: 'Keyboard',           icon: Keyboard,     panel: KeyboardPanel },
+];
+
+// ─── Main Settings page ───────────────────────────────────────────────────────
 export default function Settings() {
-  const [toggles, setToggles] = useState<Record<string, boolean>>({});
-
-  const getToggle = (section: string, label: string, def: boolean) => {
-    const key = `${section}-${label}`;
-    return key in toggles ? toggles[key] : def;
-  };
-
-  const flip = (section: string, label: string, def: boolean) => {
-    const key = `${section}-${label}`;
-    setToggles(prev => ({ ...prev, [key]: !(key in prev ? prev[key] : def) }));
-  };
+  const [active, setActive] = useState('general');
+  const current = navItems.find(n => n.id === active)!;
+  const PanelComponent = current.panel;
 
   return (
-    <div className="h-full overflow-y-auto" style={{ background: '#F7F9FC' }}>
-      <div className="max-w-3xl mx-auto p-6 space-y-4">
-        <div className="mb-6">
-          <h1 className="text-[22px] font-bold text-[#0F172A] tracking-[-0.02em]">Settings</h1>
-          <p className="text-[14px] text-[#64748B] mt-0.5">Customize your Conv AI experience</p>
-        </div>
-
-        {sections.map((section) => {
-          const Icon = section.icon;
-          return (
-            <div key={section.title} className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid rgba(226,232,240,0.8)', boxShadow: '0 1px 4px rgba(0,0,0,0.03)' }}>
-              <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: '1px solid #F1F5F9' }}>
-                <div className="w-8 h-8 rounded-[10px] flex items-center justify-center" style={{ background: '#F8FAFC' }}>
-                  <Icon size={15} className="text-[#64748B]" />
-                </div>
-                <p className="text-[14px] font-bold text-[#0F172A] tracking-[-0.01em]">{section.title}</p>
-              </div>
-              <div>
-                {section.settings.map((setting, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between px-5 py-4 hover:bg-[#FAFBFC] transition-colors"
-                    style={{ borderBottom: i < section.settings.length - 1 ? '1px solid #F8FAFC' : 'none' }}
-                  >
-                    <div className="flex-1 pr-6">
-                      <p className="text-[14px] font-semibold text-[#0F172A]">{setting.label}</p>
-                      <p className="text-[12.5px] text-[#94A3B8] mt-0.5">{setting.desc}</p>
-                    </div>
-                    {setting.type === 'toggle' ? (
-                      <Toggle
-                        on={getToggle(section.title, setting.label, setting.value as boolean)}
-                        onChange={() => flip(section.title, setting.label, setting.value as boolean)}
-                      />
-                    ) : (
-                      <button className="flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-medium text-[#475569] hover:bg-[#F8FAFC] transition-all" style={{ border: '1px solid rgba(226,232,240,0.8)' }}>
-                        {setting.value}
-                        <RiArrowRightSLine size={14} className="text-[#CBD5E1]" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
+    <div className="h-full overflow-y-auto" style={{ background: '#F1F5F9' }}>
+      <div className="max-w-5xl mx-auto p-6">
+        <div
+          className="flex rounded-2xl overflow-hidden"
+          style={{ background: T.bg, boxShadow: '0 4px 24px rgba(15,23,42,0.08), 0 1px 4px rgba(15,23,42,0.04)', border: `1px solid ${T.border}`, minHeight: '600px' }}
+        >
+          {/* ── Left navigation ── */}
+          <aside className="w-52 flex-shrink-0 py-4" style={{ background: T.surface, borderRight: `1px solid ${T.border}` }}>
+            <div className="px-3 mb-3">
+              <p className="text-[11px] font-[700] uppercase tracking-[0.08em]" style={{ color: T.subtle }}>Settings</p>
             </div>
-          );
-        })}
+            <nav className="space-y-0.5 px-2">
+              {navItems.map(item => {
+                const Icon = item.icon;
+                const isActive = item.id === active;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActive(item.id)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-[500] transition-all text-left"
+                    style={{
+                      background: isActive ? T.accentBg : 'transparent',
+                      color: isActive ? T.accent : T.muted,
+                    }}
+                  >
+                    <Icon size={14} style={{ color: isActive ? T.accent : T.subtle, flexShrink: 0 }} />
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
 
-        <div className="rounded-[16px] overflow-hidden" style={{ background: '#fff', border: '1px solid #FECACA' }}>
-          <div className="px-5 py-4" style={{ borderBottom: '1px solid #FEF2F2' }}>
-            <p className="text-[14px] font-bold text-[#EF4444]">Danger Zone</p>
-          </div>
-          <div className="p-5 space-y-3">
-            {['Clear all conversation history', 'Revoke all API keys', 'Delete account'].map((action, i) => (
-              <button key={i} className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-[13.5px] font-semibold text-[#EF4444] hover:bg-[#FEF2F2] transition-all text-left" style={{ border: '1px solid #FECACA' }}>
-                {action} <RiArrowRightSLine size={16} />
-              </button>
-            ))}
+          {/* ── Right content ── */}
+          <div className="flex-1 min-w-0 p-6 overflow-y-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.18 }}
+              >
+                <h2 className="text-[18px] font-[700] mb-5" style={{ color: T.text }}>{current.label}</h2>
+                <PanelComponent />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
