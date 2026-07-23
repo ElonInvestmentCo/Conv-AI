@@ -29,7 +29,7 @@ import {
 import { useConversations } from '../context/ConversationsContext';
 import { LogoMark } from '../components/LogoMark';
 import AccountPage from '../pages/Account';
-import SettingsPage from '../pages/Settings';
+import { SettingsModal } from '../components/SettingsModal';
 
 // ── Toggle icons (from attached SVGs) ─────────────────────────────────────────
 const CollapseIcon = ({ size = 20 }: { size?: number }) => (
@@ -594,9 +594,7 @@ export default function MainLayout() {
       <PageModal open={accountOpen}  onClose={() => setAccountOpen(false)}  title="Account">
         <AccountPage />
       </PageModal>
-      <PageModal open={settingsOpen} onClose={() => setSettingsOpen(false)} title="Settings" wide>
-        <SettingsPage />
-      </PageModal>
+      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
       <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
 
       {/* ════ SIDEBAR ═══════════════════════════════════════════════ */}

@@ -2,12 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Code2,
   Pencil,
-  Search,
-  Lightbulb,
-  FileText,
-  Globe,
   RotateCcw,
   Copy,
   ThumbsUp,
@@ -17,16 +12,7 @@ import {
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
 import { LogoMark } from '../components/LogoMark';
-
-// ── Welcome prompts ───────────────────────────────────────────────────────────
-const prompts = [
-  { icon: <Code2 size={15} className="text-[#6366F1]" />,    title: 'Write code',       desc: 'Debug, refactor, or build something new'   },
-  { icon: <Pencil size={15} className="text-[#94A3B8]" />,   title: 'Draft content',    desc: 'Emails, blog posts, social copy'             },
-  { icon: <Search size={15} className="text-[#10B981]" />,   title: 'Research',         desc: 'Deep analysis and comprehensive summaries'   },
-  { icon: <Lightbulb size={15} className="text-[#F59E0B]" />,title: 'Brainstorm',       desc: 'Generate ideas and explore possibilities'    },
-  { icon: <FileText size={15} className="text-[#EF4444]" />, title: 'Analyze document', desc: 'Upload files for instant AI analysis'        },
-  { icon: <Globe size={15} className="text-[#06B6D4]" />,    title: 'Browse the web',   desc: 'Search and summarize live information'       },
-];
+import { EmptyState } from '../components/EmptyState';
 
 const chips = ['Continue this further', 'Show me an example', 'Explain step by step', 'Generate the code'];
 
@@ -288,53 +274,8 @@ export default function Chat() {
 
         {/* ── Empty / welcome state ───────────────────────────────── */}
         {!started ? (
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 py-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="w-full max-w-[860px]"
-            >
-              <div className="text-center mb-10">
-                <div
-                  className="w-[52px] h-[52px] rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                  style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
-                >
-                  <LogoMark className="w-[30px] h-[30px]" />
-                </div>
-                <h1
-                  className="text-[28px] font-semibold text-[#F8FAFC] tracking-tight mb-2"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                >
-                  What can I help you with?
-                </h1>
-                <p className="text-[14px] text-[#475569]">
-                  Powered by <span className="text-[#6366F1] font-medium">GPT-4o</span>
-                </p>
-              </div>
-              <div className="grid grid-cols-3 gap-3 mb-8">
-                {prompts.map((p, i) => (
-                  <motion.button
-                    key={i}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07, type: 'spring', stiffness: 300 }}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setInput(p.title);
-                      setTimeout(() => textareaRef.current?.focus(), 0);
-                    }}
-                    className="text-left p-4 rounded-2xl transition-colors duration-[160ms] hover:border-[#2E3440]"
-                    style={{ background: '#181b21', border: '1px solid #1E222A' }}
-                  >
-                    <div className="mb-2.5">{p.icon}</div>
-                    <p className="text-[13px] font-semibold text-[#F8FAFC] mb-1">{p.title}</p>
-                    <p className="text-[12px] text-[#475569] leading-snug">{p.desc}</p>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
+          <div className="flex-1 overflow-y-auto flex flex-col">
+            <EmptyState onSuggest={(text) => { setInput(text); setTimeout(() => textareaRef.current?.focus(), 0); }} />
           </div>
         ) : (
           /* ── Conversation thread ─────────────────────────────────── */
