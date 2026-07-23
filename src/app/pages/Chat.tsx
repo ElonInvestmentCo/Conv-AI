@@ -14,14 +14,7 @@ import {
   ThumbsDown,
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
-
-// ── Conv AI Logo Mark ─────────────────────────────────────────────────────────
-const LogoMark = ({ className = 'w-5 h-5' }: { className?: string }) => (
-  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill="#6366F1" />
-    <path d="M26 22C26 24.2091 24.2091 26 22 26H16V14C16 9.58172 19.5817 6 24 6H26V22Z" fill="#6366F1" fillOpacity={0.5} />
-  </svg>
-);
+import { LogoMark } from '../components/LogoMark';
 
 // ── Welcome prompts ───────────────────────────────────────────────────────────
 const prompts = [
@@ -77,7 +70,7 @@ const UserBubble = ({ text }: { text: string }) => (
 const AIAvatar = () => (
   <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
     style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-    <LogoMark className="w-[17px] h-[17px]" />
+    <LogoMark className="w-[17px] h-[17px]" variant="brand" />
   </div>
 );
 

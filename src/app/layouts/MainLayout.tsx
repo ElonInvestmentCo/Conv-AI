@@ -28,14 +28,7 @@ import {
   X,
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
-
-// ── Logo ───────────────────────────────────────────────────────────────────────
-const LogoMark = ({ size = 22 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-    <path d="M6 10C6 7.79086 7.79086 6 10 6H16V18C16 22.4183 12.4183 26 8 26H6V10Z" fill="#F8FAFC" />
-    <path d="M26 22C26 24.2091 24.2091 26 22 26H16V14C16 9.58172 19.5817 6 24 6H26V22Z" fill="#F8FAFC" fillOpacity={0.5} />
-  </svg>
-);
+import { LogoMark } from '../components/LogoMark';
 
 // ── Toggle icons (from attached SVGs) ─────────────────────────────────────────
 const CollapseIcon = ({ size = 20 }: { size?: number }) => (

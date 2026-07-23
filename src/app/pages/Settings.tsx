@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme, type Theme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Settings as SettingsIcon, Bell, User, Puzzle, Mic,
@@ -88,9 +89,10 @@ const ActionBtn = ({ label, variant = 'default', onClick }: { label: string; var
   );
 };
 
-const Select = ({ value, options }: { value: string; options: string[] }) => (
+const Select = ({ value, options, onChange }: { value: string; options: string[]; onChange?: (v: string) => void }) => (
   <select
-    defaultValue={value}
+    value={value}
+    onChange={e => onChange?.(e.target.value)}
     className="text-[12px] font-medium px-3 py-1.5 rounded-lg appearance-none cursor-pointer outline-none transition-all"
     style={{ border: `1px solid ${T.border}`, color: T.muted, background: T.surface }}
   >
@@ -104,10 +106,16 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 // ── Panel components ──────────────────────────────────────────────────────────
 
+// Map display label ↔ theme token
+const LABEL_TO_THEME: Record<string, Theme> = { Dark: 'dark', Light: 'light', System: 'system' };
+const THEME_TO_LABEL: Record<Theme, string>  = { dark: 'Dark', light: 'Light', system: 'System' };
+
 function GeneralPanel() {
   const [mfaDismissed, setMfaDismissed] = useState(false);
   const [intelligence, setIntelligence] = useState(true);
   const [dictation, setDictation]       = useState(false);
+  const { theme, setTheme } = useTheme();
+
   return (
     <div>
       {!mfaDismissed && (
@@ -126,7 +134,11 @@ function GeneralPanel() {
         </div>
       )}
       <SettingRow label="Appearance" desc="Interface color scheme">
-        <Select value="Dark" options={['Dark', 'Light', 'System']} />
+        <Select
+          value={THEME_TO_LABEL[theme] ?? 'Dark'}
+          options={['Dark', 'Light', 'System']}
+          onChange={label => setTheme(LABEL_TO_THEME[label] ?? 'dark')}
+        />
       </SettingRow>
       <SettingRow label="Contrast">
         <Select value="System" options={['System', 'Standard', 'High']} />
