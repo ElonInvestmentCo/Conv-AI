@@ -364,7 +364,7 @@ export default function Chat() {
               style={{
                 maxWidth: 773,
                 minHeight: 53,
-                background: '#111318',
+                background: '#181b21',
                 border: 'none',
                 borderRadius: 32,
                 paddingLeft: 8,
@@ -375,7 +375,7 @@ export default function Chat() {
             >
               {/* Attachment */}
               <button
-                className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[150ms] text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24]"
+                className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[150ms] text-[#475569] hover:text-[#94A3B8] hover:bg-[#181b21]"
                 style={{ width: 38, height: 38 }}
                 title="Add attachment"
               >
@@ -419,7 +419,7 @@ export default function Chat() {
                   }}
                   onMouseEnter={e => {
                     if (!voiceMode) {
-                      (e.currentTarget as HTMLElement).style.background = '#1A1D24';
+                      (e.currentTarget as HTMLElement).style.background = '#181b21';
                       (e.currentTarget as HTMLElement).style.color = '#94A3B8';
                     }
                   }}
@@ -443,7 +443,7 @@ export default function Chat() {
                   style={{
                     width: 44,
                     height: 44,
-                    background: input.trim() ? '#6366F1' : '#1A1D24',
+                    background: input.trim() ? '#6366F1' : '#181b21',
                     boxShadow: input.trim() ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
                     cursor: input.trim() ? 'pointer' : 'default',
                   }}
