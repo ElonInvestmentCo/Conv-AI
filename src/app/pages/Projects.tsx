@@ -75,8 +75,8 @@ export default function Projects() {
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setShowNew(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]"
-            style={{ background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.3)' }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#1D4ED8]"
+            style={{ background: '#2563EB', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}
           >
             <Plus size={14} />
             New Project
@@ -117,7 +117,7 @@ export default function Projects() {
                   <button
                     disabled={!newName.trim()}
                     className="px-4 py-2.5 rounded-xl text-[13px] font-semibold text-white transition-all disabled:opacity-30"
-                    style={{ background: '#6366F1' }}
+                    style={{ background: '#2563EB' }}
                     onClick={() => { setShowNew(false); setNewName(''); }}
                   >
                     Create

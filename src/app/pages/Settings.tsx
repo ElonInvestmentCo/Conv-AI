@@ -128,7 +128,7 @@ function GeneralPanel() {
             <p className="text-[12px] mt-0.5 leading-relaxed" style={{ color: T.muted }}>
               Add multi-factor authentication (MFA), like a text message or authenticator app, to help protect your account.
             </p>
-            <button className="mt-2.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-all" style={{ background: T.accent }}>Set up MFA</button>
+            <button className="mt-2.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-all" style={{ background: '#2563EB' }}>Set up MFA</button>
           </div>
           <button onClick={() => setMfaDismissed(true)} className="transition-colors p-0.5" style={{ color: T.subtle }}>✕</button>
         </div>
@@ -352,7 +352,7 @@ function BillingPanel() {
             </div>
             <p className="text-[12px] mt-1 ml-9" style={{ color: T.muted }}>Intelligence for everyday tasks</p>
           </div>
-          <button className="px-3.5 py-1.5 rounded-lg text-[12px] font-semibold text-white" style={{ background: T.accent }}>Upgrade</button>
+          <button className="px-3.5 py-1.5 rounded-lg text-[12px] font-semibold text-white" style={{ background: '#2563EB' }}>Upgrade</button>
         </div>
       </div>
       <div className="pt-4 mt-4" style={{ borderTop: `1px solid ${T.border}` }}>

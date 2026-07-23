@@ -114,7 +114,7 @@ export default function Library() {
                 onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
               />
             </div>
-            <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]" style={{ background: '#6366F1' }}>
+            <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#1D4ED8]" style={{ background: '#2563EB' }}>
               New <ChevronDown size={13} />
             </button>
           </div>

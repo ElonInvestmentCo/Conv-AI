@@ -133,7 +133,7 @@ export default function Help() {
             <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold text-[#94A3B8] transition-all hover:bg-[#1A1D24]" style={{ background: '#1A1D24', border: '1px solid #2E3440' }}>
               <Mail size={13} /> Email Support
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]" style={{ background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.3)' }}>
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#1D4ED8]" style={{ background: '#2563EB', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}>
               <MessageSquare size={13} /> Live Chat
             </button>
           </div>

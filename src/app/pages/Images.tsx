@@ -159,7 +159,7 @@ export default function Images() {
             onClick={generate}
             disabled={!prompt.trim()}
             className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30"
-            style={{ background: prompt.trim() ? '#6366F1' : '#1A1D24' }}
+            style={{ background: prompt.trim() ? '#2563EB' : '#1A1D24' }}
           >
             {generating ? (
               <motion.div

@@ -755,8 +755,8 @@ export default function MainLayout() {
                   })}
                   <div style={{ padding: '6px 12px 4px' }}>
                     <button onClick={() => { setProfileOpen(false); setUpgradeOpen(true); }}
-                      className="w-full flex items-center justify-center gap-2 text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
-                      style={{ height: 34, borderRadius: 10, background: '#6366F1', fontSize: 14, fontWeight: 600 }}>
+                      className="w-full flex items-center justify-center gap-2 text-white transition-all duration-[150ms] hover:bg-[#1D4ED8]"
+                      style={{ height: 34, borderRadius: 10, background: '#2563EB', fontSize: 14, fontWeight: 600 }}>
                       <Zap size={14} strokeWidth={2} />Upgrade to Pro
                     </button>
                   </div>
@@ -852,8 +852,8 @@ export default function MainLayout() {
             </div>
 
             <button onClick={handleNewChat}
-              className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-semibold text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
-              style={{ height: 38, background: '#6366F1', boxShadow: '0 2px 8px rgba(99,102,241,0.28)' }}
+              className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-semibold text-white transition-all duration-[150ms] hover:bg-[#1D4ED8]"
+              style={{ height: 38, background: '#2563EB', boxShadow: '0 2px 8px rgba(37,99,235,0.28)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.4)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(99,102,241,0.28)'; }}>
               <SquarePen size={13} strokeWidth={2} />New Chat
