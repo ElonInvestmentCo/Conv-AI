@@ -437,7 +437,7 @@ function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => void })
   const plans = [
     {
       name: 'Plus', price: '$20', period: '/month', color: '#6366F1',
-      features: ['GPT-4o access', 'Extended context', 'Image generation', 'Priority support'],
+      features: ['Full AI model access', 'Extended context', 'Image generation', 'Priority support'],
       cta: 'Upgrade to Plus',
     },
     {
@@ -848,7 +848,7 @@ export default function MainLayout() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 px-3.5 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-[150ms] hover:bg-[#1A1D24]"
               style={{ border: '1px solid #1E222A', height: 38, color: '#94A3B8' }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" /><span>GPT-4o</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" /><span>Conv AI</span>
             </div>
 
             <button onClick={handleNewChat}

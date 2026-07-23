@@ -25,7 +25,7 @@ const sections = [
   {
     title: 'AI Preferences',
     items: [
-      { icon: Bot,          label: 'Default AI Model',  desc: 'GPT-4o · Multimodal'           },
+      { icon: Bot,          label: 'Default AI Model',  desc: 'Conv AI · Multimodal'           },
       { icon: MessageSquare,label: 'Chat Preferences',  desc: 'Response style, language'       },
       { icon: Bell,         label: 'Notifications',     desc: 'Email, push, in-app alerts'     },
     ],

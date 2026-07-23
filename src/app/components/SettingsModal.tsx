@@ -151,7 +151,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                 <div className="pt-4 border-t border-white/8">
                   <button className="flex items-center gap-2 px-4 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-sm font-medium transition-colors">
                     <Zap size={15} />
-                    Upgrade to ChatGPT Plus
+                    Upgrade to Conv AI Pro
                   </button>
                 </div>
               </div>
@@ -202,7 +202,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-semibold text-[#0F172A]">Free Plan</p>
-                      <p className="text-xs text-[#334155] mt-0.5">Limited to GPT-4o mini with standard limits</p>
+                      <p className="text-xs text-[#334155] mt-0.5">Limited to standard AI with standard limits</p>
                     </div>
                     <button className="px-3 py-1.5 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-xs font-medium transition-colors">
                       Upgrade
@@ -211,8 +211,8 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className="space-y-3">
                   {[
-                    { plan: "ChatGPT Plus", price: "$20/mo", features: ["GPT-4o access", "Advanced reasoning", "Image generation", "Higher limits"] },
-                    { plan: "ChatGPT Team", price: "$25/mo", features: ["Everything in Plus", "Team workspace", "Admin controls", "Priority support"] },
+                    { plan: "Conv AI Pro", price: "$20/mo", features: ["Full AI model access", "Advanced reasoning", "Image generation", "Higher limits"] },
+                    { plan: "Conv AI Team", price: "$25/mo", features: ["Everything in Pro", "Team workspace", "Admin controls", "Priority support"] },
                   ].map((p) => (
                     <div key={p.plan} className="p-4 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
                       <div className="flex items-center justify-between mb-3">

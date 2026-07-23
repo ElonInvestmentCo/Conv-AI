@@ -7,14 +7,14 @@ import {
 } from 'lucide-react';
 
 const faqs = [
-  { q: 'What is Conv AI?', a: "Conv AI is a premium AI platform that gives you access to the world's best AI models — including GPT-4o, Claude 3.5, and o1 — in a single, precision-designed workspace. You can chat, generate images, run agents, automate workflows, and more." },
-  { q: 'Which AI models are available?', a: 'Conv AI includes GPT-4o, GPT-4o mini, o1-preview, Claude 3.5 Sonnet, Gemini 1.5 Pro, and DALL·E 3. You can switch models per conversation or set a default in Settings.' },
+  { q: 'What is Conv AI?', a: "Conv AI is a premium AI platform that gives you access to the world's best AI models in a single, precision-designed workspace. You can chat, generate images, run agents, automate workflows, and more." },
+  { q: 'Which AI models are available?', a: 'Conv AI gives you access to a curated set of advanced AI models. You can switch models per conversation or set a default in Settings.' },
   { q: 'What are AI Agents?', a: 'Agents are autonomous AI workflows that can complete multi-step tasks on your behalf — like researching a topic, reviewing code, drafting emails, or processing documents. They run independently and report results when complete.' },
   { q: 'How does the Knowledge Base work?', a: 'Upload your documents, PDFs, or connect data sources like Notion and Google Drive. Conv AI embeds them into a searchable vector database. When you chat, the AI can retrieve relevant information from your knowledge base automatically.' },
   { q: 'What are Automations?', a: 'Automations are event-triggered AI workflows. For example: "When a new email arrives → classify it → draft a reply → add to my CRM." You can build them with a visual editor or describe them in plain English.' },
-  { q: 'How do credits work?', a: 'Different features use different amounts of credits. Text chat (GPT-4o) costs ~1 credit/message. Image generation costs 10 credits. Agent runs cost 25 credits. Your plan includes a monthly credit allowance.' },
+  { q: 'How do credits work?', a: 'Different features use different amounts of credits. Text chat costs ~1 credit/message. Image generation costs 10 credits. Agent runs cost 25 credits. Your plan includes a monthly credit allowance.' },
   { q: 'Is my data private?', a: 'Yes. Your conversations and files are private by default. You can opt out of training data usage in Settings → Privacy. We use enterprise-grade encryption and never share your data with third parties.' },
-  { q: 'How do I use the API?', a: 'Go to API Keys to create a key. Conv AI provides a REST API compatible with the OpenAI SDK. Point your base URL to api.convai.io and use your Conv AI key to access all models and features programmatically.' },
+  { q: 'How do I use the API?', a: 'Go to API Keys to create a key. Conv AI provides a REST API with its own SDK. Point your base URL to api.convai.io and use your Conv AI key to access all models and features programmatically.' },
 ];
 
 const guides = [
