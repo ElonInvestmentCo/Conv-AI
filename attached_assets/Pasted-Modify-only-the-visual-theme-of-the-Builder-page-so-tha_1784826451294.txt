@@ -1,0 +1,46 @@
+Modify only the visual theme of the Builder page so that it matches the visual style of my Conv AI website.
+
+This is a theme replacement only—not a redesign, rebuild, or layout change.
+
+Requirements:
+
+• Keep the existing Builder page structure exactly as it is.
+• Keep every component in its current position.
+• Keep the existing layout, spacing, padding, margins, sizing, alignment, typography, icons, buttons, cards, input fields, animations, interactions, and responsive behavior exactly the same.
+• Do not add, remove, or rearrange any elements.
+• Do not replace any Builder functionality.
+
+Only make these two changes:
+
+1. Theme
+   - Replace the Builder page's colors, backgrounds, surfaces, borders, shadows, hover states, and accent colors so they match the visual theme used throughout my Conv AI website.
+   - Use the same color palette, dark theme, surface hierarchy, border treatments, and visual styling as the Conv AI pages.
+   - Maintain the Builder page's existing layout while making it visually consistent with the rest of the website.
+
+2. Logo
+   - Replace the existing Replit/Builder logo with my Conv AI logo.
+   - Keep the logo in the exact same location, size, alignment, spacing, and behavior as the current logo.
+   - Do not change any surrounding elements.
+
+Critical Rules:
+
+• DO NOT redesign the Builder page.
+• DO NOT rebuild any components.
+• DO NOT modify the HTML/JSX structure.
+• DO NOT move, resize, or reorder any elements.
+• DO NOT change the navigation.
+• DO NOT change any text.
+• DO NOT replace icons (except the logo).
+• DO NOT alter typography.
+• DO NOT modify spacing or proportions.
+• DO NOT change animations or interactions.
+• DO NOT introduce new UI components.
+• DO NOT remove any existing functionality.
+• DO NOT refactor the page.
+• DO NOT make any "improvements" or creative design decisions.
+
+The only permitted changes are:
+- Applying my Conv AI visual theme to the Builder page.
+- Replacing the existing logo with my Conv AI logo.
+
+Everything else must remain completely untouched and visually identical to the current Builder implementation.
