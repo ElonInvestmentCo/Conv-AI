@@ -400,6 +400,8 @@ export default function Chat() {
                   caretColor: '#6366F1',
                   fontFamily: 'Inter, system-ui, sans-serif',
                   fontWeight: 400,
+                  outline: 'none',
+                  border: 'none',
                 }}
               />
 
