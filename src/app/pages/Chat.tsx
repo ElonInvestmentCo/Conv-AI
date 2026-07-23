@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -12,6 +12,8 @@ import {
   Copy,
   ThumbsUp,
   ThumbsDown,
+  Plus,
+  Mic,
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
 import { LogoMark } from '../components/LogoMark';
@@ -28,27 +30,45 @@ const prompts = [
 
 const chips = ['Continue this further', 'Show me an example', 'Explain step by step', 'Generate the code'];
 
-// ── Simulated AI responses ────────────────────────────────────────────────────
 function buildAIResponse(userText: string): string {
   return `I've received your message: "${userText}"\n\nI'm processing this with full context from our conversation. Here's my analysis and next steps based on what you've shared.\n\nLet me know if you'd like me to go deeper on any specific aspect.`;
 }
+
+// ── Animated voice waveform — 5 white bars ────────────────────────────────────
+const VoiceWaveform = () => (
+  <div className="flex items-center gap-[3px]">
+    {[0, 1, 2, 3, 4].map(i => (
+      <motion.div
+        key={i}
+        className="w-[3px] rounded-full bg-white"
+        animate={{ height: ['5px', `${13 + (i % 3) * 5}px`, '5px'] }}
+        transition={{ duration: 0.55, repeat: Infinity, delay: i * 0.09, ease: 'easeInOut' }}
+      />
+    ))}
+  </div>
+);
 
 // ── Typing indicator ──────────────────────────────────────────────────────────
 const TypingDots = () => (
   <div className="flex items-center gap-[5px] py-0.5">
     {[0, 1, 2].map(i => (
-      <motion.span key={i} className="block w-[6px] h-[6px] rounded-full bg-[#6366F1]"
+      <motion.span
+        key={i}
+        className="block w-[6px] h-[6px] rounded-full bg-[#6366F1]"
         animate={{ y: [0, -5, 0], opacity: [0.35, 1, 0.35] }}
-        transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.17, ease: 'easeInOut' }} />
+        transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.17, ease: 'easeInOut' }}
+      />
     ))}
   </div>
 );
 
-// ── Markdown renderer (subset) ────────────────────────────────────────────────
+// ── Markdown renderer ─────────────────────────────────────────────────────────
 function renderLine(line: string, key: number) {
   let html = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/`(.+?)`/g,
-    `<code style="background:#1A1D24;color:#818CF8;padding:2px 7px;border-radius:5px;font-size:12.5px;font-family:'JetBrains Mono',monospace">$1</code>`);
+  html = html.replace(
+    /`(.+?)`/g,
+    `<code style="background:#1A1D24;color:#818CF8;padding:2px 7px;border-radius:5px;font-size:12.5px;font-family:'JetBrains Mono',monospace">$1</code>`
+  );
   return <span key={key} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
@@ -56,20 +76,28 @@ function parseMarkdown(text: string) {
   return text.split('\n\n').map(block => block.split('\n'));
 }
 
-// ── Bubbles ───────────────────────────────────────────────────────────────────
+// ── Message components ────────────────────────────────────────────────────────
 const UserBubble = ({ text }: { text: string }) => (
-  <motion.div initial={{ opacity: 0, y: 10, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-    transition={{ type: 'spring', stiffness: 420, damping: 36 }} className="flex justify-end">
-    <div className="max-w-[62%] px-5 py-[14px] text-[15px] leading-[1.65] text-[#F8FAFC]"
-      style={{ background: '#1A1D24', border: '1px solid #2E3440', borderRadius: '20px 20px 4px 20px' }}>
+  <motion.div
+    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+    className="flex justify-end"
+  >
+    <div
+      className="max-w-[62%] px-5 py-[14px] text-[15px] leading-[1.65] text-[#F8FAFC]"
+      style={{ background: '#1A1D24', border: '1px solid #2E3440', borderRadius: '20px 20px 4px 20px' }}
+    >
       {text}
     </div>
   </motion.div>
 );
 
 const AIAvatar = () => (
-  <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
-    style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+  <div
+    className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
+    style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+  >
     <LogoMark className="w-[17px] h-[17px]" variant="brand" />
   </div>
 );
@@ -77,8 +105,12 @@ const AIAvatar = () => (
 const AIMessage = ({ text }: { text: string }) => {
   const blocks = parseMarkdown(text);
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ type: 'spring', stiffness: 380, damping: 34 }} className="flex gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+      className="flex gap-4"
+    >
       <AIAvatar />
       <div className="flex-1 min-w-0">
         <div className="space-y-[14px]">
@@ -95,17 +127,26 @@ const AIMessage = ({ text }: { text: string }) => {
         </div>
         <div className="flex items-center gap-0.5 mt-4">
           {[
-            { Icon: Copy,      title: 'Copy'        },
-            { Icon: ThumbsUp,  title: 'Helpful'     },
-            { Icon: ThumbsDown,title: 'Not helpful'  },
-            { Icon: RotateCcw, title: 'Regenerate'  },
-            { Icon: Pencil,    title: 'Edit'        },
+            { Icon: Copy,       title: 'Copy'        },
+            { Icon: ThumbsUp,   title: 'Helpful'     },
+            { Icon: ThumbsDown, title: 'Not helpful'  },
+            { Icon: RotateCcw,  title: 'Regenerate'  },
+            { Icon: Pencil,     title: 'Edit'        },
           ].map(({ Icon, title }) => (
-            <button key={title} title={title}
+            <button
+              key={title}
+              title={title}
               className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-[140ms]"
               style={{ color: 'rgba(148,163,184,0.65)' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'rgba(148,163,184,0.65)'; }}>
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = '#1A1D24';
+                (e.currentTarget as HTMLElement).style.color = '#94A3B8';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = 'rgba(148,163,184,0.65)';
+              }}
+            >
               <Icon size={14} strokeWidth={1.8} />
             </button>
           ))}
@@ -121,16 +162,17 @@ export default function Chat() {
   const navigate = useNavigate();
   const { getConversation, createConversation, addMessage } = useConversations();
 
-  const [input, setInput]           = useState('');
-  const [isTyping, setIsTyping]     = useState(false);
-  const [voiceMode, setVoiceMode]   = useState(false);
+  const [input, setInput]             = useState('');
+  const [isTyping, setIsTyping]       = useState(false);
+  const [voiceMode, setVoiceMode]     = useState(false);
+  const [composerFocused, setComposerFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef   = useRef<HTMLDivElement>(null);
 
-  // Resolve the active conversation (or redirect if id is invalid)
+  // Resolve the active conversation
   const conversation = convId ? getConversation(convId) : undefined;
 
-  // If no id was given, create one and redirect immediately
+  // If no id, create one and redirect
   useEffect(() => {
     if (!convId) {
       const id = createConversation();
@@ -138,7 +180,7 @@ export default function Chat() {
     }
   }, [convId, createConversation, navigate]);
 
-  // If a convId was given but doesn't exist (e.g. stale URL), create new
+  // If convId is stale / invalid, go back to /chat to create fresh
   useEffect(() => {
     if (convId && !conversation) {
       navigate('/chat', { replace: true });
@@ -148,28 +190,26 @@ export default function Chat() {
   const messages = conversation?.messages ?? [];
   const started  = messages.length > 0;
 
-  // Scroll to bottom on new messages / typing
+  // Auto-scroll on new messages or typing indicator
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length, isTyping]);
 
-  const send = (text?: string) => {
+  const send = useCallback((text?: string) => {
     const t = (text ?? input).trim();
     if (!t || !convId || isTyping) return;
 
     setInput('');
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    // Save user message
     addMessage(convId, { role: 'user', text: t });
 
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
-      // Save AI response — this also triggers auto-title generation
       addMessage(convId, { role: 'ai', text: buildAIResponse(t) });
     }, 1600);
-  };
+  }, [input, convId, isTyping, addMessage]);
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -180,24 +220,32 @@ export default function Chat() {
     el.style.height = Math.min(el.scrollHeight, 180) + 'px';
   };
 
-  if (!convId || !conversation) return null; // briefly null while redirecting
+  if (!convId || !conversation) return null;
 
   return (
     <div className="flex h-full overflow-hidden" style={{ background: '#0A0C10' }}>
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        {/* ── Empty / welcome state ── */}
+        {/* ── Empty / welcome state ───────────────────────────────── */}
         {!started ? (
           <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 py-10">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="w-full max-w-[860px]">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="w-full max-w-[860px]"
+            >
               <div className="text-center mb-10">
-                <div className="w-[52px] h-[52px] rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                  style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                <div
+                  className="w-[52px] h-[52px] rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                  style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+                >
                   <LogoMark className="w-[30px] h-[30px]" />
                 </div>
-                <h1 className="text-[28px] font-semibold text-[#F8FAFC] tracking-tight mb-2"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <h1
+                  className="text-[28px] font-semibold text-[#F8FAFC] tracking-tight mb-2"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
                   What can I help you with?
                 </h1>
                 <p className="text-[14px] text-[#475569]">
@@ -206,12 +254,17 @@ export default function Chat() {
               </div>
               <div className="grid grid-cols-3 gap-3 mb-8">
                 {prompts.map((p, i) => (
-                  <motion.button key={i} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+                  <motion.button
+                    key={i}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07, type: 'spring', stiffness: 300 }}
-                    whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => send(p.title)}
                     className="text-left p-4 rounded-2xl transition-colors duration-[160ms] hover:border-[#2E3440]"
-                    style={{ background: '#111318', border: '1px solid #1E222A' }}>
+                    style={{ background: '#111318', border: '1px solid #1E222A' }}
+                  >
                     <div className="mb-2.5">{p.icon}</div>
                     <p className="text-[13px] font-semibold text-[#F8FAFC] mb-1">{p.title}</p>
                     <p className="text-[12px] text-[#475569] leading-snug">{p.desc}</p>
@@ -221,7 +274,7 @@ export default function Chat() {
             </motion.div>
           </div>
         ) : (
-          /* ── Conversation messages ── */
+          /* ── Conversation thread ─────────────────────────────────── */
           <div className="flex-1 overflow-y-auto">
             <div className="max-w-[880px] mx-auto px-6 py-8 space-y-8">
               <AnimatePresence initial={false}>
@@ -234,8 +287,13 @@ export default function Chat() {
                   </div>
                 ))}
                 {isTyping && (
-                  <motion.div key="typing" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }} className="flex gap-4">
+                  <motion.div
+                    key="typing"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex gap-4"
+                  >
                     <AIAvatar />
                     <div className="px-5 py-4 rounded-2xl" style={{ background: '#111318', border: '1px solid #1E222A' }}>
                       <TypingDots />
@@ -248,17 +306,36 @@ export default function Chat() {
           </div>
         )}
 
-        {/* ── Bottom: chips + composer ── */}
+        {/* ── Bottom: suggestion chips + composer ─────────────────── */}
         <div className="flex-shrink-0 pb-5">
+
+          {/* Suggestion chips */}
           <AnimatePresence>
             {started && !isTyping && (
-              <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="flex gap-2 overflow-x-auto px-6 mb-3" style={{ scrollbarWidth: 'none' }}>
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex gap-2 overflow-x-auto px-6 mb-4"
+                style={{ scrollbarWidth: 'none' }}
+              >
                 {chips.map((s, i) => (
-                  <motion.button key={i} whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.97 }}
+                  <motion.button
+                    key={i}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => send(s)}
-                    className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12.5px] font-medium text-[#475569] hover:text-[#94A3B8] transition-all hover:border-[#2E3440]"
-                    style={{ border: '1px solid #1E222A', whiteSpace: 'nowrap' }}>
+                    className="flex-shrink-0 text-[13px] font-medium text-[#475569] hover:text-[#94A3B8] transition-all duration-[160ms] hover:border-[#2E3440]"
+                    style={{
+                      height: 38,
+                      paddingLeft: 16,
+                      paddingRight: 16,
+                      borderRadius: 999,
+                      border: '1px solid #1E222A',
+                      background: 'transparent',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     {s}
                   </motion.button>
                 ))}
@@ -266,65 +343,138 @@ export default function Chat() {
             )}
           </AnimatePresence>
 
-          {/* Composer */}
-          <div className="px-6 pb-0 pt-2 flex-shrink-0 flex flex-col items-center">
-            <div className="w-full max-w-[773px] flex items-center gap-0 rounded-full px-2 transition-all"
-              style={{ background: '#ffffff', minHeight: 52, border: '1px solid #e5e5e5', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
-              <button title="Add attachment"
-                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all ml-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
+          {/* ── Composer ─────────────────────────────────────────────── */}
+          <div className="px-6 flex justify-center">
+            <motion.div
+              animate={{
+                boxShadow: composerFocused
+                  ? '0 0 0 1.5px #6366F1, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35)'
+                  : '0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.25)',
+              }}
+              transition={{ duration: 0.18 }}
+              className="relative flex items-center gap-1 w-full"
+              style={{
+                maxWidth: 880,
+                minHeight: 64,
+                background: '#111318',
+                border: composerFocused
+                  ? '1px solid rgba(99,102,241,0.45)'
+                  : '1px solid #1E222A',
+                borderRadius: 32,
+                paddingLeft: 12,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                transition: 'border-color 0.18s ease',
+              }}
+            >
+              {/* Attachment */}
+              <button
+                className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[150ms] text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24]"
+                style={{ width: 38, height: 38 }}
+                title="Add attachment"
+              >
+                <Plus size={20} strokeWidth={2} />
               </button>
 
-              <textarea ref={textareaRef} value={input}
+              {/* Text input */}
+              <textarea
+                ref={textareaRef}
+                value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKey}
+                onFocus={() => setComposerFocused(true)}
+                onBlur={() => setComposerFocused(false)}
                 onInput={e => autoResize(e.target as HTMLTextAreaElement)}
-                placeholder="Ask anything"
+                placeholder="Ask anything…"
                 rows={1}
-                className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[#0d0d0d] placeholder-[#8e8ea0] text-[16px] leading-[24px] py-[5px] px-2"
-                style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif', maxHeight: 160 }}
+                className="flex-1 min-w-0 resize-none outline-none bg-transparent text-[15px] leading-[1.5] py-1.5 px-1"
+                style={{
+                  maxHeight: 180,
+                  color: '#F8FAFC',
+                  caretColor: '#6366F1',
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  fontWeight: 400,
+                }}
               />
 
-              <div className="flex items-center gap-1 flex-shrink-0 mr-1">
-                <button className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-[#6b6b6b] hover:text-[#0d0d0d] hover:bg-black/5 transition-all"
-                  onClick={() => setVoiceMode(v => !v)} title="Voice input">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" />
-                  </svg>
-                </button>
+              {/* Mic + Send */}
+              <div className="flex items-center gap-1 flex-shrink-0">
                 <button
-                  onClick={input.trim() ? () => send() : () => setVoiceMode(v => !v)}
-                  className="flex-shrink-0 flex items-center justify-center rounded-full transition-all"
-                  style={{ width: 55, height: 53, background: '#0d0d0d' }}
-                  title={input.trim() ? 'Send' : 'Voice mode'}>
-                  {input.trim() ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
-                    </svg>
-                  ) : voiceMode ? (
-                    <div className="flex items-center gap-[3px]">
-                      {[0, 1, 2, 3, 4].map(i => (
-                        <motion.div key={i} className="w-[3px] rounded-full bg-white"
-                          animate={{ height: [6, 18 + (i % 3) * 5, 6] }}
-                          transition={{ duration: 0.55, repeat: Infinity, delay: i * 0.11, ease: 'easeInOut' }}
-                          style={{ height: 6 }} />
-                      ))}
-                    </div>
-                  ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" />
-                    </svg>
-                  )}
+                  onClick={() => setVoiceMode(v => !v)}
+                  title={voiceMode ? 'Stop voice' : 'Voice input'}
+                  className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[150ms]"
+                  style={{
+                    width: 38,
+                    height: 38,
+                    background: voiceMode ? 'rgba(99,102,241,0.15)' : 'transparent',
+                    color: voiceMode ? '#6366F1' : '#475569',
+                  }}
+                  onMouseEnter={e => {
+                    if (!voiceMode) {
+                      (e.currentTarget as HTMLElement).style.background = '#1A1D24';
+                      (e.currentTarget as HTMLElement).style.color = '#94A3B8';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!voiceMode) {
+                      (e.currentTarget as HTMLElement).style.background = 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = '#475569';
+                    }
+                  }}
+                >
+                  {voiceMode ? <VoiceWaveform /> : <Mic size={18} strokeWidth={1.8} />}
                 </button>
+
+                <motion.button
+                  onClick={() => send()}
+                  whileHover={input.trim() ? { scale: 1.04 } : {}}
+                  whileTap={input.trim() ? { scale: 0.96 } : {}}
+                  transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                  title="Send message"
+                  className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[160ms]"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    background: input.trim() ? '#6366F1' : '#1A1D24',
+                    boxShadow: input.trim() ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
+                    cursor: input.trim() ? 'pointer' : 'default',
+                  }}
+                  onMouseEnter={e => {
+                    if (input.trim()) {
+                      (e.currentTarget as HTMLElement).style.background = '#4F46E5';
+                      (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.45)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (input.trim()) {
+                      (e.currentTarget as HTMLElement).style.background = '#6366F1';
+                      (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(99,102,241,0.35)';
+                    }
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ opacity: input.trim() ? 1 : 0.3 }}
+                  >
+                    <line x1="12" y1="19" x2="12" y2="5" />
+                    <polyline points="5 12 12 5 19 12" />
+                  </svg>
+                </motion.button>
               </div>
-            </div>
-            <p className="text-center text-[12px] text-[#8E8EA0] mt-2.5"
-              style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif' }}>
-              Conv AI can make mistakes. Check important info.
-            </p>
+            </motion.div>
           </div>
+
+          <p className="text-center text-[12px] text-[#2E3440] mt-3">
+            Conv AI can make mistakes. Check important info.
+          </p>
         </div>
       </div>
     </div>
