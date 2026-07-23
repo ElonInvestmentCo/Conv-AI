@@ -109,9 +109,7 @@ export default function Library() {
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search files…"
                 className="pl-8 pr-3 py-2 text-[13px] rounded-xl outline-none w-52 transition-all"
-                style={{ background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
-                onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-                onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
+                style={{ background: '#111318', color: '#94A3B8' }}
               />
             </div>
             <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold text-white transition-all hover:bg-[#4F46E5]" style={{ background: '#6366F1' }}>

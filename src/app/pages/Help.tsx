@@ -50,9 +50,7 @@ export default function Help() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search help articles…"
             className="w-full pl-12 pr-4 py-3 text-[14px] rounded-2xl outline-none transition-all text-[#F8FAFC] placeholder-[#2E3440]"
-            style={{ background: '#111318', border: '1px solid #1E222A' }}
-            onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-            onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
+            style={{ background: '#111318' }}
           />
         </div>
 

@@ -213,9 +213,7 @@ function PersonalizationPanel() {
           placeholder="Additional behavior, style, and tone preferences"
           rows={3}
           className="mt-2 w-full px-3.5 py-3 text-[13px] rounded-xl outline-none resize-none transition-all"
-          style={{ border: `1px solid ${T.border}`, color: T.muted, background: T.surface }}
-          onFocus={e => { e.target.style.borderColor = T.accent; }}
-          onBlur={e => { e.target.style.borderColor = T.border; }}
+          style={{ color: T.muted, background: T.surface }}
         />
       </div>
       <SettingRow label="About you" desc="Help Conv AI personalize responses by sharing information about yourself.">

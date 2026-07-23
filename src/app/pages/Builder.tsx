@@ -646,7 +646,6 @@ function RepoUrlInput({ label, placeholder }: { label: string; placeholder: stri
         className="w-full px-3 py-2 rounded-lg text-[13px] outline-none"
         style={{
           background: T.surface,
-          border: `1px solid ${T.border}`,
           color: T.text,
           caretColor: T.blue,
         }}

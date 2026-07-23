@@ -111,7 +111,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                 <div className="border-t border-white/8 pt-6">
                   <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Language & Region</h3>
                   <SettingsRow label="Language" description="Interface language">
-                    <select className="bg-[#0F172A]/20 text-sm text-[#0F172A] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+                    <select className="bg-[#0F172A]/20 text-sm text-[#0F172A] rounded-lg px-3 py-1.5 outline-none">
                       <option>English (US)</option>
                       <option>Español</option>
                       <option>Français</option>
@@ -146,7 +146,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   </div>
                 </div>
                 <SettingsRow label="Display name" description="How your name appears in conversations">
-                  <input defaultValue="Alex Johnson" className="bg-[#0F172A]/20 text-sm text-[#0F172A] border border-white/10 rounded-lg px-3 py-1.5 outline-none w-40 focus:border-[#6366F1]/50 transition-colors" />
+                  <input defaultValue="Alex Johnson" className="bg-[#0F172A]/20 text-sm text-[#0F172A] rounded-lg px-3 py-1.5 outline-none w-40" />
                 </SettingsRow>
                 <div className="pt-4 border-t border-white/8">
                   <button className="flex items-center gap-2 px-4 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-sm font-medium transition-colors">

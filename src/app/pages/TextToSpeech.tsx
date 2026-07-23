@@ -108,9 +108,7 @@ export default function TextToSpeech() {
               placeholder="Type or paste the text you want to convert to speech…"
               rows={5}
               className="w-full px-4 py-3 text-[14px] rounded-xl outline-none resize-none transition-all leading-relaxed text-[#F8FAFC] placeholder-[#2E3440]"
-              style={{ background: '#1A1D24', border: '1px solid #1E222A' }}
-              onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-              onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
+              style={{ background: '#1A1D24' }}
             />
             <span className="absolute bottom-3 right-3 text-[11px] text-[#2E3440]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
               {text.length}/{charLimit}

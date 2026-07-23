@@ -102,9 +102,7 @@ export default function Projects() {
                     placeholder="Project name…"
                     autoFocus
                     className="flex-1 px-4 py-2.5 text-[13px] rounded-xl outline-none"
-                    style={{ background: '#1A1D24', border: '1px solid #2E3440', color: '#F8FAFC' }}
-                    onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-                    onBlur={e => { e.target.style.borderColor = '#2E3440'; }}
+                    style={{ background: '#1A1D24', color: '#F8FAFC' }}
                     onKeyDown={e => { if (e.key === 'Escape') { setShowNew(false); setNewName(''); } }}
                   />
                   <button
@@ -137,9 +135,7 @@ export default function Projects() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search projects…"
             className="w-full pl-9 pr-3 py-2.5 text-[13px] rounded-xl outline-none transition-all"
-            style={{ background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
-            onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-            onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
+            style={{ background: '#111318', color: '#94A3B8' }}
           />
         </div>
 

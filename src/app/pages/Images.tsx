@@ -287,9 +287,7 @@ export default function Images() {
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search images…"
                 className="pl-8 pr-3 py-1.5 text-[12px] rounded-xl outline-none w-44 transition-all"
-                style={{ background: '#111318', border: '1px solid #1E222A', color: '#94A3B8' }}
-                onFocus={e => { e.target.style.borderColor = '#6366F1'; }}
-                onBlur={e => { e.target.style.borderColor = '#1E222A'; }}
+                style={{ background: '#111318', color: '#94A3B8' }}
               />
             </div>
           </div>
