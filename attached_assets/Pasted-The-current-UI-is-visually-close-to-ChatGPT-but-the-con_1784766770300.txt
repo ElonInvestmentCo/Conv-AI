@@ -1,0 +1,229 @@
+The current UI is visually close to ChatGPT, but the conversation architecture and sidebar behavior do not match ChatGPT's UX. Refactor the implementation so it behaves like ChatGPT, not just looks like it.
+
+========================
+1. RECENTS ARCHITECTURE
+========================
+
+The current implementation incorrectly creates multiple "New chat" entries.
+
+Instead:
+
+• Every conversation has exactly ONE record.
+• A conversation should NEVER be duplicated.
+• Sending another message updates the existing conversation.
+• Only creating a brand-new chat creates a new conversation record.
+• Conversations are sorted by updatedAt (most recent first).
+
+Data model:
+
+Conversation
+- id
+- title
+- createdAt
+- updatedAt
+- messages[]
+- model
+- pinned
+- archived
+- deleted
+
+The sidebar must be rendered entirely from this conversation store.
+
+========================
+2. NEW CHAT LIFECYCLE
+========================
+
+Current behavior is incorrect.
+
+Correct flow:
+
+User clicks "New Chat"
+
+↓
+
+Create ONE temporary conversation
+
+↓
+
+Display "New chat"
+
+↓
+
+User sends first prompt
+
+↓
+
+Generate conversation title from first user message
+
+↓
+
+Replace "New chat" with generated title
+
+↓
+
+Update updatedAt
+
+↓
+
+Move conversation to top
+
+Do NOT create another conversation after the first message.
+
+========================
+3. CONVERSATION TITLES
+========================
+
+Never leave every conversation named:
+
+- New chat
+- New chat
+- New chat
+
+Generate a short title from the first prompt.
+
+Examples:
+
+"Fix sidebar scrolling"
+
+"Dashboard redesign"
+
+"Git merge issue"
+
+"Create landing page"
+
+Update the existing conversation title instead of inserting another conversation.
+
+========================
+4. RECENTS LIST
+========================
+
+Requirements:
+
+• One row per conversation
+• Active conversation highlighted
+• Hover state
+• Click restores conversation
+• Ordered by latest activity
+• No duplicate entries
+• No placeholder rows
+
+When there are no conversations:
+
+Display:
+
+"No recent conversations"
+
+instead of multiple "New chat" items.
+
+========================
+5. RESTORE CONVERSATIONS
+========================
+
+Selecting a conversation must restore:
+
+• all messages
+• attachments
+• model
+• scroll position
+• conversation state
+
+Each conversation should use routing similar to:
+
+/chat/:conversationId
+
+========================
+6. AUTO SAVE
+========================
+
+Every new message immediately updates:
+
+conversation.updatedAt
+
+conversation.lastMessage
+
+conversation.title (if still untitled)
+
+Then automatically resort the sidebar by updatedAt descending.
+
+Never append duplicate conversation objects.
+
+========================
+7. SEARCH
+========================
+
+The sidebar should NOT contain a permanent search field.
+
+Replace it with a Search icon only.
+
+Clicking Search should open a floating search overlay.
+
+Overlay requirements:
+
+• backdrop blur
+• dark overlay
+• centered panel
+• autofocus search input
+• ESC closes
+• click outside closes
+• Ctrl/Cmd + K opens
+• live filtering
+
+Search must include:
+
+• conversation title
+• user messages
+• assistant messages
+
+The search overlay should feel like Spotlight.
+
+========================
+8. SIDEBAR STRUCTURE
+========================
+
+The desktop sidebar should have three independent regions.
+
+TOP (fixed)
+
+• Logo
+• Search icon
+• Collapse button
+• Navigation
+
+MIDDLE (scrollable)
+
+• Recent conversations ONLY
+
+BOTTOM (fixed)
+
+• User profile
+
+Only the middle section may scroll.
+
+========================
+9. ACTIVE CONVERSATION
+========================
+
+Only one conversation can be active.
+
+Active row:
+
+• darker background
+• subtle accent
+• keyboard focus support
+
+========================
+10. GENERAL CLEANUP
+========================
+
+Refactor the conversation state into a single source of truth.
+
+Remove any logic that:
+
+• creates duplicate conversations
+• inserts multiple "New chat" rows
+• stores conversation state separately from messages
+• manually appends sidebar entries
+
+Everything in the sidebar should be derived from the conversation store.
+
+Focus on matching ChatGPT's interaction model and conversation lifecycle rather than only matching its appearance.

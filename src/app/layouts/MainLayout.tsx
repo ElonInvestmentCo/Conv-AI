@@ -37,6 +37,18 @@ const LogoMark = ({ size = 22 }: { size?: number }) => (
   </svg>
 );
 
+// ── Toggle icons (from attached SVGs) ─────────────────────────────────────────
+const CollapseIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="rgba(165,180,252,1)" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.83582 12L11.0429 18.2071L12.4571 16.7929L7.66424 12L12.4571 7.20712L11.0429 5.79291L4.83582 12ZM10.4857 12L16.6928 18.2071L18.107 16.7929L13.3141 12L18.107 7.20712L16.6928 5.79291L10.4857 12Z"/>
+  </svg>
+);
+const ExpandIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="rgba(165,180,252,1)" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.1642 12L12.9571 5.79291L11.5429 7.20712L16.3358 12L11.5429 16.7929L12.9571 18.2071L19.1642 12ZM13.5143 12L7.30722 5.79291L5.89301 7.20712L10.6859 12L5.89301 16.7929L7.30722 18.2071L13.5143 12Z"/>
+  </svg>
+);
+
 // ── Static nav ─────────────────────────────────────────────────────────────────
 const secondaryNav = [
   { label: 'Images',         path: '/images',    Icon: Images          },
@@ -449,34 +461,37 @@ export default function MainLayout() {
         {/* ── SECTION 1: Fixed Header ─────────────────────────────── */}
         <div className="flex-shrink-0" style={{ borderBottom: '1px solid #1E222A' }}>
 
-          {/* Top toolbar — logo | search icon | collapse button */}
+          {/* Top toolbar */}
           <div className="flex items-center" style={{ height: 58, paddingLeft: 16, paddingRight: 8, gap: 8 }}>
             <LogoMark size={22} />
 
+            {/* Wordmark + search icon — only when expanded */}
             <AnimatePresence initial={false}>
               {!collapsed && (
                 <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }} transition={{ duration: 0.17 }}
-                  className="overflow-hidden flex items-baseline flex-1">
+                  className="overflow-hidden flex items-center flex-1 gap-1">
                   <span style={{ fontSize: 15, fontWeight: 600, color: '#F8FAFC', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>Conv</span>
-                  <span style={{ fontSize: 15, fontWeight: 400, color: '#94A3B8', marginLeft: 3, whiteSpace: 'nowrap' }}>AI</span>
+                  <span style={{ fontSize: 15, fontWeight: 400, color: '#94A3B8', whiteSpace: 'nowrap' }}>AI</span>
+                  {/* Search icon — only in expanded header */}
+                  <button onClick={openSearch} title="Search (⌘K)"
+                    className="flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-[150ms] ml-auto"
+                    style={{ width: 36, height: 36, color: '#475569' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                    <Search size={20} strokeWidth={1.75} />
+                  </button>
+                  {/* « Collapse button — only in expanded header, top-right */}
+                  <button onClick={() => setCollapsed(true)} title="Collapse sidebar"
+                    className="flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-[150ms]"
+                    style={{ width: 36, height: 36 }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
+                    <CollapseIcon size={20} />
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {/* Search icon — 20px icon, 36×36 click target */}
-            <button onClick={openSearch} title="Search (⌘K)"
-              className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms] ml-auto"
-              style={{ width: 36, height: 36 }}>
-              <Search size={20} strokeWidth={1.75} />
-            </button>
-
-            {/* Collapse toggle — 36×36 */}
-            <button onClick={() => setCollapsed(v => !v)} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#2E3440] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms]"
-              style={{ width: 36, height: 36 }}>
-              {collapsed ? <ChevronRight size={20} strokeWidth={1.75} /> : <ChevronLeft size={20} strokeWidth={1.75} />}
-            </button>
           </div>
 
           {/* Primary nav — no search input */}
@@ -603,25 +618,65 @@ export default function MainLayout() {
             )}
           </AnimatePresence>
 
-          {/* Profile row */}
-          <button onClick={() => setProfileOpen(v => !v)} title={collapsed ? 'Alex Reed' : undefined}
-            className="w-full flex items-center rounded-[10px] cursor-pointer hover:bg-[#1A1D24] transition-all duration-[150ms]"
-            style={{ gap: 10, padding: '6px 10px', minHeight: 48 }}>
-            <div className="flex items-center justify-center text-white flex-shrink-0"
-              style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #06B6D4)', fontSize: 12, fontWeight: 700 }}>
-              A
+          {/* ── EXPANDED footer: [avatar + name | flex] [bell] ── */}
+          {!collapsed && (
+            <div className="flex items-center gap-1">
+              {/* Avatar + name — clickable for profile popup */}
+              <button onClick={() => setProfileOpen(v => !v)}
+                className="flex items-center gap-2.5 flex-1 min-w-0 rounded-[10px] cursor-pointer hover:bg-[#1A1D24] transition-all duration-[150ms]"
+                style={{ padding: '6px 10px', minHeight: 48 }}>
+                <div className="flex items-center justify-center text-white flex-shrink-0"
+                  style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #06B6D4)', fontSize: 12, fontWeight: 700 }}>
+                  A
+                </div>
+                <div className="overflow-hidden text-left flex-1">
+                  <p className="whitespace-nowrap text-[#F8FAFC]" style={{ fontSize: 15, fontWeight: 600, lineHeight: '22px' }}>Alex Reed</p>
+                  <p className="whitespace-nowrap text-[#475569]" style={{ fontSize: 12, fontWeight: 400 }}>Pro Plan</p>
+                </div>
+              </button>
+
+              {/* Bell — bottom right, expanded only */}
+              <NavLink to="/notifications"
+                className="relative flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-[150ms]"
+                style={{ width: 36, height: 36, color: '#475569' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                <Bell size={17} strokeWidth={1.75} />
+                <span className="absolute top-[8px] right-[8px] w-[6px] h-[6px] bg-[#6366F1] rounded-full" />
+              </NavLink>
             </div>
-            <AnimatePresence initial={false}>
-              {!collapsed && (
-                <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }} transition={{ duration: 0.17 }}
-                  className="overflow-hidden text-left flex-1">
-                  <p className="whitespace-nowrap text-[#F8FAFC]" style={{ fontSize: 16, fontWeight: 600, lineHeight: '22px' }}>Alex Reed</p>
-                  <p className="whitespace-nowrap text-[#475569]" style={{ fontSize: 13, fontWeight: 400 }}>Pro Plan</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </button>
+          )}
+
+          {/* ── COLLAPSED footer: stacked » + bell + avatar ── */}
+          {collapsed && (
+            <div className="flex flex-col items-center gap-1 py-1">
+              {/* » Expand button */}
+              <button onClick={() => setCollapsed(false)} title="Expand sidebar"
+                className="flex items-center justify-center rounded-lg transition-all duration-[150ms]"
+                style={{ width: 40, height: 36 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
+                <ExpandIcon size={20} />
+              </button>
+
+              {/* Bell */}
+              <NavLink to="/notifications"
+                className="relative flex items-center justify-center rounded-lg transition-all duration-[150ms]"
+                style={{ width: 40, height: 36, color: '#475569' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                <Bell size={17} strokeWidth={1.75} />
+                <span className="absolute top-[6px] right-[6px] w-[6px] h-[6px] bg-[#6366F1] rounded-full" />
+              </NavLink>
+
+              {/* Avatar — clickable for profile popup */}
+              <button onClick={() => setProfileOpen(v => !v)} title="Alex Reed"
+                className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-[150ms] hover:ring-2 hover:ring-[#6366F1]/40"
+                style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #6366F1, #06B6D4)', fontSize: 12, fontWeight: 700, color: '#fff', marginTop: 2 }}>
+                A
+              </button>
+            </div>
+          )}
         </div>
       </motion.aside>
 
@@ -641,13 +696,6 @@ export default function MainLayout() {
               style={{ border: '1px solid #1E222A', height: 38, color: '#94A3B8' }}>
               <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" /><span>GPT-4o</span>
             </div>
-
-            <NavLink to="/notifications"
-              className="relative flex items-center justify-center rounded-xl text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all duration-[150ms]"
-              style={{ width: 38, height: 38, border: '1px solid #1E222A' }}>
-              <Bell size={15} strokeWidth={1.8} />
-              <span className="absolute top-[9px] right-[9px] w-1.5 h-1.5 bg-[#6366F1] rounded-full" />
-            </NavLink>
 
             <button onClick={handleNewChat}
               className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-semibold text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
