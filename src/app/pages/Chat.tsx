@@ -162,6 +162,9 @@ export default function Chat() {
   const navigate = useNavigate();
   const { getConversation, createConversation, addMessage } = useConversations();
 
+  // Pending suggestion text to pre-fill the composer after a card click
+  const pendingSuggestion = useRef<string | null>(null);
+
   const [input, setInput]             = useState('');
   const [isTyping, setIsTyping]       = useState(false);
   const [voiceMode, setVoiceMode]     = useState(false);
@@ -172,15 +175,7 @@ export default function Chat() {
   // Resolve the active conversation
   const conversation = convId ? getConversation(convId) : undefined;
 
-  // If no id, create one and redirect
-  useEffect(() => {
-    if (!convId) {
-      const id = createConversation();
-      navigate(`/chat/${id}`, { replace: true });
-    }
-  }, [convId, createConversation, navigate]);
-
-  // If convId is stale / invalid, go back to /chat to create fresh
+  // If convId is stale / invalid, go back to /chat (welcome screen)
   useEffect(() => {
     if (convId && !conversation) {
       navigate('/chat', { replace: true });

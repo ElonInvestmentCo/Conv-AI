@@ -66,16 +66,36 @@ function sortByActivity(convs: Conversation[]): Conversation[] {
   return [...convs].sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
-/** Generate a short title from the first user message */
+/** Filler words to strip before building a short title */
+const FILLERS = new Set([
+  'a', 'an', 'the', 'i', 'me', 'my', 'we', 'our', 'you', 'your',
+  'is', 'are', 'am', 'was', 'were', 'be', 'been', 'being',
+  'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
+  'could', 'should', 'can', 'may', 'might', 'shall',
+  'to', 'of', 'in', 'on', 'at', 'for', 'with', 'by', 'from',
+  'and', 'or', 'but', 'so', 'if', 'that', 'this', 'it',
+  'help', 'please', 'need', 'want', 'make', 'create',
+  'how', 'why', 'what', 'when', 'where', 'which', 'who',
+  'get', 'give', 'just', 'really', 'very', 'some', 'any',
+]);
+
+/** Generate a concise 2–5 word title from the first user message */
 function autoTitle(firstUserMessage: string): string {
   const cleaned = firstUserMessage
     .replace(/\n+/g, ' ')
-    .replace(/[?!.,;:]+$/, '')
+    .replace(/[?!.,;:'"]+/g, '')
     .trim();
-  const words = cleaned.split(/\s+/);
-  const short = words.slice(0, 7).join(' ');
-  // Capitalize first letter
-  return short.charAt(0).toUpperCase() + short.slice(1);
+
+  const allWords = cleaned.split(/\s+/);
+
+  // Keep meaningful words (not fillers), preserve original capitalisation
+  const meaningful = allWords.filter(w => !FILLERS.has(w.toLowerCase()));
+
+  // Fall back to raw words if everything was filtered
+  const source = meaningful.length >= 2 ? meaningful : allWords;
+
+  const title = source.slice(0, 5).join(' ');
+  return title.charAt(0).toUpperCase() + title.slice(1);
 }
 
 function uid(): string {
