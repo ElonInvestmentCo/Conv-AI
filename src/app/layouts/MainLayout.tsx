@@ -140,7 +140,7 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
 
       <AnimatePresence>
         {showActions && (
-          <motion.div ref={menuRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <motion.div ref={menuRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, pointerEvents: 'none' }}
             transition={{ duration: 0.15 }} className="absolute right-1 top-1/2 -translate-y-1/2">
             <button onClick={e => { e.stopPropagation(); setMenuOpen(v => !v); }}
               className="flex items-center justify-center rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-white/[0.06] transition-all duration-[140ms]"
@@ -150,7 +150,7 @@ function ConvRow({ conv, isActive, onClick, onRename, onArchive, onDelete }: {
             <AnimatePresence>
               {menuOpen && (
                 <motion.div initial={{ opacity: 0, scale: 0.94, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: -4 }} transition={{ duration: 0.14, ease: 'easeOut' }}
+                  exit={{ opacity: 0, scale: 0.94, y: -4, pointerEvents: 'none' }} transition={{ duration: 0.14, ease: 'easeOut' }}
                   style={{
                     position: 'absolute', top: 32, right: 0, width: 160, zIndex: 9999,
                     background: '#171A20', border: '1px solid rgba(255,255,255,0.08)',
@@ -452,7 +452,7 @@ export default function MainLayout() {
         style={{ background: '#0A0C10', borderRight: '1px solid #1E222A' }}>
 
         {/* ── SECTION 1: Fixed Header ─────────────────────────────── */}
-        <div className="flex-shrink-0" style={{ borderBottom: '1px solid #1E222A' }}>
+        <div className="flex-shrink-0">
 
           {/* Top toolbar */}
           <div className="flex items-center" style={{ height: 58, paddingLeft: 16, paddingRight: 8, gap: 8 }}>
@@ -569,7 +569,7 @@ export default function MainLayout() {
           <AnimatePresence>
             {profileOpen && (
               <motion.div initial={{ opacity: 0, scale: 0.94, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.94, y: 10 }} transition={{ duration: 0.18, ease: 'easeOut' }}
+                exit={{ opacity: 0, scale: 0.94, y: 10, pointerEvents: 'none' }} transition={{ duration: 0.18, ease: 'easeOut' }}
                 style={{
                   position: 'fixed', bottom: 76, left: 12, width: 236, zIndex: 9999,
                   background: '#171A20', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
