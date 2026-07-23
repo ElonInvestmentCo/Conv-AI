@@ -606,7 +606,7 @@ export default function MainLayout() {
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ type: 'spring', stiffness: 420, damping: 42 }}
         className="flex-shrink-0 flex flex-col h-full overflow-hidden"
-        style={{ background: '#0A0C10' }}>
+        style={{ background: '#0A0C10', borderRight: '1px solid #A5B4FC' }}>
 
         {/* ── SECTION 1: Fixed Header ─────────────────────────────── */}
         <div className="flex-shrink-0">
