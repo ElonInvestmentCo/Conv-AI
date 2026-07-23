@@ -162,6 +162,43 @@ app.post('/api/tts', async (req, res) => {
   }
 });
 
+// ── Conversation title generation ────────────────────────────────────────────
+app.post('/api/title', async (req, res) => {
+  if (!openai) {
+    return res.status(503).json({ error: 'OPENAI_API_KEY is not configured on the server.' });
+  }
+
+  const { message } = req.body;
+  if (!message?.trim()) {
+    return res.status(400).json({ error: 'message is required.' });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'Generate a short 2–5 word conversation title that captures the core topic of the user message. ' +
+            'Reply with ONLY the title — no quotes, no punctuation, no explanation. ' +
+            'Capitalise the first word only. ' +
+            'Examples: "Help me build a fintech dashboard" → "Fintech dashboard build". ' +
+            '"Write a Python web scraper" → "Python web scraper".',
+        },
+        { role: 'user', content: message.slice(0, 400) },
+      ],
+      max_tokens: 20,
+      temperature: 0.3,
+    });
+    const title = completion.choices[0]?.message?.content?.trim() ?? '';
+    res.json({ title });
+  } catch (err) {
+    console.error('Title gen error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`API server → http://0.0.0.0:${PORT}`);
 });
