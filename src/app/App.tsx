@@ -66,23 +66,25 @@ export default function App() {
     <ThemeProvider>
       <ConversationsProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Navigate to="/chat" replace />} />
+          <Suspense fallback={<PageSkeleton />}>
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<Navigate to="/chat" replace />} />
 
-              {/* Each page is an independent lazy chunk */}
-              <Route path="chat/:id?" element={<Lazy><Chat /></Lazy>} />
-              <Route path="images"     element={<Lazy><Images /></Lazy>} />
-              <Route path="library"    element={<Lazy><Library /></Lazy>} />
-              <Route path="projects"   element={<Lazy><Projects /></Lazy>} />
-              <Route path="builder"    element={<Lazy><Builder /></Lazy>} />
-              <Route path="tts"        element={<Lazy><TextToSpeech /></Lazy>} />
-              <Route path="notifications" element={<Lazy><Notifications /></Lazy>} />
-              <Route path="account"    element={<Lazy><Account /></Lazy>} />
-              <Route path="settings"   element={<Lazy><Settings /></Lazy>} />
-              <Route path="help"       element={<Lazy><Help /></Lazy>} />
-            </Route>
-          </Routes>
+                {/* Each page is an independent lazy chunk */}
+                <Route path="chat/:id?" element={<Lazy><Chat /></Lazy>} />
+                <Route path="images"     element={<Lazy><Images /></Lazy>} />
+                <Route path="library"    element={<Lazy><Library /></Lazy>} />
+                <Route path="projects"   element={<Lazy><Projects /></Lazy>} />
+                <Route path="builder"    element={<Lazy><Builder /></Lazy>} />
+                <Route path="tts"        element={<Lazy><TextToSpeech /></Lazy>} />
+                <Route path="notifications" element={<Lazy><Notifications /></Lazy>} />
+                <Route path="account"    element={<Lazy><Account /></Lazy>} />
+                <Route path="settings"   element={<Lazy><Settings /></Lazy>} />
+                <Route path="help"       element={<Lazy><Help /></Lazy>} />
+              </Route>
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </ConversationsProvider>
     </ThemeProvider>
