@@ -46,7 +46,9 @@ function load(): Conversation[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    return JSON.parse(raw) as Conversation[];
+    const all = JSON.parse(raw) as Conversation[];
+    // Drop empty shells that were created before a message was ever sent
+    return all.filter(c => c.messages.length > 0);
   } catch {
     return [];
   }
