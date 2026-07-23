@@ -1,0 +1,68 @@
+Extract the attached ZIP file and use it as the source of truth for this implementation.
+
+Search the extracted project and locate the following UI exactly as it exists:
+
+1. The homepage hero section containing:
+   • "What can I help with?"
+   • Write
+   • a short poem about the ocean at dawn
+   • Code
+   • a REST API endpoint in Express.js
+   • Create
+   • a product description for wireless headphones
+   • Summarize
+   • the key ideas from Atomic Habits
+
+2. The complete Profile Settings modal, including:
+   • General
+   • Account
+   • Security
+   • Data controls
+   • Billing
+   • Appearance
+   • Theme selector
+   • Language & Region
+   • Chat settings
+   • Every control, toggle, dropdown, divider, icon, spacing, and interaction exactly as provided.
+
+Once located, implement these designs into my website.
+
+This is a direct implementation—not a recreation or redesign.
+
+Requirements:
+
+• Copy the original implementation exactly from the extracted files.
+• Preserve the exact HTML/JSX structure.
+• Preserve the exact CSS/Tailwind styles.
+• Preserve all fonts, spacing, sizing, alignment, colors, gradients, shadows, opacity, blur, transparency, borders, border radii, icons, animations, transitions, hover states, active states, focus states, loading states, and micro-interactions.
+• Preserve all responsiveness and responsive breakpoints.
+• Preserve Auto Layout and component hierarchy where applicable.
+• Preserve every asset exactly as supplied.
+• Preserve all accessibility attributes and keyboard interactions if present.
+
+Critical Rules:
+
+• DO NOT rebuild any part of these designs.
+• DO NOT recreate them from scratch.
+• DO NOT redesign them.
+• DO NOT modify the layout.
+• DO NOT simplify the code.
+• DO NOT refactor the extracted components.
+• DO NOT replace components with existing project components.
+• DO NOT substitute fonts, icons, colors, or assets.
+• DO NOT optimize or "improve" anything.
+• DO NOT generate new versions using AI.
+• DO NOT alter spacing, typography, proportions, or styling for any reason.
+• DO NOT remove any visual detail.
+• DO NOT merge these components into another design system if doing so changes their appearance or behavior.
+
+Only make the minimum code changes necessary to:
+• Import the extracted components.
+• Connect required routes.
+• Resolve imports and dependencies.
+• Wire up the interactions.
+• Ensure they function correctly within the existing application.
+
+If any conflict exists between the current website and the extracted files, the extracted files take precedence for these sections.
+
+Before making changes, verify that the requested hero section and Profile Settings modal exist within the extracted ZIP and report their exact file paths. If multiple versions are found, identify each one and recommend the version that most closely matches the attached reference screenshots. Only after identifying the correct source should you integrate it without modifying its design or behavior.
