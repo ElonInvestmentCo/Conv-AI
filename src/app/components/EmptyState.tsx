@@ -11,8 +11,8 @@ const SUGGESTIONS = [
 export function EmptyState({ onSuggest }: { onSuggest: (text: string) => void }) {
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 pb-8">
-      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-6 shadow-lg">
-        <LogoMark size={28} variant="auto" style={{ filter: "invert(1)" }} />
+      <div className="w-12 h-12 rounded-full flex items-center justify-center mb-6" style={{ background: '#181b21' }}>
+        <LogoMark size={28} variant="auto" />
       </div>
       <h1 className="text-3xl font-semibold text-[#ececec] mb-8">What can I help with?</h1>
       <div className="grid grid-cols-2 gap-2.5 w-full max-w-xl mb-8">
