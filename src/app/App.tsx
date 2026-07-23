@@ -76,13 +76,14 @@ export default function App() {
                 <Route path="images"     element={<Lazy><Images /></Lazy>} />
                 <Route path="library"    element={<Lazy><Library /></Lazy>} />
                 <Route path="projects"   element={<Lazy><Projects /></Lazy>} />
-                <Route path="builder"    element={<Lazy><Builder /></Lazy>} />
                 <Route path="tts"        element={<Lazy><TextToSpeech /></Lazy>} />
                 <Route path="notifications" element={<Lazy><Notifications /></Lazy>} />
                 <Route path="account"    element={<Lazy><Account /></Lazy>} />
                 <Route path="settings"   element={<Lazy><Settings /></Lazy>} />
                 <Route path="help"       element={<Lazy><Help /></Lazy>} />
               </Route>
+              {/* Builder has its own full-screen layout with its own sidebar */}
+              <Route path="builder"    element={<Lazy><Builder /></Lazy>} />
             </Routes>
           </Suspense>
         </BrowserRouter>
