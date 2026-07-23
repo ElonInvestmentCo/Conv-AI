@@ -356,7 +356,7 @@ export default function Chat() {
             <motion.div
               animate={{
                 boxShadow: composerFocused
-                  ? '0 0 0 1.5px #6366F1, 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35)'
+                  ? '0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35)'
                   : '0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.25)',
               }}
               transition={{ duration: 0.18 }}
@@ -365,15 +365,12 @@ export default function Chat() {
                 maxWidth: 773,
                 minHeight: 53,
                 background: '#111318',
-                border: composerFocused
-                  ? '1px solid rgba(99,102,241,0.45)'
-                  : '1px solid #1E222A',
+                border: 'none',
                 borderRadius: 32,
                 paddingLeft: 8,
                 paddingRight: 8,
                 paddingTop: 6,
                 paddingBottom: 6,
-                transition: 'border-color 0.18s ease',
               }}
             >
               {/* Attachment */}
