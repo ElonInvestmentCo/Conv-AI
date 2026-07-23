@@ -326,7 +326,7 @@ export default function Chat() {
                       setTimeout(() => textareaRef.current?.focus(), 0);
                     }}
                     className="text-left p-4 rounded-2xl transition-colors duration-[160ms] hover:border-[#2E3440]"
-                    style={{ background: '#111318', border: '1px solid #1E222A' }}
+                    style={{ background: '#2b2b2b', border: '1px solid #1E222A' }}
                   >
                     <div className="mb-2.5">{p.icon}</div>
                     <p className="text-[13px] font-semibold text-[#F8FAFC] mb-1">{p.title}</p>
