@@ -185,6 +185,15 @@ export default function Chat() {
   const messages = conversation?.messages ?? [];
   const started  = messages.length > 0;
 
+  // Pre-fill composer if a suggestion was clicked before a conversation existed
+  useEffect(() => {
+    if (pendingSuggestion.current && textareaRef.current) {
+      setInput(pendingSuggestion.current);
+      pendingSuggestion.current = null;
+      textareaRef.current.focus();
+    }
+  }, [convId]);
+
   // Auto-scroll on new messages or typing indicator
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -192,19 +201,26 @@ export default function Chat() {
 
   const send = useCallback((text?: string) => {
     const t = (text ?? input).trim();
-    if (!t || !convId || isTyping) return;
+    if (!t || isTyping) return;
 
     setInput('');
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    addMessage(convId, { role: 'user', text: t });
+    // Lazily create a conversation the first time the user sends a real message
+    let activeId = convId;
+    if (!activeId) {
+      activeId = createConversation();
+      navigate(`/chat/${activeId}`, { replace: true });
+    }
+
+    addMessage(activeId, { role: 'user', text: t });
 
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
-      addMessage(convId, { role: 'ai', text: buildAIResponse(t) });
+      addMessage(activeId!, { role: 'ai', text: buildAIResponse(t) });
     }, 1600);
-  }, [input, convId, isTyping, addMessage]);
+  }, [input, convId, isTyping, addMessage, createConversation, navigate]);
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -215,7 +231,8 @@ export default function Chat() {
     el.style.height = Math.min(el.scrollHeight, 180) + 'px';
   };
 
-  if (!convId || !conversation) return null;
+  // Stale convId — redirect handled by effect above; render nothing while redirecting
+  if (convId && !conversation) return null;
 
   return (
     <div className="flex h-full overflow-hidden" style={{ background: '#0A0C10' }}>
@@ -256,7 +273,10 @@ export default function Chat() {
                     transition={{ delay: i * 0.07, type: 'spring', stiffness: 300 }}
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => send(p.title)}
+                    onClick={() => {
+                      setInput(p.title);
+                      setTimeout(() => textareaRef.current?.focus(), 0);
+                    }}
                     className="text-left p-4 rounded-2xl transition-colors duration-[160ms] hover:border-[#2E3440]"
                     style={{ background: '#111318', border: '1px solid #1E222A' }}
                   >

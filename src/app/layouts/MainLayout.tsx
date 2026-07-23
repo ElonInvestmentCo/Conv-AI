@@ -560,8 +560,7 @@ export default function MainLayout() {
   }, [openSearch]);
 
   const handleNewChat = () => {
-    const id = createConversation();
-    navigate(`/chat/${id}`);
+    navigate('/chat');
   };
 
   const startRename = (id: string, currentTitle: string) => {
