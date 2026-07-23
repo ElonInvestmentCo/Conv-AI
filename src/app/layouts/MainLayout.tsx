@@ -24,7 +24,7 @@ import {
   Pencil,
   Archive,
   Trash2,
-  MessageSquare,
+  Circle,
   X,
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
@@ -254,17 +254,17 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
             onClick={e => e.stopPropagation()}
             style={{
               position: 'fixed',
-              top: '12%',
+              top: '18%',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '100%',
-              maxWidth: 800,
-              maxHeight: '70vh',
+              width: 'calc(100% - 32px)',
+              maxWidth: 500,
+              maxHeight: '65vh',
               zIndex: 10001,
-              background: '#171A20',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 20,
-              boxShadow: '0 24px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.3)',
+              background: '#1C1F26',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 14,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.7)',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
@@ -272,23 +272,23 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           >
             {/* Search input row */}
             <div className="flex items-center flex-shrink-0"
-              style={{ height: 60, paddingLeft: 20, paddingRight: 16, borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 12 }}>
-              <Search size={18} strokeWidth={1.8} style={{ color: '#475569', flexShrink: 0 }} />
+              style={{ height: 56, paddingLeft: 16, paddingRight: 12, borderBottom: '1px solid rgba(255,255,255,0.07)', gap: 10 }}>
+              <Search size={17} strokeWidth={1.8} style={{ color: '#6B7280', flexShrink: 0 }} />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                placeholder="Search conversations..."
+                placeholder="Search..."
                 className="flex-1 outline-none bg-transparent"
                 style={{
-                  fontSize: 17, fontWeight: 400, color: '#F8FAFC',
+                  fontSize: 16, fontWeight: 400, color: '#F8FAFC',
                   fontFamily: 'Inter, system-ui, sans-serif',
                 }}
               />
               <button onClick={onClose}
-                className="flex-shrink-0 flex items-center justify-center rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-white/[0.06] transition-all duration-[140ms]"
-                style={{ width: 32, height: 32 }}>
-                <X size={16} strokeWidth={2} />
+                className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-[140ms]"
+                style={{ width: 26, height: 26, background: 'rgba(255,255,255,0.1)', color: '#9CA3AF' }}>
+                <X size={13} strokeWidth={2.5} />
               </button>
             </div>
 
@@ -299,11 +299,11 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                   <p style={{ fontSize: 14, color: '#475569' }}>No conversations yet. Start a new chat!</p>
                 </div>
               ) : (
-                <div style={{ padding: '12px 8px' }}>
+                <div style={{ padding: '8px 0' }}>
                   {/* Last opened */}
                   {!q && lastOpened && (
-                    <div style={{ marginBottom: 4 }}>
-                      <p className="uppercase tracking-wider" style={{ fontSize: 11, fontWeight: 600, color: '#2E3440', paddingLeft: 12, marginBottom: 4 }}>
+                    <div style={{ marginBottom: 8 }}>
+                      <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', paddingLeft: 16, paddingBottom: 4 }}>
                         Last opened
                       </p>
                       <SearchResultRow conv={lastOpened} onClick={() => go(lastOpened.id)} />
@@ -312,8 +312,8 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
 
                   {/* Recent chats / search results */}
                   {recentChats.length > 0 && (
-                    <div style={{ marginTop: !q && lastOpened ? 12 : 0 }}>
-                      <p className="uppercase tracking-wider" style={{ fontSize: 11, fontWeight: 600, color: '#2E3440', paddingLeft: 12, marginBottom: 4 }}>
+                    <div style={{ marginTop: !q && lastOpened ? 4 : 0 }}>
+                      <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', paddingLeft: 16, paddingBottom: 4 }}>
                         {q ? 'Results' : 'Recent chats'}
                       </p>
                       {recentChats.map(conv => (
@@ -360,13 +360,13 @@ function SearchResultRow({ conv, onClick, query = '' }: { conv: { id: string; ti
     <button onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="w-full flex items-center gap-3 text-left transition-all duration-[140ms] rounded-[10px]"
+      className="w-full flex items-center gap-3 text-left transition-all duration-[140ms]"
       style={{
-        height: 44, paddingLeft: 12, paddingRight: 16,
-        background: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+        height: 42, paddingLeft: 16, paddingRight: 16,
+        background: hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
       }}>
-      <MessageSquare size={15} strokeWidth={1.6} style={{ color: '#475569', flexShrink: 0 }} />
-      <span className="truncate" style={{ fontSize: 15, fontWeight: 400, lineHeight: '22px', color: '#94A3B8' }}>
+      <Circle size={16} strokeWidth={1.5} style={{ color: '#6B7280', flexShrink: 0 }} />
+      <span className="truncate" style={{ fontSize: 14, fontWeight: 400, lineHeight: '20px', color: '#D1D5DB' }}>
         {renderTitle()}
       </span>
     </button>
