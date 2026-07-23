@@ -20,12 +20,12 @@ export function EmptyState({ onSuggest }: { onSuggest: (text: string) => void })
           <button
             key={s.label}
             onClick={() => onSuggest(s.text)}
-            className="flex items-start gap-3 p-4 rounded-2xl bg-[#93A2B8] hover:bg-[#3a3a3a] border border-white/8 transition-colors text-left group"
+            className="flex items-start gap-3 p-4 rounded-2xl bg-[#93A2B8] hover:bg-[#7B8FA8] border border-white/8 transition-colors text-left group"
           >
-            <s.icon size={18} className="text-[#8e8ea0] group-hover:text-[#ececec] transition-colors mt-0.5 flex-shrink-0" />
+            <s.icon size={18} className="text-[#1E293B] group-hover:text-[#0F172A] transition-colors mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium text-[#ececec]">{s.label}</p>
-              <p className="text-xs text-[#8e8ea0] mt-0.5 leading-relaxed">{s.text}</p>
+              <p className="text-sm font-medium text-[#0F172A]">{s.label}</p>
+              <p className="text-xs text-[#334155] mt-0.5 leading-relaxed">{s.text}</p>
             </div>
           </button>
         ))}

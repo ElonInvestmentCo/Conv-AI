@@ -1,0 +1,68 @@
+Update only the text colors and button colors in the sections shown in the attached screenshots so they match my website's brand identity while maintaining excellent readability and accessibility.
+
+This is a visual styling update only. Do not redesign, rebuild, or modify the layout.
+
+Apply the following changes:
+
+Text Colors
+• Update all headings, labels, descriptions, menu items, settings labels, helper text, and other visible text to use my website's brand text color palette.
+• Ensure every piece of text has sufficient contrast against its background and is clearly readable.
+• Preserve the existing typography, including:
+  - Font family
+  - Font size
+  - Font weight
+  - Line height
+  - Letter spacing
+• Only change the text colors.
+
+Buttons & Interactive Controls
+Update the colors of:
+• Theme selector buttons
+• Dropdowns
+• Toggle switches
+• Primary buttons
+• Secondary buttons
+• Selected states
+• Hover states
+• Active states
+• Focus states
+• Any other interactive controls within the affected sections
+
+Use my website's existing brand colors so these controls are visually consistent with the rest of the application while remaining easy to see and interact with.
+
+Keep Unchanged
+• Layout
+• Spacing
+• Padding
+• Margins
+• Alignment
+• Component sizes
+• Borders
+• Border radius
+• Shadows
+• Blur effects
+• Transparency
+• Background colors
+• Icons
+• Animations
+• Transitions
+• Component hierarchy
+• Functionality
+• Responsive behavior
+
+Critical Rules
+
+• DO NOT redesign any component.
+• DO NOT rebuild or recreate any UI.
+• DO NOT move or resize anything.
+• DO NOT modify any text content.
+• DO NOT replace any icons.
+• DO NOT change the existing backgrounds.
+• DO NOT alter the structure of the page.
+• DO NOT make any additional visual changes outside of the requested text and button colors.
+
+The only permitted changes are:
+1. Update the text colors to match my website's brand identity while ensuring high contrast and readability.
+2. Update the colors of buttons and interactive controls to match my website's brand identity while preserving their existing behavior and states.
+
+Everything else must remain visually and functionally identical.

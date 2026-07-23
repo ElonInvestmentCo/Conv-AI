@@ -17,7 +17,7 @@ function Toggle({ defaultChecked = false }: { defaultChecked?: boolean }) {
   return (
     <button
       onClick={() => setOn(!on)}
-      className={`relative inline-flex w-10 h-5.5 rounded-full transition-colors duration-200 ${on ? "bg-[#10a37f]" : "bg-white/20"}`}
+      className={`relative inline-flex w-10 h-5.5 rounded-full transition-colors duration-200 ${on ? "bg-[#6366F1]" : "bg-[#0F172A]/20"}`}
       style={{ height: "22px", width: "40px" }}
     >
       <span
@@ -32,8 +32,8 @@ function SettingsRow({ label, description, children }: { label: string; descript
   return (
     <div className="flex items-center justify-between py-3 border-b border-white/6 last:border-0">
       <div className="flex-1 mr-4">
-        <p className="text-sm text-[#ececec] font-medium">{label}</p>
-        <p className="text-xs text-[#8e8ea0] mt-0.5 leading-relaxed">{description}</p>
+        <p className="text-sm text-[#0F172A] font-medium">{label}</p>
+        <p className="text-xs text-[#334155] mt-0.5 leading-relaxed">{description}</p>
       </div>
       {children}
     </div>
@@ -57,8 +57,8 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
       <div className="bg-[#93A2B8] rounded-2xl shadow-2xl border border-white/10 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/8">
-          <h2 className="text-lg font-semibold text-[#ececec]">Settings</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/8 text-[#8e8ea0] hover:text-[#ececec] transition-colors">
+          <h2 className="text-lg font-semibold text-[#0F172A]">Settings</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#0F172A]/8 text-[#334155] hover:text-[#0F172A] transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -72,8 +72,8 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                 onClick={() => setTab(t.id)}
                 className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors text-left mb-0.5 ${
                   tab === t.id
-                    ? "bg-white/10 text-[#ececec] font-medium"
-                    : "text-[#8e8ea0] hover:text-[#ececec] hover:bg-white/6"
+                    ? "bg-[#0F172A]/10 text-[#0F172A] font-medium"
+                    : "text-[#334155] hover:text-[#0F172A] hover:bg-[#0F172A]/6"
                 }`}
               >
                 <t.icon size={16} />
@@ -87,19 +87,19 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
             {tab === "general" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#ececec] mb-4">Appearance</h3>
+                  <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Appearance</h3>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-[#ececec]">Theme</p>
-                      <p className="text-xs text-[#8e8ea0] mt-0.5">Choose your preferred interface theme</p>
+                      <p className="text-sm text-[#0F172A]">Theme</p>
+                      <p className="text-xs text-[#334155] mt-0.5">Choose your preferred interface theme</p>
                     </div>
-                    <div className="flex bg-[#171717] rounded-lg p-1 gap-1">
+                    <div className="flex bg-[#0F172A]/20 rounded-lg p-1 gap-1">
                       {(["light", "dark", "system"] as const).map((t) => (
                         <button
                           key={t}
                           onClick={() => setTheme(t)}
                           className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors capitalize ${
-                            theme === t ? "bg-[#2f2f2f] text-[#ececec]" : "text-[#8e8ea0] hover:text-[#ececec]"
+                            theme === t ? "bg-[#0F172A] text-white" : "text-[#334155] hover:text-[#0F172A]"
                           }`}
                         >
                           {t}
@@ -109,9 +109,9 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   </div>
                 </div>
                 <div className="border-t border-white/8 pt-6">
-                  <h3 className="text-sm font-semibold text-[#ececec] mb-4">Language & Region</h3>
+                  <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Language & Region</h3>
                   <SettingsRow label="Language" description="Interface language">
-                    <select className="bg-[#171717] text-sm text-[#ececec] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+                    <select className="bg-[#0F172A]/20 text-sm text-[#0F172A] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
                       <option>English (US)</option>
                       <option>Español</option>
                       <option>Français</option>
@@ -120,7 +120,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   </SettingsRow>
                 </div>
                 <div className="border-t border-white/8 pt-6">
-                  <h3 className="text-sm font-semibold text-[#ececec] mb-4">Chat</h3>
+                  <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Chat</h3>
                   <SettingsRow label="Always show code when using data analyst" description="Show the underlying code for responses generated with code">
                     <Toggle defaultChecked />
                   </SettingsRow>
@@ -134,22 +134,22 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
             {tab === "account" && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4 pb-6 border-b border-white/8">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#10a37f] to-[#0d8f6e] flex items-center justify-center text-white text-2xl font-semibold">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#6366F1] to-[#4F46E5] flex items-center justify-center text-white text-2xl font-semibold">
                     A
                   </div>
                   <div>
-                    <p className="text-base font-semibold text-[#ececec]">Alex Johnson</p>
-                    <p className="text-sm text-[#8e8ea0]">alex.johnson@example.com</p>
-                    <span className="inline-flex items-center gap-1 text-xs bg-[#10a37f]/15 text-[#10a37f] px-2 py-0.5 rounded-full mt-1">
+                    <p className="text-base font-semibold text-[#0F172A]">Alex Johnson</p>
+                    <p className="text-sm text-[#334155]">alex.johnson@example.com</p>
+                    <span className="inline-flex items-center gap-1 text-xs bg-[#6366F1]/15 text-[#6366F1] px-2 py-0.5 rounded-full mt-1">
                       <Zap size={11} /> Free plan
                     </span>
                   </div>
                 </div>
                 <SettingsRow label="Display name" description="How your name appears in conversations">
-                  <input defaultValue="Alex Johnson" className="bg-[#171717] text-sm text-[#ececec] border border-white/10 rounded-lg px-3 py-1.5 outline-none w-40 focus:border-[#10a37f]/50 transition-colors" />
+                  <input defaultValue="Alex Johnson" className="bg-[#0F172A]/20 text-sm text-[#0F172A] border border-white/10 rounded-lg px-3 py-1.5 outline-none w-40 focus:border-[#6366F1]/50 transition-colors" />
                 </SettingsRow>
                 <div className="pt-4 border-t border-white/8">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-[#10a37f] hover:bg-[#0d8f6e] text-white rounded-lg text-sm font-medium transition-colors">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-sm font-medium transition-colors">
                     <Zap size={15} />
                     Upgrade to ChatGPT Plus
                   </button>
@@ -159,7 +159,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
 
             {tab === "security" && (
               <div className="space-y-6">
-                <h3 className="text-sm font-semibold text-[#ececec] mb-4">Security</h3>
+                <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Security</h3>
                 <SettingsRow label="Two-factor authentication" description="Add an extra layer of security to your account">
                   <Toggle />
                 </SettingsRow>
@@ -167,7 +167,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   <Toggle defaultChecked />
                 </SettingsRow>
                 <div className="pt-4 border-t border-white/8">
-                  <button className="text-sm text-[#8e8ea0] hover:text-[#ececec] transition-colors">
+                  <button className="text-sm text-[#334155] hover:text-[#0F172A] transition-colors">
                     Manage active sessions →
                   </button>
                 </div>
@@ -176,7 +176,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
 
             {tab === "data" && (
               <div className="space-y-6">
-                <h3 className="text-sm font-semibold text-[#ececec] mb-4">Data controls</h3>
+                <h3 className="text-sm font-semibold text-[#0F172A] mb-4">Data controls</h3>
                 <SettingsRow label="Improve the model for everyone" description="Allow your conversations to be used to train our models">
                   <Toggle defaultChecked />
                 </SettingsRow>
@@ -185,12 +185,12 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                 </SettingsRow>
                 <div className="pt-4 border-t border-white/8 space-y-3">
                   <button className="w-full text-left px-4 py-3 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
-                    <p className="text-sm font-medium text-[#ececec]">Export data</p>
-                    <p className="text-xs text-[#8e8ea0] mt-0.5">Download all your conversations and data</p>
+                    <p className="text-sm font-medium text-[#0F172A]">Export data</p>
+                    <p className="text-xs text-[#334155] mt-0.5">Download all your conversations and data</p>
                   </button>
                   <button className="w-full text-left px-4 py-3 rounded-xl border border-red-500/20 hover:border-red-500/40 transition-colors">
-                    <p className="text-sm font-medium text-red-400">Delete account</p>
-                    <p className="text-xs text-[#8e8ea0] mt-0.5">Permanently delete your account and all data</p>
+                    <p className="text-sm font-medium text-red-600">Delete account</p>
+                    <p className="text-xs text-[#334155] mt-0.5">Permanently delete your account and all data</p>
                   </button>
                 </div>
               </div>
@@ -198,13 +198,13 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
 
             {tab === "billing" && (
               <div className="space-y-6">
-                <div className="p-4 rounded-xl bg-gradient-to-br from-[#10a37f]/15 to-[#10a37f]/5 border border-[#10a37f]/20">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-[#6366F1]/15 to-[#6366F1]/5 border border-[#6366F1]/20">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-[#ececec]">Free Plan</p>
-                      <p className="text-xs text-[#8e8ea0] mt-0.5">Limited to GPT-4o mini with standard limits</p>
+                      <p className="text-sm font-semibold text-[#0F172A]">Free Plan</p>
+                      <p className="text-xs text-[#334155] mt-0.5">Limited to GPT-4o mini with standard limits</p>
                     </div>
-                    <button className="px-3 py-1.5 bg-[#10a37f] hover:bg-[#0d8f6e] text-white rounded-lg text-xs font-medium transition-colors">
+                    <button className="px-3 py-1.5 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-xs font-medium transition-colors">
                       Upgrade
                     </button>
                   </div>
@@ -216,13 +216,13 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   ].map((p) => (
                     <div key={p.plan} className="p-4 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-sm font-semibold text-[#ececec]">{p.plan}</p>
-                        <p className="text-sm text-[#8e8ea0]">{p.price}</p>
+                        <p className="text-sm font-semibold text-[#0F172A]">{p.plan}</p>
+                        <p className="text-sm text-[#334155]">{p.price}</p>
                       </div>
                       <ul className="space-y-1.5">
                         {p.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-xs text-[#8e8ea0]">
-                            <Check size={12} className="text-[#10a37f]" />
+                          <li key={f} className="flex items-center gap-2 text-xs text-[#334155]">
+                            <Check size={12} className="text-[#6366F1]" />
                             {f}
                           </li>
                         ))}
