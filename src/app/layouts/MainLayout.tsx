@@ -375,11 +375,157 @@ function SearchResultRow({ conv, onClick, query = '' }: { conv: { id: string; ti
   );
 }
 
+// ── PageModal — reusable full-content overlay ──────────────────────────────────
+function PageModal({ open, onClose, title, children, wide = false }: {
+  open: boolean; onClose: () => void; title: string; children: React.ReactNode; wide?: boolean;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
+  }, [open, onClose]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={onClose}
+            style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 12 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'fixed', top: '5%', left: '50%', transform: 'translateX(-50%)',
+              width: 'calc(100% - 40px)', maxWidth: wide ? 960 : 760,
+              maxHeight: '88vh', zIndex: 10001, display: 'flex', flexDirection: 'column',
+              background: '#111318', border: '1px solid #1E222A',
+              borderRadius: 20, boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Modal header */}
+            <div className="flex items-center justify-between flex-shrink-0"
+              style={{ height: 56, paddingLeft: 24, paddingRight: 16, borderBottom: '1px solid #1E222A' }}>
+              <span style={{ fontSize: 16, fontWeight: 600, color: '#F8FAFC', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{title}</span>
+              <button onClick={onClose}
+                className="flex items-center justify-center rounded-full transition-all duration-[140ms] hover:bg-white/10"
+                style={{ width: 28, height: 28, background: 'rgba(255,255,255,0.07)', color: '#9CA3AF', flexShrink: 0 }}>
+                <X size={14} strokeWidth={2.5} />
+              </button>
+            </div>
+            {/* Scrollable body */}
+            <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#1E222A transparent' }}>
+              {children}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ── UpgradeModal ───────────────────────────────────────────────────────────────
+function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const plans = [
+    {
+      name: 'Plus', price: '$20', period: '/month', color: '#6366F1',
+      features: ['GPT-4o access', 'Extended context', 'Image generation', 'Priority support'],
+      cta: 'Upgrade to Plus',
+    },
+    {
+      name: 'Pro', price: '$200', period: '/month', color: '#06B6D4', highlight: true,
+      features: ['Everything in Plus', 'o1 & o3 models', 'Unlimited usage', 'API access', 'Advanced data analysis'],
+      cta: 'Upgrade to Pro',
+    },
+  ];
+
+  return (
+    <PageModal open={open} onClose={onClose} title="Upgrade Plan">
+      <div style={{ padding: '28px 28px 32px' }}>
+        {/* Hero */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
+            style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)' }}>
+            <Zap size={22} className="text-[#6366F1]" />
+          </div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#F8FAFC', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            Unlock the full power of Conv AI
+          </h2>
+          <p style={{ fontSize: 14, color: '#64748B', marginTop: 6 }}>
+            Upgrade for more models, higher limits, and advanced features.
+          </p>
+        </div>
+
+        {/* Plan cards */}
+        <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+          {plans.map(plan => (
+            <div key={plan.name} className="rounded-2xl p-5 flex flex-col gap-4"
+              style={{
+                background: plan.highlight ? 'rgba(6,182,212,0.07)' : '#1A1D24',
+                border: `1.5px solid ${plan.highlight ? 'rgba(6,182,212,0.35)' : '#1E222A'}`,
+              }}>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span style={{ fontSize: 13, fontWeight: 700, color: plan.color }}>{plan.name}</span>
+                  {plan.highlight && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(6,182,212,0.15)', color: '#06B6D4', border: '1px solid rgba(6,182,212,0.3)' }}>
+                      POPULAR
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span style={{ fontSize: 28, fontWeight: 800, color: '#F8FAFC', lineHeight: 1 }}>{plan.price}</span>
+                  <span style={{ fontSize: 13, color: '#475569' }}>{plan.period}</span>
+                </div>
+              </div>
+              <ul className="space-y-2 flex-1">
+                {plan.features.map(f => (
+                  <li key={f} className="flex items-center gap-2.5">
+                    <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ background: `${plan.color}22` }}>
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ background: plan.color }} />
+                    </div>
+                    <span style={{ fontSize: 13, color: '#94A3B8' }}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <button className="w-full py-2.5 rounded-xl text-[13px] font-semibold transition-all hover:opacity-90"
+                style={{
+                  background: plan.highlight ? '#06B6D4' : '#6366F1',
+                  color: '#fff',
+                }}>
+                {plan.cta}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-center mt-6" style={{ fontSize: 12, color: '#334155' }}>
+          Cancel anytime · Billed monthly · Taxes may apply
+        </p>
+      </div>
+    </PageModal>
+  );
+}
+
 // ── Main layout ────────────────────────────────────────────────────────────────
 export default function MainLayout() {
   const [collapsed, setCollapsed]     = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchOpen, setSearchOpen]   = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [renameId, setRenameId]       = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const profileRef = useRef<HTMLDivElement>(null);
@@ -445,6 +591,15 @@ export default function MainLayout() {
 
       {/* ── Search overlay ──────────────────────────────────────── */}
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      {/* ── Page modals ─────────────────────────────────────────── */}
+      <PageModal open={accountOpen}  onClose={() => setAccountOpen(false)}  title="Account">
+        <AccountPage />
+      </PageModal>
+      <PageModal open={settingsOpen} onClose={() => setSettingsOpen(false)} title="Settings" wide>
+        <SettingsPage />
+      </PageModal>
+      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
 
       {/* ════ SIDEBAR ═══════════════════════════════════════════════ */}
       <motion.aside
@@ -581,9 +736,16 @@ export default function MainLayout() {
                 <div className="py-1">
                   {popupMenu.map(item => {
                     const { Icon } = item;
+                    const handleClick = () => {
+                      setProfileOpen(false);
+                      if (item.label === 'Account')      { setAccountOpen(true);  return; }
+                      if (item.label === 'Settings')     { setSettingsOpen(true); return; }
+                      if (item.label === 'Upgrade Plan') { setUpgradeOpen(true);  return; }
+                      if (item.path) navigate(item.path);
+                    };
                     return (
                       <React.Fragment key={item.label}>
-                        <button onClick={() => { setProfileOpen(false); if (item.path) navigate(item.path); }}
+                        <button onClick={handleClick}
                           className="w-full flex items-center gap-3 px-4 text-left transition-all duration-[150ms] hover:bg-white/[0.05]"
                           style={{ height: 40 }}>
                           <Icon size={15} className={item.accent ? 'text-[#6366F1]' : 'text-[#475569]'} strokeWidth={1.8} />
@@ -596,7 +758,8 @@ export default function MainLayout() {
                     );
                   })}
                   <div style={{ padding: '6px 12px 4px' }}>
-                    <button className="w-full flex items-center justify-center gap-2 text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
+                    <button onClick={() => { setProfileOpen(false); setUpgradeOpen(true); }}
+                      className="w-full flex items-center justify-center gap-2 text-white transition-all duration-[150ms] hover:bg-[#4F46E5]"
                       style={{ height: 34, borderRadius: 10, background: '#6366F1', fontSize: 14, fontWeight: 600 }}>
                       <Zap size={14} strokeWidth={2} />Upgrade to Pro
                     </button>
