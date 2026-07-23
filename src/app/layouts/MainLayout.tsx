@@ -255,9 +255,9 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
             onClick={e => e.stopPropagation()}
             style={{
               position: 'fixed',
-              top: '18%',
+              top: '50%',
               left: '50%',
-              transform: 'translateX(-50%)',
+              transform: 'translate(-50%, -50%)',
               width: 'calc(100% - 32px)',
               maxWidth: 500,
               maxHeight: '65vh',
