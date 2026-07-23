@@ -625,9 +625,9 @@ export default function MainLayout() {
                   {/* Search icon — only in expanded header */}
                   <button onClick={openSearch} title="Search (⌘K)"
                     className="flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-[150ms] ml-auto"
-                    style={{ width: 36, height: 36, color: '#475569' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                    style={{ width: 36, height: 36, color: '#A5B4FC' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#A5B4FC'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#A5B4FC'; }}>
                     <Search size={20} strokeWidth={1.75} />
                   </button>
                   {/* « Collapse button — only in expanded header, top-right */}
