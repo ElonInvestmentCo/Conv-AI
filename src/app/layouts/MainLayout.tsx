@@ -403,7 +403,7 @@ function PageModal({ open, onClose, title, children, wide = false }: {
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             onClick={e => e.stopPropagation()}
             style={{
-              position: 'fixed', top: '5%', left: '50%', transform: 'translateX(-50%)',
+              position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
               width: 'calc(100% - 40px)', maxWidth: wide ? 960 : 760,
               maxHeight: '88vh', zIndex: 10001, display: 'flex', flexDirection: 'column',
               background: '#111318', border: '1px solid #1E222A',
