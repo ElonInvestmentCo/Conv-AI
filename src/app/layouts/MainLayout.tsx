@@ -72,7 +72,7 @@ function NavItem({ path, label, Icon, collapsed }: { path: string; label: string
       title={collapsed ? label : undefined}
       className={({ isActive }) =>
         `group relative flex items-center gap-[14px] rounded-[10px] transition-all duration-[160ms] cursor-pointer
-        ${isActive ? 'bg-[#6366F1]/10 text-[#6366F1]' : 'text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8]'}`
+        ${isActive ? 'bg-[#6366F1]/10 text-[#6366F1]' : 'hover:bg-[#1A1D24]'}`
       }
       style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44 }}
     >
@@ -83,14 +83,15 @@ function NavItem({ path, label, Icon, collapsed }: { path: string; label: string
               transition={{ type: 'spring', stiffness: 420, damping: 38 }} />
           )}
           <Icon size={20} strokeWidth={1.75}
-            className={`relative flex-shrink-0 transition-opacity duration-[160ms] ${isActive ? 'opacity-100' : 'opacity-50 group-hover:opacity-75'}`}
+            className="relative flex-shrink-0"
+            style={{ color: isActive ? '#6366F1' : '#93A2B8' }}
           />
           <AnimatePresence initial={false}>
             {!collapsed && (
               <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }} transition={{ duration: 0.17 }}
                 className="relative overflow-hidden whitespace-nowrap"
-                style={{ fontSize: 16, fontWeight: 500, lineHeight: '24px', letterSpacing: '-0.01em' }}>
+                style={{ fontSize: 16, fontWeight: 500, lineHeight: '24px', letterSpacing: '-0.01em', color: isActive ? '#6366F1' : '#93A2B8' }}>
                 {label}
               </motion.span>
             )}
@@ -645,9 +646,9 @@ export default function MainLayout() {
           <div style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 6, paddingBottom: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* New Chat */}
             <button onClick={handleNewChat} title={collapsed ? 'New Chat' : undefined}
-              className="group relative flex items-center gap-[14px] rounded-[10px] transition-all duration-[160ms] cursor-pointer text-[#475569] hover:bg-[#1A1D24] hover:text-[#94A3B8]"
-              style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44 }}>
-              <SquarePen size={20} strokeWidth={1.75} className="relative flex-shrink-0 opacity-50 group-hover:opacity-75 transition-opacity duration-[160ms]" />
+              className="group relative flex items-center gap-[14px] rounded-[10px] transition-all duration-[160ms] cursor-pointer hover:bg-[#1A1D24]"
+              style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10, minHeight: 44, color: '#93A2B8' }}>
+              <SquarePen size={20} strokeWidth={1.75} className="relative flex-shrink-0" />
               <AnimatePresence initial={false}>
                 {!collapsed && (
                   <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }}
@@ -745,7 +746,7 @@ export default function MainLayout() {
                         <button onClick={handleClick}
                           className="w-full flex items-center gap-3 px-4 text-left transition-all duration-[150ms] hover:bg-white/[0.05]"
                           style={{ height: 40 }}>
-                          <Icon size={15} className={item.accent ? 'text-[#6366F1]' : 'text-[#475569]'} strokeWidth={1.8} />
+                          <Icon size={15} className={item.accent ? 'text-[#6366F1]' : 'text-[#93A2B8]'} strokeWidth={1.8} />
                           <span className={item.accent ? 'text-[#6366F1]' : 'text-[#94A3B8]'} style={{ fontSize: 14, fontWeight: 500 }}>
                             {item.label}
                           </span>
@@ -793,9 +794,9 @@ export default function MainLayout() {
               {/* Bell — bottom right, expanded only */}
               <NavLink to="/notifications"
                 className="relative flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-[150ms]"
-                style={{ width: 36, height: 36, color: '#475569' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                style={{ width: 36, height: 36, color: '#93A2B8' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#C4CDD9'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#93A2B8'; }}>
                 <Bell size={17} strokeWidth={1.75} />
                 <span className="absolute top-[8px] right-[8px] w-[6px] h-[6px] bg-[#6366F1] rounded-full" />
               </NavLink>
@@ -817,9 +818,9 @@ export default function MainLayout() {
               {/* Bell */}
               <NavLink to="/notifications"
                 className="relative flex items-center justify-center rounded-lg transition-all duration-[150ms]"
-                style={{ width: 40, height: 36, color: '#475569' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#94A3B8'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#475569'; }}>
+                style={{ width: 40, height: 36, color: '#93A2B8' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#1A1D24'; (e.currentTarget as HTMLElement).style.color = '#C4CDD9'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#93A2B8'; }}>
                 <Bell size={17} strokeWidth={1.75} />
                 <span className="absolute top-[6px] right-[6px] w-[6px] h-[6px] bg-[#6366F1] rounded-full" />
               </NavLink>

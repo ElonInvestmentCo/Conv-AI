@@ -104,12 +104,29 @@ export default function Images() {
   const [generating, setGenerating] = useState(false);
   const [presetIdx, setPresetIdx] = useState(0);
   const [search, setSearch] = useState('');
+  const [generatedImages, setGeneratedImages] = useState<{ id: number; src: string; prompt: string }[]>([]);
+  const [genError, setGenError] = useState('');
   const visiblePresets = 5;
 
-  const generate = () => {
+  const generate = async () => {
     if (!prompt.trim() || generating) return;
     setGenerating(true);
-    setTimeout(() => setGenerating(false), 3000);
+    setGenError('');
+    try {
+      const res = await fetch('/api/images/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Image generation failed');
+      setGeneratedImages(prev => [{ id: Date.now(), src: data.image, prompt: data.prompt }, ...prev]);
+      setPrompt('');
+    } catch (err) {
+      setGenError(err instanceof Error ? err.message : 'Image generation failed');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const filteredGallery = gallery.filter(g =>
@@ -201,6 +218,31 @@ export default function Images() {
             ))}
           </div>
         </div>
+
+        {/* Error */}
+        {genError && (
+          <div className="rounded-xl px-4 py-3 text-[13px]" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}>
+            ⚠️ {genError}
+          </div>
+        )}
+
+        {/* Generated images */}
+        {generatedImages.length > 0 && (
+          <div>
+            <p className="text-[13px] font-semibold text-[#F8FAFC] mb-3">Generated</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {generatedImages.map(img => (
+                <motion.div key={img.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                  className="rounded-2xl overflow-hidden" style={{ background: '#111318', border: '1px solid #1E222A' }}>
+                  <img src={img.src} alt={img.prompt} className="w-full aspect-square object-cover" />
+                  <div className="p-2.5">
+                    <p className="text-[11px] text-[#94A3B8] line-clamp-2 leading-snug">{img.prompt}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Generating state */}
         <AnimatePresence>

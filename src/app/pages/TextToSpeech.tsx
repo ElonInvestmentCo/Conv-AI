@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, Play, Pause,
@@ -23,6 +23,10 @@ const history = [
   { id: 3, text: 'Your order has been confirmed and will ship within 2-3 business days.',         voice: 'Alloy', duration: '0:05', date: 'Yesterday'  },
 ];
 
+const speedMap: Record<string, number> = {
+  '0.5×': 0.5, '0.75×': 0.75, '1×': 1, '1.25×': 1.25, '1.5×': 1.5, '2×': 2,
+};
+
 export default function TextToSpeech() {
   const [text, setText]           = useState('');
   const [voice, setVoice]         = useState('nova');
@@ -30,13 +34,57 @@ export default function TextToSpeech() {
   const [speed, setSpeed]         = useState('1×');
   const [generating, setGenerating] = useState(false);
   const [playing, setPlaying]     = useState<number | null>(null);
+  const [genError, setGenError]   = useState('');
+  const [audioHistory, setAudioHistory] = useState<
+    { id: number; text: string; voice: string; audioUrl: string; duration: string; date: string }[]
+  >([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const charLimit = 4000;
 
-  const generate = () => {
-    if (!text.trim()) return;
+  const generate = async () => {
+    if (!text.trim() || generating) return;
     setGenerating(true);
-    setTimeout(() => setGenerating(false), 2500);
+    setGenError('');
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voice, format, speed: speedMap[speed] ?? 1 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'TTS generation failed');
+
+      const id = Date.now();
+      setAudioHistory(prev => [
+        { id, text, voice: voices.find(v => v.id === voice)?.name ?? voice,
+          audioUrl: data.audio, duration: '—', date: 'Just now' },
+        ...prev,
+      ]);
+      // Auto-play the new audio
+      if (audioRef.current) audioRef.current.pause();
+      audioRef.current = new Audio(data.audio);
+      audioRef.current.play();
+      setPlaying(id);
+      audioRef.current.onended = () => setPlaying(null);
+    } catch (err) {
+      setGenError(err instanceof Error ? err.message : 'TTS generation failed');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const togglePlay = (id: number, audioUrl: string) => {
+    if (playing === id) {
+      audioRef.current?.pause();
+      setPlaying(null);
+    } else {
+      if (audioRef.current) audioRef.current.pause();
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.play();
+      setPlaying(id);
+      audioRef.current.onended = () => setPlaying(null);
+    }
   };
 
   return (
@@ -180,44 +228,57 @@ export default function TextToSpeech() {
           </AnimatePresence>
         </div>
 
-        {/* History */}
-        <div>
-          <p className="text-[11px] font-bold text-[#475569] uppercase tracking-widest mb-3">Recent Generations</p>
-          <div className="space-y-2">
-            {history.map((item, i) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="rounded-2xl p-4 flex items-center gap-4"
-                style={{ background: '#111318', border: '1px solid #1E222A' }}
-              >
-                <button
-                  onClick={() => setPlaying(playing === item.id ? null : item.id)}
-                  className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
-                  style={{ background: playing === item.id ? '#6366F1' : 'rgba(99,102,241,0.1)' }}
-                >
-                  {playing === item.id
-                    ? <Pause size={14} className="text-white" />
-                    : <Play  size={14} className="text-[#6366F1]" />
-                  }
-                </button>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-[#F8FAFC] line-clamp-1">{item.text}</p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[11px] text-[#475569] flex items-center gap-1"><Volume2 size={10} />{item.voice}</span>
-                    <span className="text-[11px] text-[#475569] flex items-center gap-1"><Clock size={10} />{item.duration}</span>
-                    <span className="text-[11px] text-[#2E3440]">{item.date}</span>
-                  </div>
-                </div>
-                <button className="p-2 rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all flex-shrink-0">
-                  <Download size={14} />
-                </button>
-              </motion.div>
-            ))}
+        {/* Error */}
+        {genError && (
+          <div className="rounded-xl px-4 py-3 text-[13px]" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}>
+            ⚠️ {genError}
           </div>
-        </div>
+        )}
+
+        {/* History */}
+        {audioHistory.length > 0 && (
+          <div>
+            <p className="text-[11px] font-bold text-[#475569] uppercase tracking-widest mb-3">Recent Generations</p>
+            <div className="space-y-2">
+              {audioHistory.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-2xl p-4 flex items-center gap-4"
+                  style={{ background: '#111318', border: '1px solid #1E222A' }}
+                >
+                  <button
+                    onClick={() => togglePlay(item.id, item.audioUrl)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
+                    style={{ background: playing === item.id ? '#6366F1' : 'rgba(99,102,241,0.1)' }}
+                  >
+                    {playing === item.id
+                      ? <Pause size={14} className="text-white" />
+                      : <Play  size={14} className="text-[#6366F1]" />
+                    }
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium text-[#F8FAFC] line-clamp-1">{item.text}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[11px] text-[#475569] flex items-center gap-1"><Volume2 size={10} />{item.voice}</span>
+                      <span className="text-[11px] text-[#475569] flex items-center gap-1"><Clock size={10} />{item.duration}</span>
+                      <span className="text-[11px] text-[#2E3440]">{item.date}</span>
+                    </div>
+                  </div>
+                  <a
+                    href={item.audioUrl}
+                    download={`tts-${item.id}.${format.toLowerCase()}`}
+                    className="p-2 rounded-lg text-[#475569] hover:text-[#94A3B8] hover:bg-[#1A1D24] transition-all flex-shrink-0"
+                  >
+                    <Download size={14} />
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

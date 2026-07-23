@@ -30,9 +30,6 @@ const prompts = [
 
 const chips = ['Continue this further', 'Show me an example', 'Explain step by step', 'Generate the code'];
 
-function buildAIResponse(userText: string): string {
-  return `I've received your message: "${userText}"\n\nI'm processing this with full context from our conversation. Here's my analysis and next steps based on what you've shared.\n\nLet me know if you'd like me to go deeper on any specific aspect.`;
-}
 
 // ── Animated voice waveform — 5 white bars ────────────────────────────────────
 const VoiceWaveform = () => (
@@ -167,6 +164,7 @@ export default function Chat() {
 
   const [input, setInput]             = useState('');
   const [isTyping, setIsTyping]       = useState(false);
+  const [streamingText, setStreamingText] = useState('');
   const [voiceMode, setVoiceMode]     = useState(false);
   const [composerFocused, setComposerFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -199,11 +197,12 @@ export default function Chat() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length, isTyping]);
 
-  const send = useCallback((text?: string) => {
+  const send = useCallback(async (text?: string) => {
     const t = (text ?? input).trim();
     if (!t || isTyping) return;
 
     setInput('');
+    setStreamingText('');
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     // Lazily create a conversation the first time the user sends a real message
@@ -213,14 +212,63 @@ export default function Chat() {
       navigate(`/chat/${activeId}`, { replace: true });
     }
 
-    addMessage(activeId, { role: 'user', text: t });
+    // Build API messages from existing history + the new user turn
+    const currentMsgs = getConversation(activeId)?.messages ?? [];
+    const apiMessages = [
+      ...currentMsgs.map(m => ({
+        role: m.role === 'ai' ? 'assistant' : 'user' as const,
+        content: m.text,
+      })),
+      { role: 'user' as const, content: t },
+    ];
 
+    addMessage(activeId, { role: 'user', text: t });
     setIsTyping(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(err.error || 'Chat request failed');
+      }
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let aiText = '';
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop() ?? '';
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const payload = line.slice(6).trim();
+          if (payload === '[DONE]') continue;
+          try {
+            const { content } = JSON.parse(payload);
+            if (content) { aiText += content; setStreamingText(aiText); }
+          } catch { /* ignore malformed chunks */ }
+        }
+      }
+
       setIsTyping(false);
-      addMessage(activeId!, { role: 'ai', text: buildAIResponse(t) });
-    }, 1600);
-  }, [input, convId, isTyping, addMessage, createConversation, navigate]);
+      setStreamingText('');
+      if (aiText) addMessage(activeId!, { role: 'ai', text: aiText });
+    } catch (err) {
+      setIsTyping(false);
+      setStreamingText('');
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      addMessage(activeId!, { role: 'ai', text: `⚠️ **Error:** ${msg}` });
+    }
+  }, [input, convId, isTyping, addMessage, createConversation, navigate, getConversation]);
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -302,18 +350,22 @@ export default function Chat() {
                   </div>
                 ))}
                 {isTyping && (
-                  <motion.div
-                    key="typing"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="flex gap-4"
-                  >
-                    <AIAvatar />
-                    <div className="px-5 py-4 rounded-2xl" style={{ background: '#111318', border: '1px solid #1E222A' }}>
-                      <TypingDots />
-                    </div>
-                  </motion.div>
+                  streamingText ? (
+                    <AIMessage key="streaming" text={streamingText} />
+                  ) : (
+                    <motion.div
+                      key="typing"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex gap-4"
+                    >
+                      <AIAvatar />
+                      <div className="px-5 py-4 rounded-2xl" style={{ background: '#111318', border: '1px solid #1E222A' }}>
+                        <TypingDots />
+                      </div>
+                    </motion.div>
+                  )
                 )}
               </AnimatePresence>
               <div ref={bottomRef} />
