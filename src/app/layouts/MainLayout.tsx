@@ -19,7 +19,6 @@ import {
   FolderClosed,
   FileAudio,
   LayoutDashboard,
-  Mic,
   MoreHorizontal,
   Pencil,
   Archive,
@@ -51,7 +50,6 @@ const secondaryNav = [
   { label: 'Projects',       path: '/projects',  Icon: FolderClosed    },
   { label: 'Builder',        path: '/builder',   Icon: LayoutDashboard },
   { label: 'Text to Speech', path: '/tts',       Icon: FileAudio       },
-  { label: 'Voice',          path: '/voice',     Icon: Mic             },
 ];
 
 // ── Profile menu ───────────────────────────────────────────────────────────────
