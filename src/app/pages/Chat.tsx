@@ -354,17 +354,17 @@ export default function Chat() {
               transition={{ duration: 0.18 }}
               className="relative flex items-center gap-1 w-full"
               style={{
-                maxWidth: 880,
-                minHeight: 64,
+                maxWidth: 773,
+                minHeight: 53,
                 background: '#111318',
                 border: composerFocused
                   ? '1px solid rgba(99,102,241,0.45)'
                   : '1px solid #1E222A',
                 borderRadius: 32,
-                paddingLeft: 12,
-                paddingRight: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
+                paddingLeft: 8,
+                paddingRight: 8,
+                paddingTop: 6,
+                paddingBottom: 6,
                 transition: 'border-color 0.18s ease',
               }}
             >
