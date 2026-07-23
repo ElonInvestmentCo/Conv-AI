@@ -246,6 +246,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           />
 
           {/* Modal */}
+          <div style={{ position: 'fixed', inset: 0, zIndex: 10001, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
           <motion.div
             ref={modalRef}
             initial={{ opacity: 0, scale: 0.96, y: -12 }}
@@ -254,14 +255,10 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             onClick={e => e.stopPropagation()}
             style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 'calc(100% - 32px)',
+              pointerEvents: 'auto',
+              width: 'calc(100vw - 32px)',
               maxWidth: 500,
               maxHeight: '65vh',
-              zIndex: 10001,
               background: '#1C1F26',
               border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 14,
@@ -332,6 +329,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
               )}
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
@@ -396,6 +394,7 @@ function PageModal({ open, onClose, title, children, wide = false }: {
             onClick={onClose}
             style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
           />
+          <div style={{ position: 'fixed', inset: 0, zIndex: 10001, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.97, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -403,9 +402,9 @@ function PageModal({ open, onClose, title, children, wide = false }: {
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             onClick={e => e.stopPropagation()}
             style={{
-              position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-              width: 'calc(100% - 40px)', maxWidth: wide ? 960 : 760,
-              maxHeight: '88vh', zIndex: 10001, display: 'flex', flexDirection: 'column',
+              pointerEvents: 'auto',
+              width: 'calc(100vw - 40px)', maxWidth: wide ? 960 : 760,
+              maxHeight: '88vh', display: 'flex', flexDirection: 'column',
               background: '#111318', border: '1px solid #1E222A',
               borderRadius: 20, boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
               overflow: 'hidden',
@@ -426,6 +425,7 @@ function PageModal({ open, onClose, title, children, wide = false }: {
               {children}
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
