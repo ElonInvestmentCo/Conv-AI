@@ -71,7 +71,7 @@ export default function Account() {
                   onClick={() => setEditing(!editing)}
                   className="px-4 py-2 rounded-xl text-[13px] font-semibold transition-all"
                   style={{
-                    background: editing ? '#2563EB' : '#1A1D24',
+                    background: editing ? '#6366F1' : '#1A1D24',
                     color: editing ? '#fff' : '#94A3B8',
                     border: editing ? 'none' : '1px solid #1E222A',
                     boxShadow: editing ? '0 2px 8px rgba(99,102,241,0.3)' : 'none',

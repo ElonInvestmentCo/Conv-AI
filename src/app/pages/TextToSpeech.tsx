@@ -186,7 +186,7 @@ export default function TextToSpeech() {
             disabled={!text.trim() || generating}
             className="w-full py-3 rounded-xl text-[14px] font-semibold text-white flex items-center justify-center gap-2 transition-all disabled:opacity-30"
             style={{
-              background: text.trim() && !generating ? '#2563EB' : '#1A1D24',
+              background: text.trim() && !generating ? '#6366F1' : '#1A1D24',
               boxShadow: text.trim() && !generating ? '0 2px 12px rgba(99,102,241,0.3)' : 'none',
             }}
           >
