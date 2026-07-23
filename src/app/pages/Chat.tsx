@@ -81,7 +81,7 @@ const AIAvatar = () => (
     className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
     style={{ background: '#111318', border: '1px solid #1E222A', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
   >
-    <LogoMark className="w-[17px] h-[17px]" variant="brand" />
+    <LogoMark className="w-[17px] h-[17px]" variant="auto" />
   </div>
 );
 
