@@ -29,6 +29,8 @@ import {
 } from 'lucide-react';
 import { useConversations } from '../context/ConversationsContext';
 import { LogoMark } from '../components/LogoMark';
+import AccountPage from '../pages/Account';
+import SettingsPage from '../pages/Settings';
 
 // ── Toggle icons (from attached SVGs) ─────────────────────────────────────────
 const CollapseIcon = ({ size = 20 }: { size?: number }) => (
